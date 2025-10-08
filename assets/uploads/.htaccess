@@ -1,16 +1,18 @@
-# Protect uploads directory
-# Prevent PHP execution in uploads folder for security
+# Prevent PHP execution in uploads directory
+# This is a security measure to prevent uploaded files from being executed as PHP
 
-# Disable PHP execution
-<FilesMatch "\.php$">
+# Disable PHP engine
+php_flag engine off
+
+# Or use FilesMatch to deny PHP files
+<FilesMatch "\.ph(p[3457]?|t|tml)$">
     Require all denied
 </FilesMatch>
 
-# Allow image files
-<FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|pdf)$">
-    Require all granted
-</FilesMatch>
-
-# Prevent directory listing
+# Prevent directory browsing
 Options -Indexes
 
+# Allow only specific file types
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|pdf|doc|docx)$">
+    Require all granted
+</FilesMatch>
