@@ -237,6 +237,7 @@ $read_time = ceil($word_count / 200);
                     <li><a href="about.html" class="main_link"> studio </a></li>
                     <li> <a href="portfolio.html" class="main_link"> cases </a> </li>
                     <li> <a href="blog.php" class="main_link"> news </a> </li>
+                    <li> <a href="shop.html" class="main_link"> shop </a> </li>
                     <li> <a href="contact.html" class="main_link"> contact </a> </li>
                 </ul>
             </div>
@@ -272,6 +273,9 @@ $read_time = ceil($word_count / 200);
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="blog.php">News</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="shop.html">Shop</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="contact.html">Contact</a>

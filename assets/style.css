@@ -483,6 +483,105 @@ html[lang=ar] .home-style1 .loader-wrap {
     font-size: 20px;
   }
 }
+/* Blog page header height override */
+.blog-header .img {
+  min-height: 15vh !important;
+}
+
+/* Shop page header height override */
+.shop-header .img {
+  min-height: 15vh !important;
+}
+
+/* Shop page styles */
+.tc-shop-filters {
+  background-color: #f8f9fa;
+}
+
+.tc-shop-filters .filter-group {
+  min-width: 200px;
+}
+
+.tc-shop-filters .search-box {
+  position: relative;
+  min-width: 250px;
+}
+
+.tc-shop-filters .search-box .search-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  pointer-events: none;
+}
+
+.product-card {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.product-card .img {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+}
+
+.product-card .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-card:hover .overlay {
+  opacity: 1;
+}
+
+.product-card .title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.product-card .description {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.product-card .current-price {
+  color: #ff6b35;
+  font-size: 20px;
+}
+
+.product-card .rating i {
+  font-size: 14px;
+}
+
+.product-card .badge {
+  font-size: 12px;
+  padding: 5px 10px;
+}
+
 /* --------------- experience style1 --------------- */
 .tc-experience-style1 {
   position: relative;

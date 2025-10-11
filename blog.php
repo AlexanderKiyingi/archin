@@ -124,6 +124,7 @@ $categories_result = $conn->query($categories_query);
                     <li><a href="about.html" class="main_link"> studio </a></li>
                     <li> <a href="portfolio.html" class="main_link"> cases </a> </li>
                     <li> <a href="blog.php" class="main_link"> news </a> </li>
+                    <li> <a href="shop.html" class="main_link"> shop </a> </li>
                     <li> <a href="contact.html" class="main_link"> contact </a> </li>
                 </ul>
             </div>
@@ -161,6 +162,9 @@ $categories_result = $conn->query($categories_query);
                             <a class="nav-link active" aria-current="page" href="blog.php">News</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="shop.html">Shop</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="contact.html">Contact</a>
                         </li>
                     </ul>
@@ -188,7 +192,7 @@ $categories_result = $conn->query($categories_query);
 
         
         <!--  Start page header  -->
-        <header class="tc-header-style1" style="min-height: 50vh;">
+        <header class="tc-header-style1 blog-header" style="min-height: 15vh;">
             <div class="img">
                 <img src="assets/img/home1/head_slide2.png" alt="" class="img-cover">
             </div>
