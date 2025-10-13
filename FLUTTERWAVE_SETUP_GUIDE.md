@@ -71,19 +71,20 @@ define('FLUTTERWAVE_CANCEL_URL', 'https://yourdomain.com/checkout.php');
 
 ### 4.1 Test Mode Setup
 1. Ensure `FLUTTERWAVE_ENVIRONMENT` is set to `'test'` in `flutterwave-config.php`
-2. Use test card numbers for testing:
+2. Use test card numbers for VISA testing:
    - **Visa**: 4187427415564246
-   - **Mastercard**: 5399838383838381
    - **Expiry**: Any future date
    - **CVV**: Any 3-digit number
+3. For Mobile Money testing, use test phone numbers provided by Flutterwave
 
 ### 4.2 Test Payment Flow
 1. Add items to cart on your shop page
 2. Go to checkout
 3. Fill in customer details
-4. Click "Pay Securely with Flutterwave"
-5. Use test card details
-6. Complete the payment
+4. Select either "Mobile Money" or "VISA Card" payment method
+5. Click the payment button
+6. Use test card details (for VISA) or test phone number (for Mobile Money)
+7. Complete the payment
 
 ## 🌐 Step 5: Production Setup
 

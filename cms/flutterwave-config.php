@@ -26,7 +26,7 @@ define('FLUTTERWAVE_COUNTRY', 'UG');
 define('FLUTTERWAVE_WEBHOOK_URL', 'https://yourdomain.com/cms/flutterwave-webhook.php');
 
 // Payment Options
-define('FLUTTERWAVE_PAYMENT_OPTIONS', 'card,mobilemoney,ussd,banktransfer');
+define('FLUTTERWAVE_PAYMENT_OPTIONS', 'card,mobilemoney');
 
 // Redirect URLs
 define('FLUTTERWAVE_SUCCESS_URL', 'https://yourdomain.com/order-success.php');

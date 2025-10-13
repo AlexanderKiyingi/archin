@@ -321,22 +321,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                                 <div class="checkout-form bg-white rounded p-4 shadow-sm mb-4">
                                     <h5 class="mb-4">Payment Information</h5>
                                     
-                                    <!-- Flutterwave Payment Button -->
+                                    <!-- Payment Method Selection -->
+                                    <div class="mb-4">
+                                        <h6 class="mb-3">Select Payment Method</h6>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <div class="payment-option" onclick="selectPaymentMethod('mobilemoney')">
+                                                    <div class="card payment-card" id="mobilemoney-card">
+                                                        <div class="card-body text-center">
+                                                            <i class="la la-mobile-alt fa-2x text-primary mb-2"></i>
+                                                            <h6 class="card-title">Mobile Money</h6>
+                                                            <small class="text-muted">MTN, Airtel, Africell</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <div class="payment-option" onclick="selectPaymentMethod('visa')">
+                                                    <div class="card payment-card" id="visa-card">
+                                                        <div class="card-body text-center">
+                                                            <i class="la la-credit-card fa-2x text-primary mb-2"></i>
+                                                            <h6 class="card-title">VISA Card</h6>
+                                                            <small class="text-muted">Credit & Debit Cards</small>
+                                                        </div>
+                                    </div>
+                                        </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Payment Button -->
                                     <div class="text-center mb-4">
-                                        <button type="button" class="btn btn-primary btn-lg w-100" id="flutterwave-pay-btn" onclick="payWithFlutterwave()">
+                                        <button type="button" class="btn btn-primary btn-lg w-100" id="pay-btn" onclick="processPayment()" disabled>
                                             <i class="la la-credit-card me-2"></i>
-                                            Pay Securely with Flutterwave
+                                            <span id="pay-btn-text">Select Payment Method</span>
                                         </button>
                                     </div>
                                     
                                     <div class="mt-3 text-center">
                                         <small class="color-666">
                                             <i class="la la-shield me-2"></i>
-                                            Secure payment powered by Flutterwave
+                                            Secure payment processing
                                         </small>
-                                        <div class="mt-2">
-                                            <img src="https://flutterwave.com/images/badges/badge-light.png" alt="Flutterwave" style="height: 20px;">
-                                        </div>
                                     </div>
                                     
                                     <!-- Hidden payment status -->
@@ -601,8 +627,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
             window.cartData = cart;
         });
 
-        // Flutterwave Payment Function
-        function payWithFlutterwave() {
+        // Payment Method Selection
+        let selectedPaymentMethod = null;
+
+        function selectPaymentMethod(method) {
+            selectedPaymentMethod = method;
+            
+            // Remove selected class from all cards
+            document.querySelectorAll('.payment-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked card
+            document.getElementById(method + '-card').classList.add('selected');
+            
+            // Enable pay button and update text
+            const payBtn = document.getElementById('pay-btn');
+            const payBtnText = document.getElementById('pay-btn-text');
+            
+            payBtn.disabled = false;
+            
+            if (method === 'mobilemoney') {
+                payBtnText.textContent = 'Pay with Mobile Money';
+                payBtn.innerHTML = '<i class="la la-mobile-alt me-2"></i><span id="pay-btn-text">Pay with Mobile Money</span>';
+            } else if (method === 'visa') {
+                payBtnText.textContent = 'Pay with VISA Card';
+                payBtn.innerHTML = '<i class="la la-credit-card me-2"></i><span id="pay-btn-text">Pay with VISA Card</span>';
+            }
+        }
+
+        // Process Payment Function
+        function processPayment() {
+            if (!selectedPaymentMethod) {
+                alert('Please select a payment method');
+                return;
+            }
+
+            if (selectedPaymentMethod === 'mobilemoney') {
+                payWithMobileMoney();
+            } else if (selectedPaymentMethod === 'visa') {
+                payWithVisa();
+            }
+        }
+
+        // Mobile Money Payment Function
+        function payWithMobileMoney() {
+            payWithFlutterwave('mobilemoney');
+        }
+
+        // VISA Card Payment Function
+        function payWithVisa() {
+            payWithFlutterwave('card');
+        }
+
+        // Flutterwave Payment Function (Backend Integration)
+        function payWithFlutterwave(paymentType) {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             
             if (cart.length === 0) {
@@ -630,7 +709,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                 tx_ref: txRef,
                 amount: total,
                 currency: "UGX",
-                payment_options: "card,mobilemoney,ussd",
+                payment_options: paymentType === 'mobilemoney' ? "mobilemoney" : "card",
                 redirect_url: "order-success.php",
                 customer: {
                     email: customerEmail,
