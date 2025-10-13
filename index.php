@@ -1,4 +1,58 @@
 
+<?php
+// Database connection
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'flipavenue_cms');
+
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch services (active only, ordered by display_order)
+$services_query = "SELECT * FROM services WHERE is_active = 1 ORDER BY display_order ASC LIMIT 4";
+$services_result = $conn->query($services_query);
+
+// Fetch featured projects
+$projects_query = "SELECT * FROM projects WHERE is_active = 1 AND is_featured = 1 ORDER BY display_order ASC LIMIT 6";
+$projects_result = $conn->query($projects_query);
+
+// Fetch team members
+$team_query = "SELECT * FROM team_members WHERE is_active = 1 ORDER BY display_order ASC LIMIT 6";
+$team_result = $conn->query($team_query);
+
+// Fetch testimonials
+$testimonials_query = "SELECT * FROM testimonials WHERE is_active = 1 ORDER BY display_order ASC LIMIT 3";
+$testimonials_result = $conn->query($testimonials_query);
+
+// Fetch awards
+$awards_query = "SELECT * FROM awards WHERE is_active = 1 ORDER BY year DESC, display_order ASC LIMIT 4";
+$awards_result = $conn->query($awards_query);
+
+// Fetch latest blog posts
+$blog_query = "SELECT bp.*, au.full_name as author_name 
+               FROM blog_posts bp 
+               LEFT JOIN admin_users au ON bp.author_id = au.id 
+               WHERE bp.is_published = 1 
+               ORDER BY bp.publish_date DESC 
+               LIMIT 3";
+$blog_result = $conn->query($blog_query);
+
+// Fetch site settings
+$settings = [];
+$settings_query = "SELECT setting_key, setting_value FROM site_settings";
+$settings_result = $conn->query($settings_query);
+if ($settings_result) {
+    while ($row = $settings_result->fetch_assoc()) {
+        $settings[$row['setting_key']] = $row['setting_value'];
+    }
+}
+
+// Set current year for copyright
+$current_year = date('Y');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,12 +127,12 @@
         <div class="content">
             <div class="main_links">
                 <ul>
-                    <li> <a href="index.html" class="main_link"> home </a> </li>
+                    <li> <a href="index.php" class="main_link"> home </a> </li>
                     <li><a href="about.html" class="main_link"> about us </a></li>
-                    <li> <a href="portfolio.html" class="main_link"> projects </a> </li>
+                    <li> <a href="portfolio.php" class="main_link"> projects </a> </li>
                     <li> <a href="blog.php" class="main_link"> news </a> </li>
                     <li> <a href="shop.php" class="main_link"> shop </a> </li>
-                    <li> <a href="contact.html" class="main_link"> contact </a> </li>
+                    <li> <a href="contact.php" class="main_link"> contact </a> </li>
                 </ul>
             </div>
         </div>
@@ -103,19 +157,19 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                            <a class="nav-link active" aria-current="page" href="index.php">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="about.html">About Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="portfolio.html">Projects</a>
+                            <a class="nav-link" href="portfolio.php">Projects</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="shop.php">Shop</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact</a>
+                            <a class="nav-link" href="contact.php">Contact</a>
                         </li>
                     </ul>
                         <a href="#" class="icon ms-5 fsz-21">
@@ -281,66 +335,44 @@
                         </div>
                         <div class="services">
                             <div class="row">
-                                <div class="col-lg-3">
-                                    <a href="#" class="service-card wow fadeInUp" data-wow-delay="0.2s">
-                                        <div class="icon">
-                                            <i class="la la-hard-hat"></i>
-                                        </div>
-                                        <h5 class="fsz-24 mb-20"> Architecture & Building </h5>
-                                        <div class="img">
-                                            <img src="assets/img/home1/services/ser1.jpg" alt="" class="img-cover">
-                                        </div>
-                                        <div class="text color-666 mt-50">
-                                            Planning, 3D Vissuallization, Landscape Design, Structural Drawing, CGI, Construction Supervision
-                                        </div>
-                                        <span class="arrow"> <i class="ti-arrow-top-right"></i> </span>
-                                    </a>
-                                </div>
-                                <div class="col-lg-3">
-                                    <a href="#" class="service-card mt-150 wow fadeInUp" data-wow-delay="0.4s">
-                                        <div class="icon">
-                                            <i class="la la-bezier-curve"></i>
-                                        </div>
-                                        <h5 class="fsz-24 mb-20"> Interior and Exterior Design </h5>
-                                        <div class="img">
-                                            <img src="assets/img/home1/services/ser2.jpg" alt="" class="img-cover">
-                                        </div>
-                                        <div class="text color-666 mt-50">
-                                            Interior Design, Exterior Design, Rennovation, Sustainable Design, Installation, Plumbing System, 3D Experience
-                                        </div>
-                                        <span class="arrow"> <i class="ti-arrow-top-right"></i> </span>
-                                    </a>
-                                </div>
-                                <div class="col-lg-3">
-                                    <a href="#" class="service-card wow fadeInUp" data-wow-delay="0.6s">
-                                        <div class="icon">
-                                            <i class="la la-bed"></i>
-                                        </div>
-                                        <h5 class="fsz-24 mb-20"> Furniture Productions </h5>
-                                        <div class="img">
-                                            <img src="assets/img/home1/services/ser3.jpg" alt="" class="img-cover">
-                                        </div>
-                                        <div class="text color-666 mt-50">
-                                            Bespoke Furniture, Material Supply, Online Store, Distribute, 3D Modeling
-                                        </div>
-                                        <span class="arrow"> <i class="ti-arrow-top-right"></i> </span>
-                                    </a>
-                                </div>
-                                <div class="col-lg-3">
-                                    <a href="#" class="service-card mt-150 wow fadeInUp" data-wow-delay="0.8s">
-                                        <div class="icon">
-                                            <i class="la la-comments"></i>
-                                        </div>
-                                        <h5 class="fsz-24 mb-20"> Project Consulting & Supervisor </h5>
-                                        <div class="img">
-                                            <img src="assets/img/home1/services/ser4.jpg" alt="" class="img-cover">
-                                        </div>
-                                        <div class="text color-666 mt-50">
-                                            Project Analysis, Bid Documentation, Construction Supervisor
-                                        </div>
-                                        <span class="arrow"> <i class="ti-arrow-top-right"></i> </span>
-                                    </a>
-                                </div>
+                                <?php if ($services_result && $services_result->num_rows > 0): ?>
+                                    <?php 
+                                    $delay = 0.2;
+                                    $count = 0;
+                                    while ($service = $services_result->fetch_assoc()): 
+                                    $mt_class = ($count % 2 == 1) ? 'mt-150' : '';
+                                    ?>
+                                    <div class="col-lg-3">
+                                        <a href="#" class="service-card <?php echo $mt_class; ?> wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
+                                            <div class="icon">
+                                                <i class="<?php echo htmlspecialchars($service['icon'] ?: 'la la-cube'); ?>"></i>
+                                            </div>
+                                            <h5 class="fsz-24 mb-20"><?php echo htmlspecialchars($service['title']); ?></h5>
+                                            <?php if ($service['image']): ?>
+                                                <div class="img">
+                                                    <img src="cms/<?php echo str_replace('../', '', $service['image']); ?>" alt="" class="img-cover">
+                                                </div>
+                                            <?php else: ?>
+                                                <div class="img">
+                                                    <img src="assets/img/home1/services/ser1.jpg" alt="" class="img-cover">
+                                                </div>
+                                            <?php endif; ?>
+                                            <div class="text color-666 mt-50">
+                                                <?php echo htmlspecialchars($service['description']); ?>
+                                            </div>
+                                            <span class="arrow"> <i class="ti-arrow-top-right"></i> </span>
+                                        </a>
+                                    </div>
+                                    <?php 
+                                    $delay += 0.2;
+                                    $count++;
+                                    endwhile; 
+                                    ?>
+                                <?php else: ?>
+                                    <div class="col-12 text-center py-5">
+                                        <p class="color-666">No services available at the moment.</p>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div class="text-center">
@@ -948,7 +980,7 @@
                                 <h5 class="mb-20 mt-5 fw-600"> Other links </h5>
                                 <ul class="footer-links">
                                     <li> <a href="#"> Shop </a> </li>
-                                    <li> <a href="portfolio.html"> Portfolio </a> </li>
+                                    <li> <a href="portfolio.php"> Portfolio </a> </li>
                                     <li> <a href="blog.php"> Blog </a> </li>
                                     <li> <a href="#"> Videos </a> </li>
                                 </ul>
@@ -958,8 +990,8 @@
                             <div class="branch-card">
                                 <h5 class="mb-20 mt-5 mt-lg-0 fw-600"> Important links </h5>
                                 <ul class="footer-links">
-                                    <li> <a href="careers.html"> Careers </a> </li>
-                                    <li> <a href="contact.html"> Contact Us </a> </li>
+                                    <li> <a href="careers.php"> Careers </a> </li>
+                                    <li> <a href="contact.php"> Contact Us </a> </li>
                                     <li> <a href="#"> Help </a> </li>
                                 </ul>
                             </div>
@@ -980,12 +1012,11 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="foot-links mt-4 mt-lg-0">
-                                <a href="index.html"> Home </a>
+                                <a href="index.php"> Home </a>
                                 <a href="about.html"> About Us </a>
-                                <a href="portfolio.html"> Projects </a>
-                                <a href="blog.php"> News </a>
+                                <a href="portfolio.php"> Projects </a>
                                 <a href="shop.php"> Shop </a>
-                                <a href="contact.html"> Contact </a>
+                                <a href="contact.php"> Contact </a>
                             </div>
                         </div>
                     </div>

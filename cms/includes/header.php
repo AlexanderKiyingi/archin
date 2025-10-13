@@ -72,6 +72,25 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                 </a>
                 
                 <div class="pt-4 pb-2">
+                    <p class="px-4 text-xs uppercase text-gray-500 font-semibold">E-commerce</p>
+                </div>
+                
+                <a href="shop.php" class="sidebar-link <?php echo $current_page === 'shop' ? 'active' : ''; ?> flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+                    <i class="fas fa-shopping-bag w-5"></i>
+                    <span>Products</span>
+                </a>
+                
+                <a href="orders.php" class="sidebar-link <?php echo $current_page === 'orders' || $current_page === 'order-details' ? 'active' : ''; ?> flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+                    <i class="fas fa-shopping-cart w-5"></i>
+                    <span>Orders</span>
+                </a>
+                
+                <a href="sales-analytics.php" class="sidebar-link <?php echo $current_page === 'sales-analytics' || $current_page === 'sales' ? 'active' : ''; ?> flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+                    <i class="fas fa-chart-line w-5"></i>
+                    <span>Sales Analytics</span>
+                </a>
+                
+                <div class="pt-4 pb-2">
                     <p class="px-4 text-xs uppercase text-gray-500 font-semibold">System</p>
                 </div>
                 

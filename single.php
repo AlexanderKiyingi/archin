@@ -233,12 +233,12 @@ $read_time = ceil($word_count / 200);
         <div class="content">
             <div class="main_links">
                 <ul>
-                    <li> <a href="index.html" class="main_link"> home </a> </li>
-                    <li><a href="about.html" class="main_link"> studio </a></li>
-                    <li> <a href="portfolio.html" class="main_link"> cases </a> </li>
+                    <li> <a href="index.php" class="main_link"> home </a> </li>
+                    <li><a href="about.html" class="main_link"> about us </a></li>
+                    <li> <a href="portfolio.php" class="main_link"> projects </a> </li>
                     <li> <a href="blog.php" class="main_link"> news </a> </li>
-                    <li> <a href="shop.html" class="main_link"> shop </a> </li>
-                    <li> <a href="contact.html" class="main_link"> contact </a> </li>
+                    <li> <a href="shop.php" class="main_link"> shop </a> </li>
+                    <li> <a href="contact.php" class="main_link"> contact </a> </li>
                 </ul>
             </div>
         </div>
@@ -253,7 +253,7 @@ $read_time = ceil($word_count / 200);
         <!--  Start navbar  -->
         <nav class="navbar navbar-expand-lg navbar-dark tc-navbar-style1 section-padding-x">
             <div class="container-fluid content">
-                <a class="navbar-brand" href="index.html">
+                <a class="navbar-brand" href="index.php">
                     <img src="assets/img/home1/logo.png" alt="" class="logo">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -263,31 +263,22 @@ $read_time = ceil($word_count / 200);
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html">Home</a>
+                            <a class="nav-link" href="index.php">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="about.html">Studio</a>
+                            <a class="nav-link" href="about.html">About Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="portfolio.html">Cases</a>
+                            <a class="nav-link" href="portfolio.php">Projects</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="blog.php">News</a>
+                            <a class="nav-link" href="shop.php">Shop</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="shop.html">Shop</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact</a>
+                            <a class="nav-link" href="contact.php">Contact</a>
                         </li>
                     </ul>
                     <div class="nav-side">
-                        <a href="#" class="icon ms-3">
-                            <span> EN </span>
-                        </a>
-                        <a href="#" class="icon ms-3">
-                            <span> FR </span>
-                        </a>
                         <a href="#" class="icon ms-5 fsz-21">
                             <span> <i class="la la-search"></i> </span>
                         </a>
@@ -317,7 +308,7 @@ $read_time = ceil($word_count / 200);
                 <div class="row align-items-end gx-5">
                     <div class="col-lg-8 offset-lg-2 text-center">
                         <div class="breadcrumb mb-3">
-                            <a href="index.html" class="color-666 hover-orange1">Home</a>
+                            <a href="index.php" class="color-666 hover-orange1">Home</a>
                             <span class="mx-2 color-666">/</span>
                             <a href="blog.php" class="color-666 hover-orange1">Blog</a>
                             <span class="mx-2 color-666">/</span>
@@ -555,7 +546,7 @@ $read_time = ceil($word_count / 200);
                                 <h5 class="mb-20 mt-5 fw-600"> Other links </h5>
                                 <ul class="footer-links">
                                     <li> <a href="#"> Shop </a> </li>
-                                    <li> <a href="portfolio.html"> Portfolio </a> </li>
+                                    <li> <a href="portfolio.php"> Portfolio </a> </li>
                                     <li> <a href="blog.php"> Blog </a> </li>
                                     <li> <a href="#"> Videos </a> </li>
                                 </ul>
@@ -565,8 +556,8 @@ $read_time = ceil($word_count / 200);
                             <div class="branch-card">
                                 <h5 class="mb-20 mt-5 mt-lg-0 fw-600"> Important links </h5>
                                 <ul class="footer-links">
-                                    <li> <a href="careers.html"> Careers </a> </li>
-                                    <li> <a href="contact.html"> Contact Us </a> </li>
+                                    <li> <a href="careers.php"> Careers </a> </li>
+                                    <li> <a href="contact.php"> Contact Us </a> </li>
                                     <li> <a href="#"> Help </a> </li>
                                 </ul>
                             </div>
@@ -587,11 +578,11 @@ $read_time = ceil($word_count / 200);
                         </div>
                         <div class="col-lg-6">
                             <div class="foot-links mt-4 mt-lg-0">
-                                <a href="index.html"> Home </a>
-                                <a href="about.html"> Studio </a>
-                                <a href="portfolio.html"> Cases </a>
-                                <a href="blog.php"> News </a>
-                                <a href="contact.html"> Contact </a>
+                                <a href="index.php"> Home </a>
+                                <a href="about.html"> About Us </a>
+                                <a href="portfolio.php"> Projects </a>
+                                <a href="shop.php"> Shop </a>
+                                <a href="contact.php"> Contact </a>
                             </div>
                         </div>
                     </div>

@@ -1,3 +1,31 @@
+<?php
+// Database connection
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'flipavenue_cms');
+
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Get category filter
+$category_filter = isset($_GET['category']) ? $conn->real_escape_string($_GET['category']) : '';
+
+// Fetch projects
+$where_clause = "WHERE is_active = 1";
+if ($category_filter) {
+    $where_clause .= " AND category = '$category_filter'";
+}
+
+$projects_query = "SELECT * FROM projects $where_clause ORDER BY display_order ASC, created_at DESC";
+$projects_result = $conn->query($projects_query);
+
+// Fetch categories for filter
+$categories_query = "SELECT DISTINCT category FROM projects WHERE is_active = 1 AND category != '' ORDER BY category";
+$categories_result = $conn->query($categories_query);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,12 +99,12 @@
         <div class="content">
             <div class="main_links">
                 <ul>
-                    <li> <a href="index.html" class="main_link"> home </a> </li>
-                    <li><a href="about.html" class="main_link"> studio </a></li>
-                    <li> <a href="portfolio.html" class="main_link"> cases </a> </li>
-                    <li> <a href="blog.html" class="main_link"> news </a> </li>
-                    <li> <a href="shop.html" class="main_link"> shop </a> </li>
-                    <li> <a href="contact.html" class="main_link"> contact </a> </li>
+                    <li> <a href="index.php" class="main_link"> home </a> </li>
+                    <li><a href="about.html" class="main_link"> about us </a></li>
+                    <li> <a href="portfolio.html" class="main_link"> projects </a> </li>
+                    <li> <a href="blog.php" class="main_link"> news </a> </li>
+                    <li> <a href="shop.php" class="main_link"> shop </a> </li>
+                    <li> <a href="contact.php" class="main_link"> contact </a> </li>
                 </ul>
             </div>
         </div>
@@ -91,7 +119,7 @@
         <!--  Start navbar  -->
         <nav class="navbar navbar-expand-lg navbar-dark tc-navbar-style1 section-padding-x">
             <div class="container-fluid content">
-                <a class="navbar-brand" href="index.html">
+                <a class="navbar-brand" href="index.php">
                     <img src="assets/img/home1/logo.png" alt="" class="logo">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -101,31 +129,22 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html">Home</a>
+                            <a class="nav-link" href="index.php">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="about.html">Studio</a>
+                            <a class="nav-link" href="about.html">About Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="portfolio.html">Cases</a>
+                            <a class="nav-link active" aria-current="page" href="portfolio.html">Projects</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="blog.html">News</a>
+                            <a class="nav-link" href="shop.php">Shop</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="shop.html">Shop</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact</a>
+                            <a class="nav-link" href="contact.php">Contact</a>
                         </li>
                     </ul>
                     <div class="nav-side">
-                        <a href="#" class="icon ms-3">
-                            <span> EN </span>
-                        </a>
-                        <a href="#" class="icon ms-3">
-                            <span> FR </span>
-                        </a>
                         <a href="#" class="icon ms-5 fsz-21">
                             <span> <i class="la la-search"></i> </span>
                         </a>
@@ -395,7 +414,7 @@
                 <div class="container">
                     <div class="content">
                         <h5 class="mb-30 lh-5"> Have a project in mind? </h5>
-                        <a href="contact.html" class="butn border rounded-pill hover-bg-orange1">
+                        <a href="contact.php" class="butn border rounded-pill hover-bg-orange1">
                             <span> Start Your Project <i class="small ms-1 ti-arrow-top-right"></i> </span>
                         </a>
                     </div>
@@ -440,7 +459,7 @@
                                 <ul class="footer-links">
                                     <li> <a href="#"> Shop </a> </li>
                                     <li> <a href="portfolio.html"> Portfolio </a> </li>
-                                    <li> <a href="blog.html"> Blog </a> </li>
+                                    <li> <a href="blog.php"> Blog </a> </li>
                                     <li> <a href="#"> Videos </a> </li>
                                 </ul>
                             </div>
@@ -449,8 +468,8 @@
                             <div class="branch-card">
                                 <h5 class="mb-20 mt-5 mt-lg-0 fw-600"> Important links </h5>
                                 <ul class="footer-links">
-                                    <li> <a href="careers.html"> Careers </a> </li>
-                                    <li> <a href="contact.html"> Contact Us </a> </li>
+                                    <li> <a href="careers.php"> Careers </a> </li>
+                                    <li> <a href="contact.php"> Contact Us </a> </li>
                                     <li> <a href="#"> Help </a> </li>
                                 </ul>
                             </div>
@@ -471,11 +490,11 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="foot-links mt-4 mt-lg-0">
-                                <a href="index.html"> Home </a>
-                                <a href="about.html"> Studio </a>
-                                <a href="portfolio.html"> Cases </a>
-                                <a href="blog.html"> News </a>
-                                <a href="contact.html"> Contact </a>
+                                <a href="index.php"> Home </a>
+                                <a href="about.html"> About Us </a>
+                                <a href="portfolio.php"> Projects </a>
+                                <a href="shop.php"> Shop </a>
+                                <a href="contact.php"> Contact </a>
                             </div>
                         </div>
                     </div>
