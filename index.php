@@ -51,7 +51,7 @@ $current_year = date('Y');
     <!-- Metas -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
     <meta name="keywords" content="<?php echo $page_keywords; ?>">
     <meta name="description" content="<?php echo $page_description; ?>">
     <meta name="author" content="Flip Avenue Limited">
@@ -744,123 +744,6 @@ $current_year = date('Y');
             <!--  End awards  -->
 
 
-            <!--  Start team  -->
-            <section class="tc-team-style1">
-                <div class="container">
-                    <div class="mb-80 js-splittext-lines">
-                        <h2 class="fsz-45"> Meet our top-notch experts </h2>
-                    </div>
-                    <div class="members">
-                        <div class="row justify-content-center">
-                            <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-4">
-                                <div class="member-colmn">
-                                    <a href="#" class="team-card wow zoomIn">
-                                        <div class="img">
-                                            <img src="assets/img/home1/team/team1.jpg" alt="John Henderson" class="img-cover">
-                                        </div>
-                                        <h5 class="title">John<br>Henderson</h5>
-                                        <p class="position">Senior Architect</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-4">
-                                <div class="member-colmn">
-                                    <a href="#" class="team-card wow zoomIn" data-wow-delay="0.1s">
-                                        <div class="img">
-                                            <img src="assets/img/home1/team/team2.jpg" alt="Sarah Johnson" class="img-cover">
-                                        </div>
-                                        <h5 class="title">Sarah<br>Johnson</h5>
-                                        <p class="position">Interior Designer</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-4">
-                                <div class="member-colmn">
-                                    <a href="#" class="team-card wow zoomIn" data-wow-delay="0.2s">
-                                        <div class="img">
-                                            <img src="assets/img/home1/team/team3.jpg" alt="Michael Chen" class="img-cover">
-                                        </div>
-                                        <h5 class="title">Michael<br>Chen</h5>
-                                        <p class="position">Project Manager</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-4">
-                                <div class="member-colmn">
-                                    <a href="#" class="team-card wow zoomIn" data-wow-delay="0.3s">
-                                        <div class="img">
-                                            <img src="assets/img/home1/team/team4.jpg" alt="Emily Rodriguez" class="img-cover">
-                                        </div>
-                                        <h5 class="title">Emily<br>Rodriguez</h5>
-                                        <p class="position">Design Consultant</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-4">
-                                <div class="member-colmn">
-                                    <a href="#" class="team-card wow zoomIn" data-wow-delay="0.4s">
-                                        <div class="img">
-                                            <img src="assets/img/home1/team/team5.jpg" alt="David Kim" class="img-cover">
-                                        </div>
-                                        <h5 class="title">David<br>Kim</h5>
-                                        <p class="position">Structural Engineer</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-4">
-                                <div class="member-colmn">
-                                    <a href="#" class="team-card wow zoomIn" data-wow-delay="0.5s">
-                                        <div class="img">
-                                            <img src="assets/img/home1/team/team6.jpg" alt="Lisa Anderson" class="img-cover">
-                                        </div>
-                                        <h5 class="title">Lisa<br>Anderson</h5>
-                                        <p class="position">Creative Director</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-4">
-                                <div class="member-colmn">
-                                    <a href="careers.php" class="team-card team-text wow zoomIn" data-wow-delay="0.6s">
-                                        <div class="img join-team-img">
-                                            <div class="join-team-content">
-                                                <h5 class="title">
-                                                    <span>Join Our<br>Team</span>
-                                                    <span class="arrow">
-                                                        <i class="ti-arrow-top-right"></i>
-                                                    </span>
-                                                </h5>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="numbers">
-                        <div class="row gx-5">
-                            <div class="col-lg-4">
-                                <div class="number-card wow fadeInUp" data-wow-delay="0.2s">
-                                    <h3 class="perc"> 95% </h3>
-                                    <p> Happy Customer and <br> Repeating </p>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="number-card wow fadeInUp" data-wow-delay="0.4s">
-                                    <h3 class="perc"> 126 </h3>
-                                    <p> Projects Completed in <br> 15 Years </p>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="number-card wow fadeInUp" data-wow-delay="0.6s">
-                                    <h3 class="perc"> 25 </h3>
-                                    <p> Architects and <br> High Qualified Crafters </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <!--  End team  -->
 
 
             <!--  Start blog  -->
