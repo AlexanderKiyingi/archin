@@ -15,10 +15,15 @@ $action = $_POST['action'] ?? '';
 $response = ['success' => false, 'message' => '', 'data' => null];
 
 try {
+    // Debug logging
+    error_log("Cart AJAX - Action: $action, POST data: " . json_encode($_POST));
+    
     switch ($action) {
         case 'add_to_cart':
             $product_id = intval($_POST['product_id']);
             $quantity = intval($_POST['quantity'] ?? 1);
+            
+            error_log("Cart AJAX - Adding product ID: $product_id, Quantity: $quantity");
             
             // Get product details
             $stmt = $conn->prepare("SELECT * FROM shop_products WHERE id = ? AND is_active = 1");
@@ -27,11 +32,13 @@ try {
             $result = $stmt->get_result();
             
             if ($result->num_rows === 0) {
+                error_log("Cart AJAX - Product not found: $product_id");
                 $response['message'] = 'Product not found';
                 break;
             }
             
             $product = $result->fetch_assoc();
+            error_log("Cart AJAX - Product found: " . $product['name']);
             
             // Initialize cart if not exists
             if (!isset($_SESSION['cart'])) {
@@ -60,13 +67,18 @@ try {
                 ];
             }
             
+            $cart_count = array_sum(array_column($_SESSION['cart'], 'quantity'));
+            $cart_total = array_sum(array_map(function($item) { 
+                return $item['price'] * $item['quantity']; 
+            }, $_SESSION['cart']));
+            
+            error_log("Cart AJAX - Cart updated. Count: $cart_count, Total: $cart_total");
+            
             $response['success'] = true;
             $response['message'] = 'Product added to cart successfully';
             $response['data'] = [
-                'cart_count' => array_sum(array_column($_SESSION['cart'], 'quantity')),
-                'cart_total' => array_sum(array_map(function($item) { 
-                    return $item['price'] * $item['quantity']; 
-                }, $_SESSION['cart']))
+                'cart_count' => $cart_count,
+                'cart_total' => $cart_total
             ];
             break;
             
@@ -150,7 +162,8 @@ try {
     }
     
 } catch (Exception $e) {
-    $response['message'] = 'Server error occurred';
+    error_log("Cart AJAX - Exception: " . $e->getMessage());
+    $response['message'] = 'Server error occurred: ' . $e->getMessage();
 }
 
 echo json_encode($response);

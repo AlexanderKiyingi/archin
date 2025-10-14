@@ -132,17 +132,9 @@ $shipping_tax_settings = getShippingTaxSettingsJSON();
 
         
         <!--  Start page header  -->
-        <header class="tc-header-style1 cart-header" style="min-height: 15vh;">
-            <div class="img">
+        <header class="tc-header-style1 cart-header" style="min-height: 12vh; height: 12vh; max-height: 12vh;">
+            <div class="img" style="min-height: 12vh !important; height: 12vh !important; max-height: 12vh !important;">
                 <img src="assets/img/home1/head_slide2.png" alt="" class="img-cover">
-            </div>
-            <div class="info section-padding-x pb-40">
-                <div class="row align-items-end gx-5">
-                    <div class="col-lg-8 offset-lg-2">
-                        <h1 class="js-title wow fadeInUp"> Shopping Cart </h1>
-                        <h5 class="fsz-30 mt-25 fw-400 wow fadeInUp" data-wow-delay="0.2s"> Review Your Selected Items <br> and Proceed to Checkout </h5>
-                    </div>
-                </div>
             </div>
         </header>
         <!--  End page header  -->

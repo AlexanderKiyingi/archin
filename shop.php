@@ -283,12 +283,12 @@ $categories_result = $conn->query($categories_query);
                                 ]);
                             ?>
                             <div class="col-lg-4 col-md-6 mb-4">
-                                <div class="product-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
+                                <div class="product-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s" onclick="window.location.href='product-details.php?id=<?php echo $product['id']; ?>'" style="cursor: pointer;">
                                     <div class="img">
                                         <img src="<?php echo $image; ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="img-cover">
                                         <div class="overlay">
-                                            <a href="#" class="btn btn-sm btn-primary" onclick="return false;">Quick View</a>
-                                            <button type="button" class="btn btn-sm btn-outline-light add-to-cart-btn" data-product='<?php echo htmlspecialchars($product_json); ?>'>
+                                            <a href="product-details.php?id=<?php echo $product['id']; ?>" class="btn btn-sm btn-primary">Quick View</a>
+                                            <button type="button" class="btn btn-sm btn-outline-light add-to-cart-btn" data-product='<?php echo htmlspecialchars($product_json); ?>' onclick="event.stopPropagation();">
                                                 <i class="la la-shopping-cart me-1"></i>Add to Cart
                                             </button>
                                         </div>
@@ -485,6 +485,7 @@ $categories_result = $conn->query($categories_query);
                     button.disabled = true;
                     
                     // Make AJAX call
+                    console.log('🛒 Adding to cart:', productData);
                     fetch('cart-ajax.php', {
                         method: 'POST',
                         headers: {
@@ -492,8 +493,12 @@ $categories_result = $conn->query($categories_query);
                         },
                         body: `action=add_to_cart&product_id=${productData.id}&quantity=1`
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        console.log('📡 Response status:', response.status);
+                        return response.json();
+                    })
                     .then(data => {
+                        console.log('📦 Cart response:', data);
                         if (data.success) {
                             // Update cart count
                             updateCartCount();

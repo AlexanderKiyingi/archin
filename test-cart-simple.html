@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Cart Functionality</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; }
+        button { padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { margin: 10px 0; padding: 10px; background: #f8f9fa; border-left: 4px solid #007bff; }
+        .error { border-left-color: #dc3545; background: #f8d7da; }
+        .success { border-left-color: #28a745; background: #d4edda; }
+    </style>
+</head>
+<body>
+    <h1>Cart Functionality Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Check Cart Status</h2>
+        <button onclick="testGetCart()">Get Cart Status</button>
+        <div id="cartStatus" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Add Product to Cart</h2>
+        <button onclick="testAddToCart()">Add Product ID 1 to Cart</button>
+        <div id="addResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 3: Check Cart After Adding</h2>
+        <button onclick="testGetCart()">Get Updated Cart Status</button>
+        <div id="cartStatusAfter" class="result"></div>
+    </div>
+
+    <script>
+        function testGetCart() {
+            fetch('cart-ajax.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=get_cart'
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Cart data:', data);
+                document.getElementById('cartStatus').innerHTML = 
+                    '<strong>Success:</strong> ' + JSON.stringify(data, null, 2);
+                document.getElementById('cartStatus').className = 'result success';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('cartStatus').innerHTML = 
+                    '<strong>Error:</strong> ' + error.message;
+                document.getElementById('cartStatus').className = 'result error';
+            });
+        }
+
+        function testAddToCart() {
+            fetch('cart-ajax.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=add_to_cart&product_id=1&quantity=1'
+            })
+            .then(response => {
+                console.log('Add to cart response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Add to cart data:', data);
+                document.getElementById('addResult').innerHTML = 
+                    '<strong>Result:</strong> ' + JSON.stringify(data, null, 2);
+                document.getElementById('addResult').className = 
+                    data.success ? 'result success' : 'result error';
+            })
+            .catch(error => {
+                console.error('Add to cart error:', error);
+                document.getElementById('addResult').innerHTML = 
+                    '<strong>Error:</strong> ' + error.message;
+                document.getElementById('addResult').className = 'result error';
+            });
+        }
+
+        // Auto-load cart status on page load
+        window.onload = function() {
+            testGetCart();
+        };
+    </script>
+</body>
+</html>

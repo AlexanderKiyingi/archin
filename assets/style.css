@@ -4699,11 +4699,13 @@ html[lang=ar] .home-style1 .loader-wrap {
   justify-content: center;
   gap: 10px;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.3s ease;
 }
 
 .product-card:hover .overlay {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .product-card .title {
@@ -4734,8 +4736,16 @@ html[lang=ar] .home-style1 .loader-wrap {
 }
 
 /* Cart page styles */
+.cart-header {
+  min-height: 12vh !important;
+  height: 12vh !important;
+  max-height: 12vh !important;
+}
+
 .cart-header .img {
-  min-height: 15vh !important;
+  min-height: 12vh !important;
+  height: 12vh !important;
+  max-height: 12vh !important;
 }
 
 .checkout-header .img {
