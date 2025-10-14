@@ -107,7 +107,7 @@ include 'includes/header.php';
             </a>
         </div>
         
-        <div class="overflow-x-auto">
+        <div class="table-responsive overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gray-50">
                     <tr>
@@ -175,7 +175,7 @@ include 'includes/header.php';
                 <input type="hidden" name="id" value="<?php echo $edit_service['id']; ?>">
             <?php endif; ?>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-grid grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Service Title <span class="text-red-500">*</span>
@@ -257,11 +257,11 @@ include 'includes/header.php';
                 </div>
             </div>
             
-            <div class="mt-6 flex justify-end space-x-3">
-                <a href="services.php" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+            <div class="mt-6 flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
+                <a href="services.php" class="btn-mobile px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 text-center">
                     Cancel
                 </a>
-                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                <button type="submit" class="btn-mobile px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                     <i class="fas fa-save mr-2"></i><?php echo $edit_service ? 'Update' : 'Add'; ?> Service
                 </button>
             </div>

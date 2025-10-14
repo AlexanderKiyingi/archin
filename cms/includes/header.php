@@ -19,7 +19,7 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title><?php echo $page_title ?? 'Dashboard'; ?> - FlipAvenue CMS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -28,19 +28,131 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
             background: linear-gradient(to right, #2563eb, #1d4ed8);
             color: white;
         }
+        
+        /* Mobile responsive styles */
+        @media (max-width: 768px) {
+            .mobile-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+            }
+            
+            .mobile-sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .mobile-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 40;
+            }
+            
+            .mobile-overlay.open {
+                display: block;
+            }
+            
+            .main-content-mobile {
+                margin-left: 0;
+            }
+            
+            .mobile-header {
+                display: flex;
+            }
+            
+            .desktop-header {
+                display: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .table-responsive table {
+                min-width: 600px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-mobile {
+                padding: 1rem;
+            }
+            
+            .btn-mobile {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mobile-header h2 {
+                font-size: 1.25rem;
+            }
+            
+            .mobile-header p {
+                font-size: 0.75rem;
+            }
+            
+            .card-mobile {
+                padding: 0.75rem;
+            }
+            
+            .btn-mobile {
+                padding: 0.75rem 1rem;
+                font-size: 0.875rem;
+            }
+        }
+        
+        /* Hide mobile elements on desktop */
+        @media (min-width: 769px) {
+            .mobile-header {
+                display: none;
+            }
+            
+            .desktop-header {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100">
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+    
     <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white flex-shrink-0">
+        <!-- Mobile Sidebar -->
+        <aside class="mobile-sidebar fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white lg:relative lg:translate-x-0 lg:z-auto">
             <div class="p-6 border-b border-gray-700">
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-building text-3xl text-blue-400"></i>
-                    <div>
-                        <h1 class="text-xl font-bold">FlipAvenue</h1>
-                        <p class="text-xs text-gray-400">CMS Panel</p>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-building text-3xl text-blue-400"></i>
+                        <div>
+                            <h1 class="text-xl font-bold">FlipAvenue</h1>
+                            <p class="text-xs text-gray-400">CMS Panel</p>
+                        </div>
                     </div>
+                    <button class="lg:hidden text-white hover:text-gray-300" onclick="toggleMobileSidebar()">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
                 </div>
             </div>
             
@@ -146,9 +258,52 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
         </aside>
         
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Top Header -->
-            <header class="bg-white shadow-sm z-10">
+        <div class="flex-1 flex flex-col overflow-hidden main-content-mobile">
+            <!-- Mobile Header -->
+            <header class="mobile-header bg-white shadow-sm z-10 lg:hidden">
+                <div class="flex items-center justify-between px-4 py-3">
+                    <div class="flex items-center space-x-3">
+                        <button class="mobile-menu-btn text-gray-600 hover:text-gray-900" onclick="toggleMobileSidebar()">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <div>
+                            <h2 class="text-lg font-bold text-gray-800"><?php echo $page_title ?? 'Dashboard'; ?></h2>
+                            <?php if (isset($page_description)): ?>
+                                <p class="text-xs text-gray-600"><?php echo $page_description; ?></p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-2">
+                        <a href="<?php echo SITE_URL; ?>" target="_blank" class="text-gray-600 hover:text-gray-900 p-2">
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
+                        
+                        <div class="relative group">
+                            <button class="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg hover:bg-gray-200 transition">
+                                <i class="fas fa-user-circle text-xl text-gray-600"></i>
+                                <div class="text-left hidden sm:block">
+                                    <p class="text-xs font-semibold text-gray-800"><?php echo $_SESSION['admin_name']; ?></p>
+                                    <p class="text-xs text-gray-500"><?php echo ucfirst($_SESSION['admin_role']); ?></p>
+                                </div>
+                                <i class="fas fa-chevron-down text-xs text-gray-600"></i>
+                            </button>
+                            
+                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 hidden group-hover:block">
+                                <a href="profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-t-lg">
+                                    <i class="fas fa-user mr-2"></i>Profile
+                                </a>
+                                <a href="logout.php" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-b-lg">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Desktop Header -->
+            <header class="desktop-header bg-white shadow-sm z-10">
                 <div class="flex items-center justify-between px-6 py-4">
                     <div>
                         <h2 class="text-2xl font-bold text-gray-800"><?php echo $page_title ?? 'Dashboard'; ?></h2>

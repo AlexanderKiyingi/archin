@@ -327,16 +327,186 @@ html[lang=ar] .home-style1 .loader-wrap {
 @media screen and (max-width: 991px) {
   .tc-navbar-style1 {
     position: relative;
-    background-color: #333;
+    background-color: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
   }
+  
   .tc-navbar-style1 .content {
     border: 0;
+    padding: 15px 0;
   }
-  .tc-navbar-style1 .content .navbar-nav {
-    margin: 20px 0;
+  
+  .tc-navbar-style1 .navbar-brand {
+    margin-inline-end: auto;
   }
-  .tc-navbar-style1 .content .navbar-nav .nav-link {
+  
+  .tc-navbar-style1 .navbar-brand img {
+    height: 35px;
+    max-height: 35px;
+  }
+  
+  .tc-navbar-style1 .navbar-toggler {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .tc-navbar-style1 .navbar-toggler:focus {
+    box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.5);
+    border-color: var(--color-orange1);
+  }
+  
+  .tc-navbar-style1 .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    width: 20px;
+    height: 20px;
+  }
+  
+  .tc-navbar-style1 .navbar-collapse {
+    background-color: rgba(0, 0, 0, 0.98);
+    margin: 15px -15px -15px -15px;
+    padding: 20px 15px;
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+  
+  .tc-navbar-style1 .navbar-nav {
     margin: 0;
+    text-align: center;
+  }
+  
+  .tc-navbar-style1 .navbar-nav .nav-item {
+    margin: 8px 0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .tc-navbar-style1 .navbar-nav .nav-item:hover {
+    background-color: rgba(255, 107, 107, 0.1);
+  }
+  
+  .tc-navbar-style1 .navbar-nav .nav-link {
+    margin: 0;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: block;
+    width: 100%;
+  }
+  
+  .tc-navbar-style1 .navbar-nav .nav-link:hover,
+  .tc-navbar-style1 .navbar-nav .nav-link.active {
+    color: var(--color-orange1);
+    background-color: rgba(255, 107, 107, 0.1);
+    transform: translateX(5px);
+  }
+  
+  .tc-navbar-style1 .nav-side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 15px;
+  }
+  
+  .tc-navbar-style1 .nav-side .icon {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    font-size: 16px;
+    color: #fff;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+  
+  .tc-navbar-style1 .nav-side .icon.side_menu_btn {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .tc-navbar-style1 .nav-side .icon:hover {
+    background-color: var(--color-orange1);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+  
+  .tc-navbar-style1 .nav-side .butn {
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background-color: transparent;
+    color: #fff;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .tc-navbar-style1 .nav-side .butn:hover {
+    background-color: var(--color-orange1);
+    border-color: var(--color-orange1);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+  
+  /* Mobile navigation animations and transitions */
+  .tc-navbar-style1 .navbar-collapse {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .tc-navbar-style1 .navbar-collapse.show {
+    animation: slideDown 0.3s ease-in-out;
+  }
+  
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Better touch targets for mobile */
+  .tc-navbar-style1 .navbar-nav .nav-item {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .tc-navbar-style1 .navbar-nav .nav-link {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  /* Improved accessibility */
+  .tc-navbar-style1 .navbar-nav .nav-link:focus {
+    outline: 2px solid var(--color-orange1);
+    outline-offset: 2px;
+  }
+  
+  .tc-navbar-style1 .navbar-toggler:focus {
+    outline: 2px solid var(--color-orange1);
+    outline-offset: 2px;
   }
 }
 /* --------------- header style1 --------------- */
@@ -682,6 +852,55 @@ html[lang=ar] .home-style1 .loader-wrap {
   .contact-form .row > div {
     margin-bottom: 20px;
   }
+  
+  /* Contact page specific mobile improvements */
+  .contact-info-card {
+    padding: 30px 20px !important;
+    margin-bottom: 20px;
+  }
+  
+  .contact-info-card .icon i {
+    font-size: 35px !important;
+  }
+  
+  .contact-info-card h5 {
+    font-size: 18px !important;
+  }
+  
+  .contact-info-card p {
+    font-size: 14px !important;
+  }
+  
+  .why-choose .item {
+    margin-bottom: 20px !important;
+  }
+  
+  .why-choose .item .icon i {
+    font-size: 24px !important;
+  }
+  
+  .why-choose .item h6 {
+    font-size: 16px !important;
+  }
+  
+  .why-choose .item p {
+    font-size: 13px !important;
+  }
+  
+  .social-links {
+    margin-top: 30px !important;
+  }
+  
+  .social-links h6 {
+    font-size: 16px !important;
+  }
+  
+  .social-links .icon {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 16px;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -732,6 +951,79 @@ html[lang=ar] .home-style1 .loader-wrap {
   .tc-footer-style1 .col-lg-4 {
     margin-bottom: 30px;
     text-align: center;
+  }
+  
+  /* Contact page mobile improvements */
+  .tc-contact-info-style1 .col-lg-4 {
+    margin-bottom: 25px;
+  }
+  
+  .contact-info-card {
+    padding: 25px 15px !important;
+  }
+  
+  .contact-info-card .icon i {
+    font-size: 30px !important;
+  }
+  
+  .contact-info-card h5 {
+    font-size: 16px !important;
+  }
+  
+  .contact-info-card p {
+    font-size: 13px !important;
+  }
+  
+  .tc-process-style1 .col-lg-6 {
+    margin-bottom: 30px;
+  }
+  
+  .contact-form .row .col-lg-6 {
+    margin-bottom: 15px;
+  }
+  
+  .contact-form .form-label {
+    font-size: 13px !important;
+  }
+  
+  .contact-form .form-control {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  
+  .contact-form textarea.form-control {
+    min-height: 120px;
+  }
+  
+  .why-choose .item {
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 25px !important;
+  }
+  
+  .why-choose .item .icon {
+    margin: 0 0 10px 0 !important;
+  }
+  
+  .why-choose .item .icon i {
+    font-size: 28px !important;
+  }
+  
+  .social-links {
+    text-align: center;
+    margin-top: 25px !important;
+  }
+  
+  .social-links .links {
+    justify-content: center;
+  }
+  
+  .social-links .icon {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 18px;
+    margin: 0 8px !important;
   }
 }
 
@@ -845,6 +1137,209 @@ html[lang=ar] .home-style1 .loader-wrap {
 }
 
 @media screen and (max-width: 480px) {
+  /* Enhanced mobile navigation for small screens */
+  .tc-navbar-style1 .navbar-brand img {
+    height: 30px;
+    max-height: 30px;
+  }
+  
+  .tc-navbar-style1 .navbar-toggler {
+    padding: 6px 10px;
+    border-radius: 6px;
+  }
+  
+  .tc-navbar-style1 .navbar-toggler-icon {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .tc-navbar-style1 .navbar-collapse {
+    margin: 15px -15px -15px -15px;
+    padding: 20px 15px;
+    border-radius: 0 0 12px 12px;
+  }
+  
+  .tc-navbar-style1 .navbar-nav .nav-link {
+    padding: 12px 20px;
+    font-size: 16px;
+    margin: 5px 0;
+  }
+  
+  .tc-navbar-style1 .nav-side {
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .tc-navbar-style1 .nav-side .icon {
+    width: 42px;
+    height: 42px;
+    font-size: 15px;
+  }
+  
+  .tc-navbar-style1 .nav-side .butn {
+    padding: 10px 18px;
+    font-size: 13px;
+    min-width: 110px;
+    justify-content: center;
+    border-radius: 20px;
+  }
+}
+
+/* Very small mobile devices (360px and below) */
+@media screen and (max-width: 360px) {
+  .tc-navbar-style1 .navbar-brand img {
+    height: 28px;
+    max-height: 28px;
+  }
+  
+  .tc-navbar-style1 .navbar-toggler {
+    padding: 5px 8px;
+    border-radius: 5px;
+  }
+  
+  .tc-navbar-style1 .navbar-toggler-icon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .tc-navbar-style1 .navbar-collapse {
+    margin: 12px -12px -12px -12px;
+    padding: 18px 12px;
+    border-radius: 0 0 10px 10px;
+  }
+  
+  .tc-navbar-style1 .navbar-nav .nav-link {
+    padding: 10px 18px;
+    font-size: 15px;
+    margin: 4px 0;
+  }
+  
+  .tc-navbar-style1 .nav-side {
+    gap: 10px;
+    margin-top: 18px;
+    padding-top: 18px;
+  }
+  
+  .tc-navbar-style1 .nav-side .icon {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+  
+  .tc-navbar-style1 .nav-side .butn {
+    padding: 8px 16px;
+    font-size: 12px;
+    min-width: 100px;
+    border-radius: 18px;
+  }
+}
+
+/* ============================================
+   TEAM SECTION IMPROVEMENTS
+   ============================================ */
+
+/* Team card position styling */
+.tc-team-style1 .team-card .position {
+  padding: 0 20px 15px 20px;
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  line-height: 1.4;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Join Our Team Button Styles */
+.tc-team-style1 .join-team-img {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+}
+
+.tc-team-style1 .join-team-content {
+  text-align: center;
+  color: #fff;
+}
+
+.tc-team-style1 .join-team-content .title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.tc-team-style1 .join-team-content .arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.tc-team-style1 .join-team-content:hover .arrow {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: rotate(45deg);
+}
+
+/* Team section responsive improvements */
+@media screen and (max-width: 768px) {
+  .tc-team-style1 .members .row {
+    justify-content: center !important;
+  }
+  
+  .tc-team-style1 .col-lg-2 {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .tc-team-style1 .team-card .img {
+    height: 200px !important;
+  }
+  
+  .tc-team-style1 .join-team-img {
+    min-height: 200px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .tc-team-style1 .col-lg-2 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .tc-team-style1 .team-card .img {
+    height: 180px !important;
+  }
+  
+  .tc-team-style1 .join-team-img {
+    min-height: 180px !important;
+  }
+  
+  .tc-team-style1 .join-team-content .title {
+    font-size: 1.1rem !important;
+  }
+  
+  .tc-team-style1 .join-team-content .arrow {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 12px !important;
+  }
+}
+
   /* Headers */
   .tc-header-style1.shop-header,
   .tc-header-style1.portfolio-header,
@@ -917,6 +1412,119 @@ html[lang=ar] .home-style1 .loader-wrap {
   .tc-footer-style1 .col-lg-4 {
     margin-bottom: 25px;
   }
+  
+  /* Contact page ultra-mobile improvements */
+  .tc-contact-info-style1 {
+    padding: 30px 0 !important;
+  }
+  
+  .tc-contact-info-style1 .col-lg-4 {
+    margin-bottom: 20px;
+  }
+  
+  .contact-info-card {
+    padding: 20px 12px !important;
+    text-align: center;
+  }
+  
+  .contact-info-card .icon {
+    margin-bottom: 15px !important;
+  }
+  
+  .contact-info-card .icon i {
+    font-size: 28px !important;
+  }
+  
+  .contact-info-card h5 {
+    font-size: 15px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .contact-info-card p {
+    font-size: 12px !important;
+    line-height: 1.4;
+  }
+  
+  .tc-process-style1 {
+    padding: 30px 0 !important;
+  }
+  
+  .tc-process-style1 .col-lg-6 {
+    margin-bottom: 25px;
+  }
+  
+  .tc-process-style1 h2 {
+    font-size: 24px !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .tc-process-style1 .text {
+    font-size: 13px !important;
+    margin-bottom: 25px !important;
+  }
+  
+  .contact-form .form-label {
+    font-size: 12px !important;
+    margin-bottom: 5px !important;
+  }
+  
+  .contact-form .form-control {
+    padding: 8px 10px;
+    font-size: 13px;
+    border-radius: 4px;
+  }
+  
+  .contact-form textarea.form-control {
+    min-height: 100px;
+  }
+  
+  .contact-form .btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+  }
+  
+  .why-choose {
+    margin-bottom: 20px !important;
+  }
+  
+  .why-choose .item {
+    margin-bottom: 20px !important;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+  
+  .why-choose .item .icon i {
+    font-size: 24px !important;
+  }
+  
+  .why-choose .item h6 {
+    font-size: 14px !important;
+    margin-bottom: 5px !important;
+  }
+  
+  .why-choose .item p {
+    font-size: 12px !important;
+    margin: 0;
+  }
+  
+  .social-links {
+    margin-top: 20px !important;
+  }
+  
+  .social-links h6 {
+    font-size: 14px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .social-links .icon {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 16px;
+    margin: 0 5px !important;
+  }
 }
 
 /* Touch-friendly improvements */
@@ -940,6 +1548,28 @@ html[lang=ar] .home-style1 .loader-wrap {
     padding: 12px 16px;
     font-size: 16px;
   }
+  
+  /* Contact page touch improvements */
+  .contact-form .form-control {
+    padding: 14px 16px;
+    font-size: 16px;
+  }
+  
+  .contact-form .btn {
+    padding: 14px 20px;
+    font-size: 16px;
+  }
+  
+  .contact-info-card {
+    padding: 25px 20px !important;
+  }
+  
+  .social-links .icon {
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    font-size: 20px;
+  }
 }
 
 /* High DPI displays */
@@ -948,6 +1578,1999 @@ html[lang=ar] .home-style1 .loader-wrap {
   .tc-header-style1 .img img {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
+  }
+}
+
+/* ============================================
+   RESPONSIVE TYPOGRAPHY SYSTEM
+   ============================================ */
+
+/* Base typography scaling for all pages */
+@media screen and (max-width: 1200px) {
+  /* Headers */
+  .tc-header-style1 .info h1,
+  .tc-header-style1 .info .js-title {
+    font-size: calc(5vw + 20px) !important;
+  }
+  
+  .tc-header-style1 .info h5 {
+    font-size: calc(2vw + 16px) !important;
+  }
+  
+  /* Section titles */
+  h1, .fsz-45 {
+    font-size: 2.5rem !important;
+  }
+  
+  h2, .fsz-40 {
+    font-size: 2.2rem !important;
+  }
+  
+  h3, .fsz-35 {
+    font-size: 1.8rem !important;
+  }
+  
+  h4, .fsz-30 {
+    font-size: 1.5rem !important;
+  }
+  
+  h5, .fsz-25 {
+    font-size: 1.3rem !important;
+  }
+  
+  h6, .fsz-20 {
+    font-size: 1.1rem !important;
+  }
+  
+  /* Body text */
+  .fsz-18 {
+    font-size: 1rem !important;
+  }
+  
+  .fsz-16 {
+    font-size: 0.95rem !important;
+  }
+  
+  .fsz-15 {
+    font-size: 0.9rem !important;
+  }
+  
+  .fsz-14 {
+    font-size: 0.85rem !important;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  /* Headers */
+  .tc-header-style1 .info h1,
+  .tc-header-style1 .info .js-title {
+    font-size: calc(6vw + 18px) !important;
+  }
+  
+  .tc-header-style1 .info h5 {
+    font-size: calc(2.5vw + 14px) !important;
+  }
+  
+  /* Section titles */
+  h1, .fsz-45 {
+    font-size: 2.2rem !important;
+  }
+  
+  h2, .fsz-40 {
+    font-size: 2rem !important;
+  }
+  
+  h3, .fsz-35 {
+    font-size: 1.6rem !important;
+  }
+  
+  h4, .fsz-30 {
+    font-size: 1.4rem !important;
+  }
+  
+  h5, .fsz-25 {
+    font-size: 1.2rem !important;
+  }
+  
+  h6, .fsz-20 {
+    font-size: 1rem !important;
+  }
+  
+  /* Body text */
+  .fsz-18 {
+    font-size: 0.95rem !important;
+  }
+  
+  .fsz-16 {
+    font-size: 0.9rem !important;
+  }
+  
+  .fsz-15 {
+    font-size: 0.85rem !important;
+  }
+  
+  .fsz-14 {
+    font-size: 0.8rem !important;
+  }
+  
+  /* Navigation */
+  .navbar-nav .nav-link {
+    font-size: 0.95rem !important;
+  }
+  
+  /* Enhanced mobile navigation */
+  .tc-navbar-style1 .navbar-collapse {
+    margin: 15px -20px -15px -20px;
+    padding: 25px 20px;
+  }
+  
+  .tc-navbar-style1 .navbar-nav .nav-link {
+    padding: 15px 25px;
+    font-size: 17px;
+  }
+  
+  .tc-navbar-style1 .nav-side {
+    gap: 20px;
+    margin-top: 25px;
+    padding-top: 25px;
+  }
+  
+  .tc-navbar-style1 .nav-side .icon {
+    width: 50px;
+    height: 50px;
+    font-size: 18px;
+  }
+  
+  .tc-navbar-style1 .nav-side .butn {
+    padding: 12px 25px;
+    font-size: 15px;
+  }
+  
+  /* Cards and content */
+  .product-card h5,
+  .service-card h5,
+  .project-card h5 {
+    font-size: 1.1rem !important;
+  }
+  
+  .product-card .description,
+  .service-card .description,
+  .project-card .description {
+    font-size: 0.85rem !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  /* Headers */
+  .tc-header-style1 .info h1,
+  .tc-header-style1 .info .js-title {
+    font-size: calc(8vw + 16px) !important;
+    line-height: 1.2 !important;
+  }
+  
+  .tc-header-style1 .info h5 {
+    font-size: calc(3vw + 12px) !important;
+  }
+  
+  /* Section titles */
+  h1, .fsz-45 {
+    font-size: 2rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  h2, .fsz-40 {
+    font-size: 1.8rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  h3, .fsz-35 {
+    font-size: 1.5rem !important;
+  }
+  
+  h4, .fsz-30 {
+    font-size: 1.3rem !important;
+  }
+  
+  h5, .fsz-25 {
+    font-size: 1.1rem !important;
+  }
+  
+  h6, .fsz-20 {
+    font-size: 0.95rem !important;
+  }
+  
+  /* Body text */
+  .fsz-18 {
+    font-size: 0.9rem !important;
+  }
+  
+  .fsz-16 {
+    font-size: 0.85rem !important;
+  }
+  
+  .fsz-15 {
+    font-size: 0.8rem !important;
+  }
+  
+  .fsz-14 {
+    font-size: 0.75rem !important;
+  }
+  
+  /* Navigation */
+  .navbar-brand {
+    font-size: 1.2rem !important;
+  }
+  
+  .navbar-nav .nav-link {
+    font-size: 0.9rem !important;
+    padding: 8px 12px !important;
+  }
+  
+  /* Cards and content */
+  .product-card h5,
+  .service-card h5,
+  .project-card h5 {
+    font-size: 1rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  .product-card .description,
+  .service-card .description,
+  .project-card .description {
+    font-size: 0.8rem !important;
+    line-height: 1.5 !important;
+  }
+  
+  /* Buttons */
+  .btn {
+    font-size: 0.9rem !important;
+    padding: 8px 16px !important;
+  }
+  
+  /* Footer */
+  .tc-footer-style1 h5 {
+    font-size: 1.1rem !important;
+  }
+  
+  .tc-footer-style1 p {
+    font-size: 0.85rem !important;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  /* Headers */
+  .tc-header-style1 .info h1,
+  .tc-header-style1 .info .js-title {
+    font-size: calc(10vw + 14px) !important;
+    line-height: 1.1 !important;
+  }
+  
+  .tc-header-style1 .info h5 {
+    font-size: calc(4vw + 10px) !important;
+  }
+  
+  /* Section titles */
+  h1, .fsz-45 {
+    font-size: 1.75rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  h2, .fsz-40 {
+    font-size: 1.6rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  h3, .fsz-35 {
+    font-size: 1.4rem !important;
+  }
+  
+  h4, .fsz-30 {
+    font-size: 1.2rem !important;
+  }
+  
+  h5, .fsz-25 {
+    font-size: 1rem !important;
+  }
+  
+  h6, .fsz-20 {
+    font-size: 0.9rem !important;
+  }
+  
+  /* Body text */
+  .fsz-18 {
+    font-size: 0.85rem !important;
+  }
+  
+  .fsz-16 {
+    font-size: 0.8rem !important;
+  }
+  
+  .fsz-15 {
+    font-size: 0.75rem !important;
+  }
+  
+  .fsz-14 {
+    font-size: 0.7rem !important;
+  }
+  
+  /* Navigation */
+  .navbar-brand {
+    font-size: 1.1rem !important;
+  }
+  
+  .navbar-nav .nav-link {
+    font-size: 0.85rem !important;
+    padding: 6px 10px !important;
+  }
+  
+  /* Cards and content */
+  .product-card h5,
+  .service-card h5,
+  .project-card h5 {
+    font-size: 0.95rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .product-card .description,
+  .service-card .description,
+  .project-card .description {
+    font-size: 0.75rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  /* Buttons */
+  .btn {
+    font-size: 0.85rem !important;
+    padding: 6px 12px !important;
+  }
+  
+  /* Footer */
+  .tc-footer-style1 h5 {
+    font-size: 1rem !important;
+  }
+  
+  .tc-footer-style1 p {
+    font-size: 0.8rem !important;
+  }
+  
+  /* Special mobile typography */
+  .color-666 {
+    font-size: 0.75rem !important;
+  }
+  
+  .mt-25 {
+    margin-top: 15px !important;
+  }
+  
+  .mt-30 {
+    margin-top: 18px !important;
+  }
+  
+  .mb-30 {
+    margin-bottom: 18px !important;
+  }
+  
+  .mb-40 {
+    margin-bottom: 25px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* Headers */
+  .tc-header-style1 .info h1,
+  .tc-header-style1 .info .js-title {
+    font-size: calc(12vw + 12px) !important;
+    line-height: 1.1 !important;
+  }
+  
+  .tc-header-style1 .info h5 {
+    font-size: calc(5vw + 8px) !important;
+  }
+  
+  /* Section titles */
+  h1, .fsz-45 {
+    font-size: 1.5rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  h2, .fsz-40 {
+    font-size: 1.4rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  h3, .fsz-35 {
+    font-size: 1.3rem !important;
+  }
+  
+  h4, .fsz-30 {
+    font-size: 1.1rem !important;
+  }
+  
+  h5, .fsz-25 {
+    font-size: 0.95rem !important;
+  }
+  
+  h6, .fsz-20 {
+    font-size: 0.85rem !important;
+  }
+  
+  /* Body text */
+  .fsz-18 {
+    font-size: 0.8rem !important;
+  }
+  
+  .fsz-16 {
+    font-size: 0.75rem !important;
+  }
+  
+  .fsz-15 {
+    font-size: 0.7rem !important;
+  }
+  
+  .fsz-14 {
+    font-size: 0.65rem !important;
+  }
+  
+  /* Navigation */
+  .navbar-brand {
+    font-size: 1rem !important;
+  }
+  
+  .navbar-nav .nav-link {
+    font-size: 0.8rem !important;
+    padding: 5px 8px !important;
+  }
+  
+  /* Cards and content */
+  .product-card h5,
+  .service-card h5,
+  .project-card h5 {
+    font-size: 0.9rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .product-card .description,
+  .service-card .description,
+  .project-card .description {
+    font-size: 0.7rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  /* Buttons */
+  .btn {
+    font-size: 0.8rem !important;
+    padding: 5px 10px !important;
+  }
+  
+  /* Footer */
+  .tc-footer-style1 h5 {
+    font-size: 0.95rem !important;
+  }
+  
+  .tc-footer-style1 p {
+    font-size: 0.75rem !important;
+  }
+  
+  /* Ultra-compact spacing */
+  .mt-25 {
+    margin-top: 12px !important;
+  }
+  
+  .mt-30 {
+    margin-top: 15px !important;
+  }
+  
+  .mb-30 {
+    margin-bottom: 15px !important;
+  }
+  
+  .mb-40 {
+    margin-bottom: 20px !important;
+  }
+  
+  .mb-50 {
+    margin-bottom: 25px !important;
+  }
+  
+  .p-50 {
+    padding: 25px !important;
+  }
+}
+
+/* ============================================
+   ABOUT PAGE SPACING OPTIMIZATION
+   ============================================ */
+
+/* General about page spacing improvements for all screen sizes */
+.about-header .info {
+  padding-top: 40px;
+  padding-bottom: 30px;
+}
+
+.about-header .info h1 {
+  margin-bottom: 20px;
+}
+
+.about-header .info h5 {
+  margin-top: 20px;
+}
+
+/* Reduce excessive spacing between sections */
+.tc-experience-style1 + .tc-services-style1 {
+  margin-top: -40px;
+}
+
+.tc-services-style1 + .tc-process-style1 {
+  margin-top: -30px;
+}
+
+.tc-process-style1 + .tc-team-style1 {
+  margin-top: -30px;
+}
+
+.tc-team-style1 + .tc-chat-style1 {
+  margin-top: -30px;
+}
+
+/* Optimize section titles */
+.tc-services-style1 .title {
+  margin-bottom: 40px;
+}
+
+.tc-process-style1 .title {
+  margin-bottom: 50px;
+}
+
+.tc-team-style1 .mb-80 {
+  margin-bottom: 60px;
+}
+
+/* Reduce excessive space in experience section */
+.tc-experience-style1 .exp-num {
+  margin-bottom: 60px;
+}
+
+.tc-experience-style1 .info {
+  margin-top: -20px;
+}
+
+/* Ensure animated elements maintain their space */
+.tc-experience-style1 .exp-num.wow,
+.tc-experience-style1 .info.wow,
+.tc-experience-style1 .img.wow {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.tc-experience-style1 .exp-num.wow.animated,
+.tc-experience-style1 .info.wow.animated,
+.tc-experience-style1 .img.wow.animated {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ensure all WOW animated elements maintain visibility */
+.tc-services-style1 .service-card.wow,
+.tc-process-style1 .text-center.wow,
+.tc-team-style1 .team-card.wow,
+.tc-team-style1 .number-card.wow,
+.tc-chat-style1 .content.wow {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.tc-services-style1 .service-card.wow.animated,
+.tc-process-style1 .text-center.wow.animated,
+.tc-team-style1 .team-card.wow.animated,
+.tc-team-style1 .number-card.wow.animated,
+.tc-chat-style1 .content.wow.animated {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ensure section titles maintain visibility */
+.tc-services-style1 .title h2.wow,
+.tc-process-style1 .title h2.wow,
+.tc-team-style1 .mb-80 h2.wow {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.tc-services-style1 .title h2.wow.animated,
+.tc-process-style1 .title h2.wow.animated,
+.tc-team-style1 .mb-80 h2.wow.animated {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Fallback for elements that might not animate properly */
+.tc-experience-style1 .exp-num,
+.tc-experience-style1 .info,
+.tc-experience-style1 .img,
+.tc-services-style1 .service-card,
+.tc-process-style1 .text-center,
+.tc-team-style1 .team-card,
+.tc-team-style1 .number-card,
+.tc-chat-style1 .content {
+  min-height: auto !important;
+  min-width: auto !important;
+}
+
+/* Ensure proper display for all animated elements */
+.wow {
+  visibility: visible !important;
+}
+
+.wow.animated {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* ============================================
+   CONTACT PAGE SPACING OPTIMIZATION
+   ============================================ */
+
+/* General contact page spacing improvements for all screen sizes */
+.contact-header .info {
+  padding-top: 40px;
+  padding-bottom: 30px;
+}
+
+.contact-header .info h1 {
+  margin-bottom: 20px;
+}
+
+.contact-header .info h5 {
+  margin-top: 20px;
+}
+
+/* Reduce excessive spacing between sections */
+.tc-experience-style1 + .tc-process-style1 {
+  margin-top: -40px;
+}
+
+/* Optimize contact info cards */
+.tc-experience-style1 {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+
+.tc-experience-style1 .contact-info-card {
+  margin-bottom: 0;
+  height: 100%;
+}
+
+/* Optimize contact form section */
+.tc-process-style1 {
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+/* ============================================
+   ABOUT PAGE MOBILE RESPONSIVENESS
+   ============================================ */
+
+/* Contact page specific responsive styles */
+@media screen and (max-width: 991px) {
+  /* Contact page header */
+  .contact-header .info {
+    padding-top: 30px !important;
+    padding-bottom: 20px !important;
+  }
+  
+  .contact-header .info h1 {
+    margin-bottom: 15px !important;
+  }
+  
+  .contact-header .info h5 {
+    margin-top: 15px !important;
+  }
+  
+  /* Contact page sections */
+  .tc-experience-style1 {
+    padding-top: 40px !important;
+    padding-bottom: 30px !important;
+  }
+  
+  .tc-process-style1 {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+  }
+  
+  /* Reduce spacing between sections */
+  .tc-experience-style1 + .tc-process-style1 {
+    margin-top: -25px !important;
+  }
+  
+  /* Contact info cards */
+  .contact-info-card {
+    padding: 25px 20px !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .contact-info-card .icon {
+    margin-bottom: 15px !important;
+  }
+  
+  .contact-info-card .icon i {
+    font-size: 2.5rem !important;
+  }
+  
+  .contact-info-card h5 {
+    font-size: 1.1rem !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .contact-info-card p {
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+  }
+}
+
+/* About page specific responsive styles */
+@media screen and (max-width: 991px) {
+  /* About page header */
+  .about-header .info {
+    padding-top: 30px !important;
+    padding-bottom: 20px !important;
+  }
+  
+  .about-header .info h1 {
+    margin-bottom: 15px !important;
+  }
+  
+  .about-header .info h5 {
+    margin-top: 15px !important;
+  }
+  
+  /* About page sections */
+  .tc-experience-style1 {
+    padding-top: 50px !important;
+    padding-bottom: 50px !important;
+  }
+  
+  .tc-services-style1 .content {
+    padding-top: 50px !important;
+    padding-bottom: 50px !important;
+  }
+  
+  .tc-process-style1 {
+    padding-top: 50px !important;
+    padding-bottom: 50px !important;
+  }
+  
+  .tc-team-style1 {
+    padding-top: 50px !important;
+    padding-bottom: 50px !important;
+  }
+  
+  .tc-chat-style1 {
+    padding-top: 50px !important;
+    padding-bottom: 50px !important;
+  }
+  
+  /* Footer spacing */
+  .tc-footer-style1 .top-content {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+  }
+  
+  /* Experience section */
+  .tc-experience-style1 .exp-num {
+    margin-bottom: 40px !important;
+  }
+  
+  .tc-experience-style1 .info {
+    margin-top: -15px !important;
+  }
+  
+  .tc-experience-style1 .exp-num h5 {
+    font-size: 0.9rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  .tc-experience-style1 .exp-num h2.num {
+    font-size: 3rem !important;
+    line-height: 1 !important;
+  }
+  
+  .tc-experience-style1 .info h3 {
+    font-size: 2rem !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .tc-experience-style1 .text {
+    font-size: 0.9rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 15px !important;
+  }
+  
+  /* Mission & Vision section */
+  .tc-services-style1 .title {
+    margin-bottom: 30px !important;
+  }
+  
+  /* Reduce spacing between sections */
+  .tc-experience-style1 + .tc-services-style1 {
+    margin-top: -20px !important;
+  }
+  
+  .tc-services-style1 .title h2 {
+    font-size: 2.2rem !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .tc-services-style1 .service-card {
+    padding: 25px !important;
+    margin-bottom: 30px !important;
+  }
+  
+  .tc-services-style1 .service-card .icon {
+    margin-bottom: 20px !important;
+  }
+  
+  .tc-services-style1 .service-card .icon i {
+    font-size: 2.5rem !important;
+  }
+  
+  .tc-services-style1 .service-card h5 {
+    font-size: 1.6rem !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .tc-services-style1 .service-card .text {
+    font-size: 0.9rem !important;
+    line-height: 1.6 !important;
+  }
+  
+  /* Values section */
+  .tc-process-style1 .title {
+    margin-bottom: 60px !important;
+  }
+  
+  .tc-process-style1 .title h2 {
+    font-size: 2.2rem !important;
+  }
+  
+  .tc-process-style1 .text-center {
+    margin-bottom: 35px !important;
+  }
+  
+  .tc-process-style1 .text-center .icon {
+    margin-bottom: 15px !important;
+  }
+  
+  .tc-process-style1 .text-center .icon i {
+    font-size: 2.5rem !important;
+  }
+  
+  .tc-process-style1 .text-center h5 {
+    font-size: 1.1rem !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .tc-process-style1 .text-center p {
+    font-size: 0.8rem !important;
+    line-height: 1.5 !important;
+  }
+  
+  /* Team section */
+  .tc-team-style1 .mb-80 {
+    margin-bottom: 50px !important;
+  }
+  
+  .tc-team-style1 .mb-80 h2 {
+    font-size: 2.2rem !important;
+  }
+  
+  .tc-team-style1 .team-card {
+    margin-bottom: 20px !important;
+  }
+  
+  .tc-team-style1 .team-card .title {
+    font-size: 0.9rem !important;
+    line-height: 1.3 !important;
+    padding: 10px !important;
+  }
+  
+  .tc-team-style1 .numbers {
+    margin-top: 40px !important;
+  }
+  
+  .tc-team-style1 .number-card {
+    margin-bottom: 25px !important;
+    padding: 20px !important;
+  }
+  
+  .tc-team-style1 .number-card h3 {
+    font-size: 2.5rem !important;
+    line-height: 1 !important;
+  }
+  
+  .tc-team-style1 .number-card span {
+    font-size: 2.5rem !important;
+  }
+  
+  .tc-team-style1 .number-card p {
+    font-size: 0.9rem !important;
+    line-height: 1.4 !important;
+    margin-top: 10px !important;
+  }
+  
+  /* Chat section */
+  .tc-chat-style1 .content {
+    padding: 40px 20px !important;
+  }
+  
+  .tc-chat-style1 .xl-text {
+    font-size: 1.8rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .tc-chat-style1 h5 {
+    font-size: 1.3rem !important;
+    margin-bottom: 30px !important;
+    line-height: 1.4 !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  /* Contact page header */
+  .contact-header .info {
+    padding-top: 25px !important;
+    padding-bottom: 15px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  
+  .contact-header .info h1 {
+    margin-bottom: 12px !important;
+  }
+  
+  .contact-header .info h5 {
+    margin-top: 12px !important;
+  }
+  
+  /* Contact page sections */
+  .tc-experience-style1 {
+    padding-top: 35px !important;
+    padding-bottom: 25px !important;
+  }
+  
+  .tc-process-style1 {
+    padding-top: 35px !important;
+    padding-bottom: 35px !important;
+  }
+  
+  /* Reduce spacing between sections */
+  .tc-experience-style1 + .tc-process-style1 {
+    margin-top: -30px !important;
+  }
+  
+  /* Contact info cards */
+  .contact-info-card {
+    padding: 20px 15px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .contact-info-card .icon {
+    margin-bottom: 12px !important;
+  }
+  
+  .contact-info-card .icon i {
+    font-size: 2.2rem !important;
+  }
+  
+  .contact-info-card h5 {
+    font-size: 1rem !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .contact-info-card p {
+    font-size: 0.85rem !important;
+    line-height: 1.5 !important;
+  }
+  
+  /* Contact form section */
+  .tc-process-style1 .info h2 {
+    font-size: 1.8rem !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .tc-process-style1 .info p {
+    font-size: 0.9rem !important;
+    margin-bottom: 25px !important;
+  }
+  
+  .why-choose .item {
+    margin-bottom: 15px !important;
+  }
+  
+  .why-choose .item .icon {
+    margin-right: 12px !important;
+  }
+  
+  .why-choose .item .icon i {
+    font-size: 1.5rem !important;
+  }
+  
+  .why-choose .item h6 {
+    font-size: 0.95rem !important;
+    margin-bottom: 4px !important;
+  }
+  
+  .why-choose .item p {
+    font-size: 0.8rem !important;
+  }
+
+  /* About page header */
+  .about-header .info {
+    padding-top: 25px !important;
+    padding-bottom: 15px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  
+  .about-header .info h1 {
+    margin-bottom: 12px !important;
+  }
+  
+  .about-header .info h5 {
+    margin-top: 12px !important;
+  }
+  
+  /* About page sections */
+  .tc-experience-style1 {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+  }
+  
+  .tc-services-style1 .content {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+  }
+  
+  .tc-process-style1 {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+  }
+  
+  .tc-team-style1 {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+  }
+  
+  .tc-chat-style1 {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+  }
+  
+  /* Footer spacing */
+  .tc-footer-style1 .top-content {
+    padding-top: 35px !important;
+    padding-bottom: 35px !important;
+  }
+  
+  /* Container padding */
+  .tc-experience-style1 .container-fluid,
+  .tc-services-style1 .container,
+  .tc-process-style1 .container,
+  .tc-team-style1 .container,
+  .tc-chat-style1 .container {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  
+  /* Experience section */
+  .tc-experience-style1 .row {
+    text-align: center !important;
+  }
+  
+  .tc-experience-style1 .col-lg-2,
+  .tc-experience-style1 .col-lg-3,
+  .tc-experience-style1 .col-lg-6 {
+    margin-bottom: 30px !important;
+  }
+  
+  .tc-experience-style1 .exp-num {
+    margin-bottom: 30px !important;
+  }
+  
+  .tc-experience-style1 .info {
+    margin-top: -20px !important;
+  }
+  
+  .tc-experience-style1 .exp-num h5 {
+    font-size: 0.85rem !important;
+  }
+  
+  .tc-experience-style1 .exp-num h2.num {
+    font-size: 2.5rem !important;
+  }
+  
+  .tc-experience-style1 .info h3 {
+    font-size: 1.8rem !important;
+    margin-bottom: 18px !important;
+  }
+  
+  .tc-experience-style1 .text {
+    font-size: 0.85rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 12px !important;
+  }
+  
+  /* Mission & Vision section */
+  .tc-services-style1 .title {
+    margin-bottom: 25px !important;
+  }
+  
+  /* Reduce spacing between sections */
+  .tc-experience-style1 + .tc-services-style1 {
+    margin-top: -25px !important;
+  }
+  
+  .tc-services-style1 .title h2 {
+    font-size: 2rem !important;
+    margin-bottom: 18px !important;
+  }
+  
+  .tc-services-style1 .title p {
+    font-size: 0.9rem !important;
+  }
+  
+  .tc-services-style1 .service-card {
+    padding: 20px !important;
+    margin-bottom: 25px !important;
+  }
+  
+  .tc-services-style1 .service-card .icon {
+    margin-bottom: 15px !important;
+  }
+  
+  .tc-services-style1 .service-card .icon i {
+    font-size: 2.2rem !important;
+  }
+  
+  .tc-services-style1 .service-card h5 {
+    font-size: 1.4rem !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .tc-services-style1 .service-card .text {
+    font-size: 0.85rem !important;
+    line-height: 1.6 !important;
+  }
+  
+  /* Values section */
+  .tc-process-style1 .title {
+    margin-bottom: 50px !important;
+  }
+  
+  .tc-process-style1 .title h2 {
+    font-size: 2rem !important;
+  }
+  
+  .tc-process-style1 .text-center {
+    margin-bottom: 30px !important;
+  }
+  
+  .tc-process-style1 .text-center .icon {
+    margin-bottom: 12px !important;
+  }
+  
+  .tc-process-style1 .text-center .icon i {
+    font-size: 2.2rem !important;
+  }
+  
+  .tc-process-style1 .text-center h5 {
+    font-size: 1rem !important;
+    margin-bottom: 6px !important;
+  }
+  
+  .tc-process-style1 .text-center p {
+    font-size: 0.75rem !important;
+    line-height: 1.5 !important;
+  }
+  
+  /* Team section */
+  .tc-team-style1 .mb-80 {
+    margin-bottom: 40px !important;
+  }
+  
+  .tc-team-style1 .mb-80 h2 {
+    font-size: 2rem !important;
+  }
+  
+  .tc-team-style1 .members .row {
+    justify-content: center !important;
+  }
+  
+  .tc-team-style1 .col-lg-2,
+  .tc-team-style1 .col-lg-4 {
+    margin-bottom: 20px !important;
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+  }
+  
+  .tc-team-style1 .team-card {
+    margin-bottom: 15px !important;
+  }
+  
+  .tc-team-style1 .team-card .title {
+    font-size: 0.85rem !important;
+    line-height: 1.3 !important;
+    padding: 8px !important;
+  }
+  
+  .tc-team-style1 .team-card .position {
+    font-size: 0.75rem !important;
+    padding: 0 8px 15px 8px !important;
+  }
+  
+  .tc-team-style1 .numbers {
+    margin-top: 35px !important;
+  }
+  
+  .tc-team-style1 .number-card {
+    margin-bottom: 20px !important;
+    padding: 18px !important;
+  }
+  
+  .tc-team-style1 .number-card h3 {
+    font-size: 2.2rem !important;
+  }
+  
+  .tc-team-style1 .number-card span {
+    font-size: 2.2rem !important;
+  }
+  
+  .tc-team-style1 .number-card p {
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
+    margin-top: 8px !important;
+  }
+  
+  /* Join Our Team Button Responsive */
+  .tc-team-style1 .join-team-img {
+    min-height: 200px !important;
+  }
+  
+  .tc-team-style1 .join-team-content .title {
+    font-size: 1.2rem !important;
+  }
+  
+  .tc-team-style1 .join-team-content .arrow {
+    width: 35px !important;
+    height: 35px !important;
+    font-size: 14px !important;
+  }
+  
+  /* Chat section */
+  .tc-chat-style1 .content {
+    padding: 35px 15px !important;
+    text-align: center !important;
+  }
+  
+  .tc-chat-style1 .xl-text {
+    font-size: 1.6rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .tc-chat-style1 h5 {
+    font-size: 1.2rem !important;
+    margin-bottom: 25px !important;
+    line-height: 1.4 !important;
+  }
+  
+  .tc-chat-style1 .butn {
+    font-size: 0.9rem !important;
+    padding: 10px 20px !important;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  /* Contact page header */
+  .contact-header .info {
+    padding-top: 20px !important;
+    padding-bottom: 12px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+  
+  .contact-header .info h1 {
+    margin-bottom: 10px !important;
+  }
+  
+  .contact-header .info h5 {
+    margin-top: 10px !important;
+  }
+  
+  /* Contact page sections */
+  .tc-experience-style1 {
+    padding-top: 30px !important;
+    padding-bottom: 20px !important;
+  }
+  
+  .tc-process-style1 {
+    padding-top: 30px !important;
+    padding-bottom: 30px !important;
+  }
+  
+  /* Reduce spacing between sections */
+  .tc-experience-style1 + .tc-process-style1 {
+    margin-top: -35px !important;
+  }
+  
+  /* Contact info cards */
+  .contact-info-card {
+    padding: 18px 12px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .contact-info-card .icon {
+    margin-bottom: 10px !important;
+  }
+  
+  .contact-info-card .icon i {
+    font-size: 2rem !important;
+  }
+  
+  .contact-info-card h5 {
+    font-size: 0.95rem !important;
+    margin-bottom: 6px !important;
+  }
+  
+  .contact-info-card p {
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  /* Contact form section */
+  .tc-process-style1 .info h2 {
+    font-size: 1.6rem !important;
+    margin-bottom: 18px !important;
+  }
+  
+  .tc-process-style1 .info p {
+    font-size: 0.85rem !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .why-choose .item {
+    margin-bottom: 12px !important;
+  }
+  
+  .why-choose .item .icon {
+    margin-right: 10px !important;
+  }
+  
+  .why-choose .item .icon i {
+    font-size: 1.3rem !important;
+  }
+  
+  .why-choose .item h6 {
+    font-size: 0.9rem !important;
+    margin-bottom: 3px !important;
+  }
+  
+  .why-choose .item p {
+    font-size: 0.75rem !important;
+  }
+
+  /* About page header */
+  .about-header .info {
+    padding-top: 20px !important;
+    padding-bottom: 12px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+  
+  .about-header .info h1 {
+    margin-bottom: 10px !important;
+  }
+  
+  .about-header .info h5 {
+    margin-top: 10px !important;
+  }
+  
+  /* About page sections */
+  .tc-experience-style1 {
+    padding-top: 35px !important;
+    padding-bottom: 35px !important;
+  }
+  
+  .tc-services-style1 .content {
+    padding-top: 35px !important;
+    padding-bottom: 35px !important;
+  }
+  
+  .tc-process-style1 {
+    padding-top: 35px !important;
+    padding-bottom: 35px !important;
+  }
+  
+  .tc-team-style1 {
+    padding-top: 35px !important;
+    padding-bottom: 35px !important;
+  }
+  
+  .tc-chat-style1 {
+    padding-top: 35px !important;
+    padding-bottom: 35px !important;
+  }
+  
+  /* Footer spacing */
+  .tc-footer-style1 .top-content {
+    padding-top: 30px !important;
+    padding-bottom: 30px !important;
+  }
+  
+  /* Container padding */
+  .tc-experience-style1 .container-fluid,
+  .tc-services-style1 .container,
+  .tc-process-style1 .container,
+  .tc-team-style1 .container,
+  .tc-chat-style1 .container {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+  
+  /* Row gutters */
+  .tc-experience-style1 .row,
+  .tc-services-style1 .row,
+  .tc-process-style1 .row,
+  .tc-team-style1 .row {
+    margin-left: -10px !important;
+    margin-right: -10px !important;
+  }
+  
+  .tc-experience-style1 .row > *,
+  .tc-services-style1 .row > *,
+  .tc-process-style1 .row > *,
+  .tc-team-style1 .row > * {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+  
+  /* Experience section */
+  .tc-experience-style1 .exp-num {
+    margin-bottom: 25px !important;
+  }
+  
+  .tc-experience-style1 .info {
+    margin-top: -25px !important;
+  }
+  
+  .tc-experience-style1 .exp-num h5 {
+    font-size: 0.8rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .tc-experience-style1 .exp-num h2.num {
+    font-size: 2.2rem !important;
+  }
+  
+  .tc-experience-style1 .info h3 {
+    font-size: 1.6rem !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .tc-experience-style1 .text {
+    font-size: 0.8rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 10px !important;
+  }
+  
+  /* Mission & Vision section */
+  .tc-services-style1 .title {
+    margin-bottom: 20px !important;
+  }
+  
+  /* Reduce spacing between sections */
+  .tc-experience-style1 + .tc-services-style1 {
+    margin-top: -30px !important;
+  }
+  
+  .tc-services-style1 + .tc-process-style1 {
+    margin-top: -20px !important;
+  }
+  
+  .tc-services-style1 .title h2 {
+    font-size: 1.8rem !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .tc-services-style1 .title p {
+    font-size: 0.85rem !important;
+  }
+  
+  .tc-services-style1 .service-card {
+    padding: 18px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .tc-services-style1 .service-card .icon {
+    margin-bottom: 12px !important;
+  }
+  
+  .tc-services-style1 .service-card .icon i {
+    font-size: 2rem !important;
+  }
+  
+  .tc-services-style1 .service-card h5 {
+    font-size: 1.3rem !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .tc-services-style1 .service-card .text {
+    font-size: 0.8rem !important;
+    line-height: 1.6 !important;
+  }
+  
+  /* Values section */
+  .tc-process-style1 .title {
+    margin-bottom: 40px !important;
+  }
+  
+  .tc-process-style1 .title h2 {
+    font-size: 1.8rem !important;
+  }
+  
+  .tc-process-style1 .text-center {
+    margin-bottom: 25px !important;
+  }
+  
+  .tc-process-style1 .text-center .icon {
+    margin-bottom: 10px !important;
+  }
+  
+  .tc-process-style1 .text-center .icon i {
+    font-size: 2rem !important;
+  }
+  
+  .tc-process-style1 .text-center h5 {
+    font-size: 0.95rem !important;
+    margin-bottom: 5px !important;
+  }
+  
+  .tc-process-style1 .text-center p {
+    font-size: 0.7rem !important;
+    line-height: 1.5 !important;
+  }
+  
+  /* Team section */
+  .tc-team-style1 .mb-80 {
+    margin-bottom: 35px !important;
+  }
+  
+  .tc-team-style1 .mb-80 h2 {
+    font-size: 1.8rem !important;
+  }
+  
+  .tc-team-style1 .col-lg-2,
+  .tc-team-style1 .col-lg-4 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .tc-team-style1 .team-card {
+    margin-bottom: 12px !important;
+  }
+  
+  .tc-team-style1 .team-card .title {
+    font-size: 0.8rem !important;
+    line-height: 1.3 !important;
+    padding: 6px !important;
+  }
+  
+  .tc-team-style1 .numbers {
+    margin-top: 30px !important;
+  }
+  
+  .tc-team-style1 .number-card {
+    margin-bottom: 18px !important;
+    padding: 15px !important;
+  }
+  
+  .tc-team-style1 .number-card h3 {
+    font-size: 2rem !important;
+  }
+  
+  .tc-team-style1 .number-card span {
+    font-size: 2rem !important;
+  }
+  
+  .tc-team-style1 .number-card p {
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    margin-top: 6px !important;
+  }
+  
+  /* Chat section */
+  .tc-chat-style1 .content {
+    padding: 30px 12px !important;
+  }
+  
+  .tc-chat-style1 .xl-text {
+    font-size: 1.4rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .tc-chat-style1 h5 {
+    font-size: 1.1rem !important;
+    margin-bottom: 20px !important;
+    line-height: 1.4 !important;
+  }
+  
+  .tc-chat-style1 .butn {
+    font-size: 0.85rem !important;
+    padding: 8px 16px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* Contact page header */
+  .contact-header .info {
+    padding-top: 15px !important;
+    padding-bottom: 10px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  
+  .contact-header .info h1 {
+    margin-bottom: 8px !important;
+  }
+  
+  .contact-header .info h5 {
+    margin-top: 8px !important;
+  }
+  
+  /* Contact page sections */
+  .tc-experience-style1 {
+    padding-top: 25px !important;
+    padding-bottom: 15px !important;
+  }
+  
+  .tc-process-style1 {
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
+  }
+  
+  /* Reduce spacing between sections */
+  .tc-experience-style1 + .tc-process-style1 {
+    margin-top: -40px !important;
+  }
+  
+  /* Contact info cards */
+  .contact-info-card {
+    padding: 15px 10px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .contact-info-card .icon {
+    margin-bottom: 8px !important;
+  }
+  
+  .contact-info-card .icon i {
+    font-size: 1.8rem !important;
+  }
+  
+  .contact-info-card h5 {
+    font-size: 0.9rem !important;
+    margin-bottom: 5px !important;
+  }
+  
+  .contact-info-card p {
+    font-size: 0.75rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  /* Contact form section */
+  .tc-process-style1 .info h2 {
+    font-size: 1.4rem !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .tc-process-style1 .info p {
+    font-size: 0.8rem !important;
+    margin-bottom: 18px !important;
+  }
+  
+  .why-choose .item {
+    margin-bottom: 10px !important;
+  }
+  
+  .why-choose .item .icon {
+    margin-right: 8px !important;
+  }
+  
+  .why-choose .item .icon i {
+    font-size: 1.2rem !important;
+  }
+  
+  .why-choose .item h6 {
+    font-size: 0.85rem !important;
+    margin-bottom: 2px !important;
+  }
+  
+  .why-choose .item p {
+    font-size: 0.7rem !important;
+  }
+
+  /* About page header */
+  .about-header .info {
+    padding-top: 15px !important;
+    padding-bottom: 10px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  
+  .about-header .info h1 {
+    margin-bottom: 8px !important;
+  }
+  
+  .about-header .info h5 {
+    margin-top: 8px !important;
+  }
+  
+  /* About page sections */
+  .tc-experience-style1 {
+    padding-top: 30px !important;
+    padding-bottom: 30px !important;
+  }
+  
+  .tc-services-style1 .content {
+    padding-top: 30px !important;
+    padding-bottom: 30px !important;
+  }
+  
+  .tc-process-style1 {
+    padding-top: 30px !important;
+    padding-bottom: 30px !important;
+  }
+  
+  .tc-team-style1 {
+    padding-top: 30px !important;
+    padding-bottom: 30px !important;
+  }
+  
+  .tc-chat-style1 {
+    padding-top: 30px !important;
+    padding-bottom: 30px !important;
+  }
+  
+  /* Mission & Vision section */
+  .tc-services-style1 .title {
+    margin-bottom: 18px !important;
+  }
+  
+  /* Reduce spacing between sections */
+  .tc-experience-style1 + .tc-services-style1 {
+    margin-top: -35px !important;
+  }
+  
+  .tc-services-style1 + .tc-process-style1 {
+    margin-top: -25px !important;
+  }
+  
+  .tc-process-style1 + .tc-team-style1 {
+    margin-top: -20px !important;
+  }
+  
+  /* Footer spacing */
+  .tc-footer-style1 .top-content {
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
+  }
+  
+  /* Container padding */
+  .tc-experience-style1 .container-fluid,
+  .tc-services-style1 .container,
+  .tc-process-style1 .container,
+  .tc-team-style1 .container,
+  .tc-chat-style1 .container,
+  .tc-footer-style1 .container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  
+  /* Row gutters */
+  .tc-experience-style1 .row,
+  .tc-services-style1 .row,
+  .tc-process-style1 .row,
+  .tc-team-style1 .row,
+  .tc-footer-style1 .row {
+    margin-left: -8px !important;
+    margin-right: -8px !important;
+  }
+  
+  .tc-experience-style1 .row > *,
+  .tc-services-style1 .row > *,
+  .tc-process-style1 .row > *,
+  .tc-team-style1 .row > *,
+  .tc-footer-style1 .row > * {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+  
+  /* Footer specific */
+  .tc-footer-style1 .info-side,
+  .tc-footer-style1 .branch-card {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+  
+  .tc-footer-style1 .branch-card {
+    margin-bottom: 20px !important;
+  }
+  
+  .tc-footer-style1 .foot-social {
+    margin-top: 25px !important;
+  }
+  
+  .tc-footer-style1 .foot-social a {
+    margin: 0 8px !important;
+  }
+  
+  /* Experience section */
+  .tc-experience-style1 .exp-num {
+    margin-bottom: 20px !important;
+  }
+  
+  .tc-experience-style1 .info {
+    margin-top: -30px !important;
+  }
+  
+  .tc-experience-style1 .exp-num h5 {
+    font-size: 0.75rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .tc-experience-style1 .exp-num h2.num {
+    font-size: 2rem !important;
+  }
+  
+  .tc-experience-style1 .info h3 {
+    font-size: 1.5rem !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .tc-experience-style1 .text {
+    font-size: 0.75rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 8px !important;
+  }
+  
+  /* Mission & Vision section */
+  .tc-services-style1 .title {
+    margin-bottom: 30px !important;
+  }
+  
+  .tc-services-style1 .title h2 {
+    font-size: 1.6rem !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .tc-services-style1 .title p {
+    font-size: 0.8rem !important;
+  }
+  
+  .tc-services-style1 .service-card {
+    padding: 15px !important;
+    margin-bottom: 18px !important;
+  }
+  
+  .tc-services-style1 .service-card .icon {
+    margin-bottom: 10px !important;
+  }
+  
+  .tc-services-style1 .service-card .icon i {
+    font-size: 1.8rem !important;
+  }
+  
+  .tc-services-style1 .service-card h5 {
+    font-size: 1.2rem !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .tc-services-style1 .service-card .text {
+    font-size: 0.75rem !important;
+    line-height: 1.6 !important;
+  }
+  
+  /* Values section */
+  .tc-process-style1 .title {
+    margin-bottom: 35px !important;
+  }
+  
+  .tc-process-style1 .title h2 {
+    font-size: 1.6rem !important;
+  }
+  
+  .tc-process-style1 .text-center {
+    margin-bottom: 20px !important;
+  }
+  
+  .tc-process-style1 .text-center .icon {
+    margin-bottom: 8px !important;
+  }
+  
+  .tc-process-style1 .text-center .icon i {
+    font-size: 1.8rem !important;
+  }
+  
+  .tc-process-style1 .text-center h5 {
+    font-size: 0.9rem !important;
+    margin-bottom: 4px !important;
+  }
+  
+  .tc-process-style1 .text-center p {
+    font-size: 0.65rem !important;
+    line-height: 1.5 !important;
+  }
+  
+  /* Team section */
+  .tc-team-style1 .mb-80 {
+    margin-bottom: 30px !important;
+  }
+  
+  .tc-team-style1 .mb-80 h2 {
+    font-size: 1.6rem !important;
+  }
+  
+  .tc-team-style1 .team-card {
+    margin-bottom: 10px !important;
+  }
+  
+  .tc-team-style1 .team-card .title {
+    font-size: 0.75rem !important;
+    line-height: 1.3 !important;
+    padding: 5px !important;
+  }
+  
+  .tc-team-style1 .numbers {
+    margin-top: 25px !important;
+  }
+  
+  .tc-team-style1 .number-card {
+    margin-bottom: 15px !important;
+    padding: 12px !important;
+  }
+  
+  .tc-team-style1 .number-card h3 {
+    font-size: 1.8rem !important;
+  }
+  
+  .tc-team-style1 .number-card span {
+    font-size: 1.8rem !important;
+  }
+  
+  .tc-team-style1 .number-card p {
+    font-size: 0.75rem !important;
+    line-height: 1.4 !important;
+    margin-top: 5px !important;
+  }
+  
+  /* Chat section */
+  .tc-chat-style1 .content {
+    padding: 25px 10px !important;
+  }
+  
+  .tc-chat-style1 .xl-text {
+    font-size: 1.3rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .tc-chat-style1 h5 {
+    font-size: 1rem !important;
+    margin-bottom: 18px !important;
+    line-height: 1.4 !important;
+  }
+  
+  .tc-chat-style1 .butn {
+    font-size: 0.8rem !important;
+    padding: 6px 12px !important;
   }
 }
 

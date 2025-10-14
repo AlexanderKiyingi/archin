@@ -131,9 +131,6 @@ if ($settings_result) {
                         </li>
                     </ul>
                     <div class="nav-side">
-                        <a href="#" class="icon ms-5 fsz-21">
-                            <span> <i class="la la-search"></i> </span>
-                        </a>
                         <a href="cms/login.php" class="butn border rounded-pill ms-3 hover-bg-orange1" target="_blank">
                             <span> <i class="la la-user me-2"></i> Login </span>
                         </a>

@@ -111,9 +111,6 @@
                             <span> <i class="la la-shopping-cart"></i> </span>
                             <span class="cart-badge badge bg-orange1 rounded-pill position-absolute" id="cartCount">0</span>
                         </a>
-                        <a href="#" class="icon ms-3 fsz-21">
-                            <span> <i class="la la-search"></i> </span>
-                        </a>
                         <a href="cms/login.php" class="butn border rounded-pill ms-3 hover-bg-orange1" target="_blank">
                             <span> <i class="la la-user me-2"></i> Login </span>
                         </a>

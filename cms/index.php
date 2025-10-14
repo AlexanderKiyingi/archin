@@ -37,9 +37,9 @@ include 'includes/header.php';
 ?>
 
 <!-- Statistics Cards -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+<div class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
     <!-- Services Card -->
-    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
+    <div class="card-mobile bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-blue-100 text-sm uppercase">Services</p>
@@ -55,7 +55,7 @@ include 'includes/header.php';
     </div>
     
     <!-- Projects Card -->
-    <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-lg p-6 text-white">
+    <div class="card-mobile bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-lg p-6 text-white">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-green-100 text-sm uppercase">Projects</p>
@@ -71,7 +71,7 @@ include 'includes/header.php';
     </div>
     
     <!-- Team Card -->
-    <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
+    <div class="card-mobile bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-purple-100 text-sm uppercase">Team Members</p>
@@ -87,7 +87,7 @@ include 'includes/header.php';
     </div>
     
     <!-- Contact Forms Card -->
-    <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-lg p-6 text-white">
+    <div class="card-mobile bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-lg p-6 text-white">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-orange-100 text-sm uppercase">New Messages</p>
@@ -104,8 +104,8 @@ include 'includes/header.php';
 </div>
 
 <!-- Secondary Stats -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-    <div class="bg-white rounded-lg shadow p-6">
+<div class="stats-grid grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="card-mobile bg-white rounded-lg shadow p-6">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-gray-600 text-sm">Blog Posts</p>
@@ -115,7 +115,7 @@ include 'includes/header.php';
         </div>
     </div>
     
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="card-mobile bg-white rounded-lg shadow p-6">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-gray-600 text-sm">Testimonials</p>
@@ -125,7 +125,7 @@ include 'includes/header.php';
         </div>
     </div>
     
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="card-mobile bg-white rounded-lg shadow p-6">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-gray-600 text-sm">Awards</p>
@@ -139,7 +139,7 @@ include 'includes/header.php';
 <!-- Recent Activity -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <!-- Recent Contact Submissions -->
-    <div class="bg-white rounded-lg shadow">
+    <div class="card-mobile bg-white rounded-lg shadow">
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-semibold text-gray-800">Recent Contact Submissions</h3>
         </div>
@@ -174,7 +174,7 @@ include 'includes/header.php';
     </div>
     
     <!-- Recent Blog Posts -->
-    <div class="bg-white rounded-lg shadow">
+    <div class="card-mobile bg-white rounded-lg shadow">
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-semibold text-gray-800">Recent Blog Posts</h3>
         </div>

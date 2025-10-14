@@ -117,9 +117,6 @@
                         </li>
                     </ul>
                     <div class="nav-side">
-                        <a href="#" class="icon ms-5 fsz-21">
-                            <span> <i class="la la-search"></i> </span>
-                        </a>
                         <a href="cms/login.php" class="butn border rounded-pill ms-3 hover-bg-orange1" target="_blank">
                             <span> <i class="la la-user me-2"></i> Login </span>
                         </a>
@@ -158,7 +155,7 @@
                 <div class="container-fluid">
                     <div class="row justify-content-between align-items-center">
                         <div class="col-lg-2">
-                            <div class="exp-num mb-100 wow zoomIn" data-wow-delay="0.3s">
+                            <div class="exp-num wow zoomIn" data-wow-delay="0.3s">
                                 <h5 class="fsz-18 text-uppercase"> years of <br> experience </h5>
                                 <h2 class="num"> 15 </h2>
                             </div>
@@ -193,7 +190,7 @@
             <section class="tc-services-style1">
                 <div class="content section-padding section-padding-x">
                     <div class="container">
-                        <div class="title mb-80 text-center">
+                        <div class="title text-center">
                             <h2 class="fsz-45 mb-30 wow fadeInUp"> Our Mission & Vision </h2>
                             <p class="color-666 wow fadeInUp" data-wow-delay="0.2s"> Guiding principles that shape our approach to architecture </p>
                         </div>
@@ -280,7 +277,7 @@
             <!--  Start team  -->
             <section class="tc-team-style1">
                 <div class="container">
-                    <div class="mb-80 js-splittext-lines">
+                    <div class="js-splittext-lines">
                         <h2 class="fsz-45"> Meet our top-notch experts </h2>
                     </div>
                     <div class="members">
@@ -499,6 +496,34 @@
 
     <!-- ===== home scripts ===== -->
     <script src="assets/main.js"></script>
+
+    <!-- Ensure WOW animations don't leave empty spaces -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize WOW.js if it exists
+            if (typeof WOW !== 'undefined') {
+                new WOW().init();
+            }
+            
+            // Fallback: ensure all animated elements are visible
+            setTimeout(function() {
+                const animatedElements = document.querySelectorAll('.wow');
+                animatedElements.forEach(function(element) {
+                    element.style.visibility = 'visible';
+                    element.style.opacity = '1';
+                });
+            }, 1000);
+            
+            // Additional fallback after page load
+            window.addEventListener('load', function() {
+                const animatedElements = document.querySelectorAll('.wow');
+                animatedElements.forEach(function(element) {
+                    element.style.visibility = 'visible';
+                    element.style.opacity = '1';
+                });
+            });
+        });
+    </script>
 
 </body>
 </html>

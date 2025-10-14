@@ -168,9 +168,6 @@ $current_year = date('Y');
                         <span> <i class="la la-shopping-cart"></i> </span>
                         <span class="cart-badge badge bg-orange1 rounded-pill position-absolute" id="cartCount">0</span>
                     </a>
-                    <a href="#" class="icon ms-3 fsz-21">
-                        <span> <i class="la la-search"></i> </span>
-                    </a>
                     <a href="cms/login.php" class="butn border rounded-pill ms-3 hover-bg-orange1" target="_blank">
                         <span> <i class="la la-user me-2"></i> Login </span>
                     </a>
@@ -754,71 +751,86 @@ $current_year = date('Y');
                         <h2 class="fsz-45"> Meet our top-notch experts </h2>
                     </div>
                     <div class="members">
-                        <div class="row">
-                            <div class="col-lg-2">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-4">
                                 <div class="member-colmn">
                                     <a href="#" class="team-card wow zoomIn">
                                         <div class="img">
-                                            <img src="assets/img/home1/team/team1.jpg" alt="" class="img-cover">
+                                            <img src="assets/img/home1/team/team1.jpg" alt="John Henderson" class="img-cover">
                                         </div>
-                                        <h5 class="title"> jhon <br> handerson </h5>
-                                    </a>
-                                    <a href="#" class="team-card wow zoomIn" data-wow-delay="0.1s">
-                                        <div class="img">
-                                            <img src="assets/img/home1/team/team2.jpg" alt="" class="img-cover">
-                                        </div>
-                                        <h5 class="title"> jhon <br> handerson </h5>
+                                        <h5 class="title">John<br>Henderson</h5>
+                                        <p class="position">Senior Architect</p>
                                     </a>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-4">
+                                <div class="member-colmn">
+                                    <a href="#" class="team-card wow zoomIn" data-wow-delay="0.1s">
+                                        <div class="img">
+                                            <img src="assets/img/home1/team/team2.jpg" alt="Sarah Johnson" class="img-cover">
+                                        </div>
+                                        <h5 class="title">Sarah<br>Johnson</h5>
+                                        <p class="position">Interior Designer</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-4">
                                 <div class="member-colmn">
                                     <a href="#" class="team-card wow zoomIn" data-wow-delay="0.2s">
                                         <div class="img">
-                                            <img src="assets/img/home1/team/team3.jpg" alt="" class="img-cover">
+                                            <img src="assets/img/home1/team/team3.jpg" alt="Michael Chen" class="img-cover">
                                         </div>
-                                        <h5 class="title"> jhon <br> handerson </h5>
+                                        <h5 class="title">Michael<br>Chen</h5>
+                                        <p class="position">Project Manager</p>
                                     </a>
                                 </div>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-4">
                                 <div class="member-colmn">
                                     <a href="#" class="team-card wow zoomIn" data-wow-delay="0.3s">
                                         <div class="img">
-                                            <img src="assets/img/home1/team/team4.jpg" alt="" class="img-cover">
+                                            <img src="assets/img/home1/team/team4.jpg" alt="Emily Rodriguez" class="img-cover">
                                         </div>
-                                        <h5 class="title"> jhon <br> handerson </h5>
-                                    </a>
-                                    <a href="#" class="team-card wow zoomIn" data-wow-delay="0.4s">
-                                        <div class="img">
-                                            <img src="assets/img/home1/team/team5.jpg" alt="" class="img-cover">
-                                        </div>
-                                        <h5 class="title"> jhon <br> handerson </h5>
+                                        <h5 class="title">Emily<br>Rodriguez</h5>
+                                        <p class="position">Design Consultant</p>
                                     </a>
                                 </div>
                             </div>
-                            <div class="col-lg-2 order-last order-lg-0">
+                            <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-4">
+                                <div class="member-colmn">
+                                    <a href="#" class="team-card wow zoomIn" data-wow-delay="0.4s">
+                                        <div class="img">
+                                            <img src="assets/img/home1/team/team5.jpg" alt="David Kim" class="img-cover">
+                                        </div>
+                                        <h5 class="title">David<br>Kim</h5>
+                                        <p class="position">Structural Engineer</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-4">
                                 <div class="member-colmn">
                                     <a href="#" class="team-card wow zoomIn" data-wow-delay="0.5s">
                                         <div class="img">
-                                            <img src="assets/img/home1/team/team6.jpg" alt="" class="img-cover">
+                                            <img src="assets/img/home1/team/team6.jpg" alt="Lisa Anderson" class="img-cover">
                                         </div>
-                                        <h5 class="title"> jhon <br> handerson </h5>
-                                    </a>
-                                    <a href="#" class="team-card team-text wow zoomIn" data-wow-delay="0.6s">
-                                        <div class="img">
-                                            <h5 class="title"> <div class="con"> <span> See All Our <br> Member </span> <span class="arrow"> <i class="ti-arrow-top-right"></i> </span> </div> </h5>
-                                        </div>
+                                        <h5 class="title">Lisa<br>Anderson</h5>
+                                        <p class="position">Creative Director</p>
                                     </a>
                                 </div>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-4">
                                 <div class="member-colmn">
-                                    <a href="#" class="team-card wow zoomIn" data-wow-delay="0.7s">
-                                        <div class="img">
-                                            <img src="assets/img/home1/team/team7.jpg" alt="" class="img-cover">
+                                    <a href="careers.php" class="team-card team-text wow zoomIn" data-wow-delay="0.6s">
+                                        <div class="img join-team-img">
+                                            <div class="join-team-content">
+                                                <h5 class="title">
+                                                    <span>Join Our<br>Team</span>
+                                                    <span class="arrow">
+                                                        <i class="ti-arrow-top-right"></i>
+                                                    </span>
+                                                </h5>
+                                            </div>
                                         </div>
-                                        <h5 class="title"> jhon <br> handerson </h5>
                                     </a>
                                 </div>
                             </div>

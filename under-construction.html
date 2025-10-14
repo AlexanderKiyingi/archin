@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Site Under Construction - FlipAvenue Limited</title>
+    
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* Animated background particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .particle:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .particle:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            left: 20%;
+            animation-delay: 2s;
+        }
+        
+        .particle:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            left: 35%;
+            animation-delay: 4s;
+        }
+        
+        .particle:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            left: 50%;
+            animation-delay: 1s;
+        }
+        
+        .particle:nth-child(5) {
+            width: 90px;
+            height: 90px;
+            left: 70%;
+            animation-delay: 3s;
+        }
+        
+        .particle:nth-child(6) {
+            width: 70px;
+            height: 70px;
+            left: 85%;
+            animation-delay: 5s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Main container */
+        .construction-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            width: 90%;
+            margin: 20px;
+            animation: slideIn 1s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Logo and branding */
+        .logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #ff6b6b, #ffa726);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .logo i {
+            font-size: 50px;
+            color: white;
+        }
+        
+        /* Typography */
+        .main-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+        
+        /* Countdown timer */
+        .countdown-container {
+            margin: 40px 0;
+        }
+        
+        .countdown-title {
+            font-size: 1.5rem;
+            color: #34495e;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        
+        .countdown-item {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px 20px;
+            border-radius: 15px;
+            min-width: 120px;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .countdown-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .countdown-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .countdown-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Progress bar */
+        .progress-container {
+            margin: 30px 0;
+        }
+        
+        .progress {
+            height: 8px;
+            border-radius: 10px;
+            background: rgba(102, 126, 234, 0.2);
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: width 1s ease;
+            animation: progressGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes progressGlow {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+            }
+        }
+        
+        /* Contact info */
+        .contact-info {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        
+        .contact-title {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+            color: #34495e;
+        }
+        
+        .contact-item i {
+            margin-right: 10px;
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+        
+        .contact-item a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .contact-item a:hover {
+            color: #764ba2;
+        }
+        
+        /* Social links */
+        .social-links {
+            margin-top: 30px;
+        }
+        
+        .social-link {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            line-height: 50px;
+            text-align: center;
+            margin: 0 10px;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            min-width: 50px;
+            min-height: 50px;
+        }
+        
+        .social-link:hover,
+        .social-link:active,
+        .social-link:focus {
+            transform: translateY(-3px);
+            color: white;
+            outline: none;
+        }
+        
+        /* Enhanced Responsive design */
+        
+        /* Large tablets and small desktops */
+        @media (max-width: 1024px) {
+            .construction-container {
+                padding: 50px 30px;
+                max-width: 700px;
+            }
+            
+            .main-title {
+                font-size: 3rem;
+            }
+            
+            .countdown-item {
+                min-width: 110px;
+                padding: 22px 18px;
+            }
+            
+            .countdown-number {
+                font-size: 2.2rem;
+            }
+        }
+        
+        /* Tablets */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .construction-container {
+                padding: 40px 25px;
+                margin: 10px;
+                max-width: 90%;
+            }
+            
+            .logo {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 25px;
+            }
+            
+            .logo i {
+                font-size: 40px;
+            }
+            
+            .main-title {
+                font-size: 2.5rem;
+                margin-bottom: 15px;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+                margin-bottom: 35px;
+            }
+            
+            .countdown-title {
+                font-size: 1.3rem;
+                margin-bottom: 25px;
+            }
+            
+            .countdown {
+                gap: 15px;
+                margin-bottom: 35px;
+            }
+            
+            .countdown-item {
+                min-width: 100px;
+                padding: 20px 15px;
+            }
+            
+            .countdown-number {
+                font-size: 2rem;
+            }
+            
+            .countdown-label {
+                font-size: 0.8rem;
+            }
+            
+            .progress-container {
+                margin: 25px 0;
+            }
+            
+            .contact-info {
+                padding: 25px 20px;
+                margin-top: 35px;
+            }
+            
+            .contact-title {
+                font-size: 1.1rem;
+                margin-bottom: 15px;
+            }
+            
+            .contact-item {
+                font-size: 0.95rem;
+                margin: 8px 0;
+            }
+            
+            .social-links {
+                margin-top: 25px;
+            }
+            
+            .social-link {
+                width: 45px;
+                height: 45px;
+                line-height: 45px;
+                margin: 0 8px;
+            }
+        }
+        
+        /* Mobile landscape and small tablets */
+        @media (max-width: 640px) {
+            .construction-container {
+                padding: 35px 20px;
+                margin: 5px;
+                max-width: 95%;
+            }
+            
+            .main-title {
+                font-size: 2.2rem;
+            }
+            
+            .countdown {
+                gap: 12px;
+            }
+            
+            .countdown-item {
+                min-width: 90px;
+                padding: 18px 12px;
+            }
+            
+            .countdown-number {
+                font-size: 1.8rem;
+            }
+            
+            .countdown-label {
+                font-size: 0.75rem;
+            }
+        }
+        
+        /* Mobile portrait */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .construction-container {
+                padding: 30px 15px;
+                margin: 5px;
+                max-width: 98%;
+                border-radius: 15px;
+            }
+            
+            .logo {
+                width: 80px;
+                height: 80px;
+                margin-bottom: 20px;
+            }
+            
+            .logo i {
+                font-size: 35px;
+            }
+            
+            .main-title {
+                font-size: 1.8rem;
+                margin-bottom: 12px;
+                line-height: 1.2;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+                margin-bottom: 30px;
+                line-height: 1.4;
+            }
+            
+            .countdown-title {
+                font-size: 1.2rem;
+                margin-bottom: 20px;
+            }
+            
+            .countdown {
+                gap: 8px;
+                margin-bottom: 25px;
+                justify-content: center;
+            }
+            
+            .countdown-item {
+                min-width: 75px;
+                padding: 15px 8px;
+                border-radius: 12px;
+            }
+            
+            .countdown-number {
+                font-size: 1.5rem;
+                margin-bottom: 3px;
+            }
+            
+            .countdown-label {
+                font-size: 0.7rem;
+                letter-spacing: 0.5px;
+            }
+            
+            .progress-container {
+                margin: 20px 0;
+            }
+            
+            .progress {
+                height: 6px;
+            }
+            
+            .contact-info {
+                padding: 20px 15px;
+                margin-top: 25px;
+                border-radius: 12px;
+            }
+            
+            .contact-title {
+                font-size: 1rem;
+                margin-bottom: 12px;
+            }
+            
+            .contact-item {
+                font-size: 0.9rem;
+                margin: 6px 0;
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .contact-item i {
+                margin-right: 0;
+                margin-bottom: 4px;
+                font-size: 1rem;
+            }
+            
+            .social-links {
+                margin-top: 20px;
+            }
+            
+            .social-link {
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                margin: 0 6px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Very small mobile devices */
+        @media (max-width: 360px) {
+            .construction-container {
+                padding: 25px 12px;
+                margin: 2px;
+                max-width: 99%;
+            }
+            
+            .main-title {
+                font-size: 1.6rem;
+            }
+            
+            .subtitle {
+                font-size: 0.95rem;
+            }
+            
+            .countdown {
+                gap: 6px;
+            }
+            
+            .countdown-item {
+                min-width: 65px;
+                padding: 12px 6px;
+            }
+            
+            .countdown-number {
+                font-size: 1.3rem;
+            }
+            
+            .countdown-label {
+                font-size: 0.65rem;
+            }
+            
+            .contact-info {
+                padding: 15px 12px;
+            }
+            
+            .social-link {
+                width: 35px;
+                height: 35px;
+                line-height: 35px;
+                margin: 0 4px;
+            }
+        }
+        
+        /* Landscape orientation adjustments */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .construction-container {
+                padding: 20px 30px;
+                margin: 10px;
+            }
+            
+            .logo {
+                width: 70px;
+                height: 70px;
+                margin-bottom: 15px;
+            }
+            
+            .logo i {
+                font-size: 30px;
+            }
+            
+            .main-title {
+                font-size: 2rem;
+                margin-bottom: 10px;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+                margin-bottom: 20px;
+            }
+            
+            .countdown {
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+            
+            .countdown-item {
+                min-width: 80px;
+                padding: 12px 8px;
+            }
+            
+            .countdown-number {
+                font-size: 1.5rem;
+            }
+            
+            .countdown-label {
+                font-size: 0.7rem;
+            }
+            
+            .contact-info {
+                padding: 15px 20px;
+                margin-top: 20px;
+            }
+            
+            .social-links {
+                margin-top: 15px;
+            }
+        }
+        
+        /* Loading animation */
+        .loading-dots {
+            display: inline-block;
+            margin-left: 10px;
+        }
+        
+        .loading-dots span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #667eea;
+            margin: 0 2px;
+            animation: loadingDots 1.4s ease-in-out infinite;
+        }
+        
+        .loading-dots span:nth-child(1) { animation-delay: 0s; }
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes loadingDots {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background particles -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    
+    <!-- Main construction page -->
+    <div class="construction-container">
+        <!-- Logo -->
+        <div class="logo">
+            <i class="fas fa-hammer"></i>
+        </div>
+        
+        <!-- Main title -->
+        <h1 class="main-title">Under Construction</h1>
+        <p class="subtitle">We're building something amazing!<span class="loading-dots"><span></span><span></span><span></span></span></p>
+        
+        <!-- Countdown timer -->
+        <div class="countdown-container">
+            <h3 class="countdown-title">Launching In:</h3>
+            <div class="countdown" id="countdown">
+                <div class="countdown-item">
+                    <span class="countdown-number" id="hours">00</span>
+                    <span class="countdown-label">Hours</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="minutes">00</span>
+                    <span class="countdown-label">Minutes</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="seconds">00</span>
+                    <span class="countdown-label">Seconds</span>
+                </div>
+            </div>
+            
+            <!-- Progress bar -->
+            <div class="progress-container">
+                <div class="progress">
+                    <div class="progress-bar" id="progressBar" role="progressbar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact information -->
+        <div class="contact-info">
+            <h4 class="contact-title">Get In Touch</h4>
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Kataza Close, Bugolobi, Kampala, Uganda</span>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-phone"></i>
+                <a href="tel:+256701380251">+256 701 380 251</a>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <a href="mailto:info@flipavenueltd.com">info@flipavenueltd.com</a>
+            </div>
+        </div>
+        
+        <!-- Social links -->
+        <div class="social-links">
+            <a href="#" class="social-link">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social-link">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="social-link">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="social-link">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Countdown timer functionality
+        // Set target date once (24 hours from when page loads)
+        const targetTime = new Date().getTime() + (24 * 60 * 60 * 1000);
+        
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetTime - now;
+            
+            // Calculate time remaining
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            // Update the countdown display
+            document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
+            document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
+            document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
+            
+            // Update progress bar (0% at start, 100% when countdown reaches 0)
+            const totalTime = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+            const elapsed = totalTime - distance;
+            const progress = (elapsed / totalTime) * 100;
+            document.getElementById("progressBar").style.width = progress + "%";
+            
+            // If countdown is finished
+            if (distance < 0) {
+                document.getElementById("hours").innerHTML = "00";
+                document.getElementById("minutes").innerHTML = "00";
+                document.getElementById("seconds").innerHTML = "00";
+                document.getElementById("progressBar").style.width = "100%";
+                
+                // Reset countdown for another 24 hours
+                setTimeout(() => {
+                    // You can redirect to main site or show a different message
+                    // window.location.href = "index.php";
+                }, 1000);
+            }
+        }
+        
+        // Initialize and start countdown
+        function initializeCountdown() {
+            // Run countdown immediately
+            updateCountdown();
+            // Update every second
+            setInterval(updateCountdown, 1000);
+        }
+        
+        // Start countdown when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeCountdown);
+        } else {
+            // DOM is already ready
+            initializeCountdown();
+        }
+        
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to countdown items
+            const countdownItems = document.querySelectorAll('.countdown-item');
+            countdownItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px) scale(1.05)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+            
+            // Add click effect to social links
+            const socialLinks = document.querySelectorAll('.social-link');
+            socialLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Create ripple effect
+                    const ripple = document.createElement('span');
+                    ripple.style.position = 'absolute';
+                    ripple.style.borderRadius = '50%';
+                    ripple.style.background = 'rgba(255, 255, 255, 0.6)';
+                    ripple.style.transform = 'scale(0)';
+                    ripple.style.animation = 'ripple 0.6s linear';
+                    ripple.style.left = '50%';
+                    ripple.style.top = '50%';
+                    ripple.style.width = '20px';
+                    ripple.style.height = '20px';
+                    ripple.style.marginLeft = '-10px';
+                    ripple.style.marginTop = '-10px';
+                    
+                    this.style.position = 'relative';
+                    this.style.overflow = 'hidden';
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+            
+            // Add CSS for ripple animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes ripple {
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+        
+        // Add keyboard accessibility
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                const focused = document.activeElement;
+                if (focused.classList.contains('social-link')) {
+                    focused.click();
+                }
+            }
+        });
+        
+        // Add some fun animations on page load
+        window.addEventListener('load', function() {
+            // Animate countdown items one by one
+            const countdownItems = document.querySelectorAll('.countdown-item');
+            countdownItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateY(20px)';
+                    item.style.transition = 'all 0.5s ease';
+                    
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>
