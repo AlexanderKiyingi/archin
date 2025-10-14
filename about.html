@@ -277,78 +277,38 @@
             <!--  Start team  -->
             <section class="tc-team-style1">
                 <div class="container">
-                    <div class="js-splittext-lines">
+                    <div class="js-splittext-lines mb-80">
                         <h2 class="fsz-45"> Meet our top-notch experts </h2>
                     </div>
-                    <div class="members">
-                        <div class="row">
-                            <div class="col-lg-2">
-                                <div class="member-colmn">
-                                    <a href="#" class="team-card wow zoomIn">
-                                        <div class="img">
-                                            <img src="assets/img/home1/team/team1.jpg" alt="" class="img-cover">
-                                        </div>
-                                        <h5 class="title"> John <br> Henderson </h5>
-                                    </a>
-                                    <a href="#" class="team-card wow zoomIn" data-wow-delay="0.1s">
-                                        <div class="img">
-                                            <img src="assets/img/home1/team/team2.jpg" alt="" class="img-cover">
-                                        </div>
-                                        <h5 class="title"> Sarah <br> Johnson </h5>
-                                    </a>
-                                </div>
+                    <div class="team-grid">
+                        <div class="team-member-card wow zoomIn">
+                            <div class="team-image-container">
+                                <img src="assets/img/home1/team/team1.jpg" alt="John Henderson">
                             </div>
-                            <div class="col-lg-4">
-                                <div class="member-colmn">
-                                    <a href="#" class="team-card wow zoomIn" data-wow-delay="0.2s">
-                                        <div class="img">
-                                            <img src="assets/img/home1/team/team3.jpg" alt="" class="img-cover">
-                                        </div>
-                                        <h5 class="title"> Michael <br> Rodriguez </h5>
-                                    </a>
-                                </div>
+                            <div class="team-member-info">
+                                <h5 class="team-member-name">John<br>Henderson</h5>
+                                <p class="team-member-position">Senior Architect</p>
                             </div>
-                            <div class="col-lg-2">
-                                <div class="member-colmn">
-                                    <a href="#" class="team-card wow zoomIn" data-wow-delay="0.3s">
-                                        <div class="img">
-                                            <img src="assets/img/home1/team/team4.jpg" alt="" class="img-cover">
-                                        </div>
-                                        <h5 class="title"> Emily <br> Chen </h5>
-                                    </a>
-                                    <a href="#" class="team-card wow zoomIn" data-wow-delay="0.4s">
-                                        <div class="img">
-                                            <img src="assets/img/home1/team/team5.jpg" alt="" class="img-cover">
-                                        </div>
-                                        <h5 class="title"> David <br> Williams </h5>
-                                    </a>
-                                </div>
+                        </div>
+                        <div class="team-member-card wow zoomIn" data-wow-delay="0.2s">
+                            <div class="team-image-container">
+                                <img src="assets/img/home1/team/team2.jpg" alt="Sarah Johnson">
                             </div>
-                            <div class="col-lg-2 order-last order-lg-0">
-                                <div class="member-colmn">
-                                    <a href="#" class="team-card wow zoomIn" data-wow-delay="0.5s">
-                                        <div class="img">
-                                            <img src="assets/img/home1/team/team6.jpg" alt="" class="img-cover">
-                                        </div>
-                                        <h5 class="title"> Lisa <br> Anderson </h5>
-                                    </a>
-                                    <a href="contact.php" class="team-card team-text wow zoomIn" data-wow-delay="0.6s">
-                                        <div class="img">
-                                            <h5 class="title"> <div class="con"> <span> Join Our <br> Team </span> <span class="arrow"> <i class="ti-arrow-top-right"></i> </span> </div> </h5>
-                                        </div>
-                                    </a>
-                                </div>
+                            <div class="team-member-info">
+                                <h5 class="team-member-name">Sarah<br>Johnson</h5>
+                                <p class="team-member-position">Interior Designer</p>
                             </div>
-                            <div class="col-lg-2">
-                                <div class="member-colmn">
-                                    <a href="#" class="team-card wow zoomIn" data-wow-delay="0.7s">
-                                        <div class="img">
-                                            <img src="assets/img/home1/team/team7.jpg" alt="" class="img-cover">
-                                        </div>
-                                        <h5 class="title"> James <br> Taylor </h5>
-                                    </a>
+                        </div>
+                        <div class="team-member-card wow zoomIn" data-wow-delay="0.4s">
+                            <a href="careers.php" class="join-team-container">
+                                <div class="join-team-text">
+                                    <div>JOIN OUR</div>
+                                    <div>TEAM</div>
+                                    <div class="join-team-arrow">
+                                        <i class="ti-arrow-top-right"></i>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                     <div class="numbers">
@@ -497,22 +457,57 @@
     <!-- ===== home scripts ===== -->
     <script src="assets/main.js"></script>
 
-    <!-- Ensure WOW animations don't leave empty spaces -->
+    <!-- Enhanced WOW animations with mobile optimization -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize WOW.js if it exists
+            // Initialize WOW.js with mobile support
             if (typeof WOW !== 'undefined') {
-                new WOW().init();
+                var wow = new WOW({
+                    boxClass: 'wow',
+                    animateClass: 'animated',
+                    offset: 50, // Reduced for better mobile experience
+                    mobile: true,
+                    live: false
+                });
+                wow.init();
             }
+            
+            // Mobile-specific animation enhancements
+            var isMobile = window.innerWidth <= 768;
             
             // Fallback: ensure all animated elements are visible
             setTimeout(function() {
                 const animatedElements = document.querySelectorAll('.wow');
                 animatedElements.forEach(function(element) {
-                    element.style.visibility = 'visible';
-                    element.style.opacity = '1';
+                    // Force visibility on mobile for better UX
+                    if (isMobile) {
+                        element.style.visibility = 'visible';
+                        element.style.opacity = '1';
+                        element.style.transform = 'none';
+                    }
+                    
+                    // Ensure animation class is applied
+                    if (!element.classList.contains('animated')) {
+                        element.classList.add('animated');
+                    }
                 });
-            }, 1000);
+            }, isMobile ? 500 : 1000);
+            
+            // Handle orientation changes and resize
+            window.addEventListener('resize', function() {
+                var newIsMobile = window.innerWidth <= 768;
+                if (newIsMobile !== isMobile) {
+                    isMobile = newIsMobile;
+                    // Re-ensure visibility on orientation change
+                    setTimeout(function() {
+                        const animatedElements = document.querySelectorAll('.wow');
+                        animatedElements.forEach(function(element) {
+                            element.style.visibility = 'visible';
+                            element.style.opacity = '1';
+                        });
+                    }, 100);
+                }
+            });
             
             // Additional fallback after page load
             window.addEventListener('load', function() {

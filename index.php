@@ -974,5 +974,68 @@ $current_year = date('Y');
         document.addEventListener('DOMContentLoaded', updateCartCount);
     </script>
 
+    <!-- Enhanced WOW animations with mobile optimization -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize WOW.js with mobile support
+            if (typeof WOW !== 'undefined') {
+                var wow = new WOW({
+                    boxClass: 'wow',
+                    animateClass: 'animated',
+                    offset: 50, // Reduced for better mobile experience
+                    mobile: true,
+                    live: false
+                });
+                wow.init();
+            }
+            
+            // Mobile-specific animation enhancements
+            var isMobile = window.innerWidth <= 768;
+            
+            // Fallback: ensure all animated elements are visible
+            setTimeout(function() {
+                const animatedElements = document.querySelectorAll('.wow');
+                animatedElements.forEach(function(element) {
+                    // Force visibility on mobile for better UX
+                    if (isMobile) {
+                        element.style.visibility = 'visible';
+                        element.style.opacity = '1';
+                        element.style.transform = 'none';
+                    }
+                    
+                    // Ensure animation class is applied
+                    if (!element.classList.contains('animated')) {
+                        element.classList.add('animated');
+                    }
+                });
+            }, isMobile ? 500 : 1000);
+            
+            // Handle orientation changes and resize
+            window.addEventListener('resize', function() {
+                var newIsMobile = window.innerWidth <= 768;
+                if (newIsMobile !== isMobile) {
+                    isMobile = newIsMobile;
+                    // Re-ensure visibility on orientation change
+                    setTimeout(function() {
+                        const animatedElements = document.querySelectorAll('.wow');
+                        animatedElements.forEach(function(element) {
+                            element.style.visibility = 'visible';
+                            element.style.opacity = '1';
+                        });
+                    }, 100);
+                }
+            });
+            
+            // Additional fallback after page load
+            window.addEventListener('load', function() {
+                const animatedElements = document.querySelectorAll('.wow');
+                animatedElements.forEach(function(element) {
+                    element.style.visibility = 'visible';
+                    element.style.opacity = '1';
+                });
+            });
+        });
+    </script>
+
 </body>
 </html>

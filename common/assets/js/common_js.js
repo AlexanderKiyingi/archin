@@ -5,8 +5,8 @@ $( function() {
     wow = new WOW({
         boxClass: 'wow',
         animateClass: 'animated',
-        offset: 200,
-        mobile: false,
+        offset: 100,
+        mobile: true,
         live: false
     });
     wow.init();

@@ -610,6 +610,60 @@ if ($settings_result) {
         });
     </script>
 
+    <!-- Enhanced WOW animations with mobile optimization -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof WOW !== 'undefined') {
+                var wow = new WOW({
+                    boxClass: 'wow',
+                    animateClass: 'animated',
+                    offset: 50,
+                    mobile: true,
+                    live: false
+                });
+                wow.init();
+            }
+            
+            var isMobile = window.innerWidth <= 768;
+            
+            setTimeout(function() {
+                const animatedElements = document.querySelectorAll('.wow');
+                animatedElements.forEach(function(element) {
+                    if (isMobile) {
+                        element.style.visibility = 'visible';
+                        element.style.opacity = '1';
+                        element.style.transform = 'none';
+                    }
+                    if (!element.classList.contains('animated')) {
+                        element.classList.add('animated');
+                    }
+                });
+            }, isMobile ? 500 : 1000);
+            
+            window.addEventListener('resize', function() {
+                var newIsMobile = window.innerWidth <= 768;
+                if (newIsMobile !== isMobile) {
+                    isMobile = newIsMobile;
+                    setTimeout(function() {
+                        const animatedElements = document.querySelectorAll('.wow');
+                        animatedElements.forEach(function(element) {
+                            element.style.visibility = 'visible';
+                            element.style.opacity = '1';
+                        });
+                    }, 100);
+                }
+            });
+            
+            window.addEventListener('load', function() {
+                const animatedElements = document.querySelectorAll('.wow');
+                animatedElements.forEach(function(element) {
+                    element.style.visibility = 'visible';
+                    element.style.opacity = '1';
+                });
+            });
+        });
+    </script>
+
 </body>
 </html>
 
