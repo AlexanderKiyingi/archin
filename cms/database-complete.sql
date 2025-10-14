@@ -3,8 +3,8 @@
 -- Last Updated: 2024 - Includes E-commerce & Flutterwave Integration
 -- Currency: UGX (Ugandan Shillings)
 
-CREATE DATABASE IF NOT EXISTS flipavenue_cms;
-USE flipavenue_cms;
+CREATE DATABASE IF NOT EXISTS u680675202_flipavenue_cms;
+USE u680675202_flipavenue_cms;
 
 -- ============================================
 -- CORE CMS TABLES

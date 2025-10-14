@@ -1,14 +1,6 @@
 <?php
-// Database connection
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'flipavenue_cms');
-
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// Include centralized database connection
+require_once 'cms/db_connect.php';
 
 // Include Flutterwave configuration
 require_once 'cms/flutterwave-config.php';

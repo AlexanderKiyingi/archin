@@ -4,11 +4,8 @@
  * Processes contact form submissions and saves to database
  */
 
-// Database configuration
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'flipavenue_cms');
+// Include centralized database connection
+require_once 'cms/db_connect.php';
 
 // Response headers
 header('Content-Type: application/json');

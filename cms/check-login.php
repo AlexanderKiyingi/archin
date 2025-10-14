@@ -32,7 +32,7 @@ ini_set('display_errors', 1);
 $host = 'localhost';
 $user = 'root';
 $pass = '';
-$dbname = 'flipavenue_cms';
+$dbname = 'u680675202_flipavenue_cms';
 
 echo "<h2>Step 1: Database Connection</h2>";
 

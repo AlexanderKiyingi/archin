@@ -16,7 +16,7 @@ echo "<h2>3. Direct Database Test</h2>";
 $host = 'localhost';
 $user = 'root';
 $pass = '';
-$db = 'flipavenue_cms';
+$db = 'u680675202_flipavenue_cms';
 
 echo "Connecting to MySQL...<br>";
 $conn = new mysqli($host, $user, $pass, $db);
