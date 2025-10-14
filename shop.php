@@ -61,7 +61,7 @@ $categories_result = $conn->query($categories_query);
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Shop - FlipAvenue</title>
     <meta name="description" content="Discover our collection of architectural products, design tools, and professional resources.">
     <meta name="keywords" content="architecture, design, products, tools, resources, shop">
@@ -190,14 +190,7 @@ $categories_result = $conn->query($categories_query);
             <div class="img">
                 <img src="assets/img/home1/head_slide2.png" alt="" class="img-cover">
             </div>
-            <div class="info section-padding-x pb-40">
-                <div class="row align-items-end gx-5">
-                    <div class="col-lg-8 offset-lg-2">
-                        <h1 class="js-title wow fadeInUp"> Shop </h1>
-                        <h5 class="fsz-30 mt-25 fw-400 wow fadeInUp" data-wow-delay="0.2s"> Architectural Products & Design Tools <br> for Professionals </h5>
-                    </div>
-                </div>
-            </div>
+            
         </header>
         <!--  End page header  -->
 

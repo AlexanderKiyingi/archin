@@ -24,7 +24,7 @@ $categories_result = $conn->query($categories_query);
     <!-- Metas -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="keywords" content="FlipAvenue, Architecture Portfolio, Projects, Uganda">
     <meta name="description" content="Explore FlipAvenue's portfolio of architectural projects including residential, commercial, and landscape designs.">
     <meta name="author" content="Flip Avenue Limited">
@@ -158,14 +158,7 @@ $categories_result = $conn->query($categories_query);
             <div class="img">
                 <img src="assets/img/home1/head_slide1.jpg" alt="" class="img-cover">
             </div>
-            <div class="info section-padding-x pb-70">
-                <div class="row align-items-end gx-5">
-                    <div class="col-lg-8 offset-lg-2 text-center">
-                        <h1 class="js-title wow fadeInUp"> Our Portfolio </h1>
-                        <h5 class="fsz-30 mt-30 fw-400 wow fadeInUp" data-wow-delay="0.2s"> Showcasing Excellence in <br> Architecture & Design </h5>
-                    </div>
-                </div>
-            </div>
+            
         </header>
         <!--  End page header  -->
 
