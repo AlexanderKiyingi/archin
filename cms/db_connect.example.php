@@ -7,10 +7,10 @@
  */
 
 // Database Configuration
-define('DB_HOST', 'localhost');              // Database host
-define('DB_USER', 'your_db_username');       // Database username
-define('DB_PASS', 'your_db_password');       // Database password
-define('DB_NAME', 'u680675202_flipavenue_cms'); // Database name
+define('DB_HOST', 'localhost');              // Usually localhost for Hostinger
+define('DB_USER', 'u680675202_flipavenue');  // Your Hostinger database username
+define('DB_PASS', 'your_db_password');       // Your Hostinger database password
+define('DB_NAME', 'u680675202_flipavenue_cms'); // Your Hostinger database name
 
 // Create database connection
 try {

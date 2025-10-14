@@ -214,7 +214,7 @@
                                         <label class="fw-600">Quantity:</label>
                                         <div class="input-group" style="width: 120px;">
                                             <button class="btn btn-outline-secondary" type="button" id="decreaseQty">-</button>
-                                            <input type="number" class="form-control text-center" value="1" min="1" id="productQuantity">
+                                            <input type="number" class="form-control text-center quantity-input" value="1" min="1" id="productQuantity" readonly>
                                             <button class="btn btn-outline-secondary" type="button" id="increaseQty">+</button>
                                         </div>
                                     </div>
@@ -598,9 +598,25 @@
 
             // Update cart count
             function updateCartCount() {
-                const cart = JSON.parse(localStorage.getItem('cart')) || [];
-                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-                document.getElementById('cartCount').textContent = totalItems;
+                fetch('cart-ajax.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'action=get_cart'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const cartCountElement = document.getElementById('cartCount');
+                        if (cartCountElement) {
+                            cartCountElement.textContent = data.data.cart_count;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating cart count:', error);
+                });
             }
             updateCartCount();
 
@@ -627,33 +643,51 @@
             });
 
             // Add to cart
-            document.getElementById('addToCartBtn').addEventListener('click', function() {
+            document.getElementById('addToCartBtn').addEventListener('click', async function() {
                 if (productId && products[productId]) {
                     const product = products[productId];
                     const quantity = parseInt(document.getElementById('productQuantity').value);
-                    
-                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-                    const existingItem = cart.find(item => item.id === product.id);
-                    
-                    if (existingItem) {
-                        existingItem.quantity += quantity;
-                    } else {
-                        cart.push({...product, quantity: quantity});
-                    }
-                    
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    updateCartCount();
-                    
-                    // Show success message
                     const btn = this;
-                    const originalText = btn.innerHTML;
-                    btn.innerHTML = '<i class="la la-check me-2"></i>Added to Cart!';
-                    btn.classList.add('btn-success');
                     
-                    setTimeout(() => {
+                    // Show loading state
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="la la-spinner la-spin me-2"></i>Adding...';
+                    btn.disabled = true;
+                    
+                    try {
+                        // Make AJAX call
+                        const response = await fetch('cart-ajax.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: `action=add_to_cart&product_id=${product.id}&quantity=${quantity}`
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            // Update cart count
+                            updateCartCount();
+                            
+                            // Show success message
+                            btn.innerHTML = '<i class="la la-check me-2"></i>Added to Cart!';
+                            btn.classList.add('btn-success');
+                            
+                            setTimeout(() => {
+                                btn.innerHTML = originalText;
+                                btn.classList.remove('btn-success');
+                                btn.disabled = false;
+                            }, 2000);
+                        } else {
+                            throw new Error(data.message);
+                        }
+                    } catch (error) {
+                        console.error('Error adding to cart:', error);
                         btn.innerHTML = originalText;
-                        btn.classList.remove('btn-success');
-                    }, 2000);
+                        btn.disabled = false;
+                        alert('Error adding product to cart. Please try again.');
+                    }
                 }
             });
         });

@@ -154,7 +154,7 @@ $categories_result = $conn->query($categories_query);
 
         
         <!--  Start page header  -->
-        <header class="tc-header-style1" style="min-height: 60vh;">
+        <header class="tc-header-style1 portfolio-header" style="min-height: 12vh;">
             <div class="img">
                 <img src="assets/img/home1/head_slide1.jpg" alt="" class="img-cover">
             </div>

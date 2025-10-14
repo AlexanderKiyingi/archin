@@ -12,14 +12,24 @@ if (session_status() === PHP_SESSION_NONE) {
 // Include centralized database connection
 require_once __DIR__ . '/db_connect.php';
 
+// Include security functions
+require_once __DIR__ . '/security.php';
+
 // Application Configuration
-define('SITE_URL', 'http://localhost/archin');
+define('SITE_URL', 'localhost'); // Replace with your actual domain
 define('CMS_URL', SITE_URL . '/cms');
 define('UPLOAD_PATH', dirname(__DIR__) . '/assets/uploads/');
 define('UPLOAD_URL', SITE_URL . '/assets/uploads/');
 
-// Security
+// Security Configuration
 define('SESSION_TIMEOUT', 3600); // 1 hour in seconds
+define('MAX_LOGIN_ATTEMPTS', 5); // Max failed login attempts
+define('LOCKOUT_TIME', 900); // 15 minutes lockout
+define('PASSWORD_MIN_LENGTH', 8); // Minimum password length
+define('SESSION_REGENERATE_INTERVAL', 300); // Regenerate session ID every 5 minutes
+
+// Set security headers
+setSecurityHeaders();
 
 // Pagination
 define('ITEMS_PER_PAGE', 10);

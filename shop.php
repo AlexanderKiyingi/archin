@@ -186,7 +186,7 @@ $categories_result = $conn->query($categories_query);
 
         
         <!--  Start page header  -->
-        <header class="tc-header-style1 shop-header" style="min-height: 15vh;">
+        <header class="tc-header-style1 shop-header" style="min-height: 12vh;">
             <div class="img">
                 <img src="assets/img/home1/head_slide2.png" alt="" class="img-cover">
             </div>
@@ -284,7 +284,7 @@ $categories_result = $conn->query($categories_query);
                             while ($product = $products_result->fetch_assoc()): 
                                 $image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $product['featured_image']) : 'assets/img/home1/projects/proj1.jpg';
                                 $product_json = json_encode([
-                                    'id' => 'product-' . $product['id'],
+                                    'id' => $product['id'],
                                     'name' => $product['name'],
                                     'description' => $product['description'],
                                     'price' => (float)$product['price'],
@@ -298,7 +298,9 @@ $categories_result = $conn->query($categories_query);
                                         <img src="<?php echo $image; ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="img-cover">
                                         <div class="overlay">
                                             <a href="#" class="btn btn-sm btn-primary" onclick="return false;">Quick View</a>
-                                            <a href="#" class="btn btn-sm btn-outline-light add-to-cart-btn" data-product='<?php echo htmlspecialchars($product_json); ?>'>Add to Cart</a>
+                                            <button type="button" class="btn btn-sm btn-outline-light add-to-cart-btn" data-product='<?php echo htmlspecialchars($product_json); ?>'>
+                                                <i class="la la-shopping-cart me-1"></i>Add to Cart
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="info p-4">
@@ -449,46 +451,136 @@ $categories_result = $conn->query($categories_query);
             // Initialize WOW.js
             new WOW().init();
 
-            // Update cart count
+            // Update cart count via AJAX
             function updateCartCount() {
-                const cart = JSON.parse(localStorage.getItem('cart')) || [];
-                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-                document.getElementById('cartCount').textContent = totalItems;
+                fetch('cart-ajax.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'action=get_cart'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const cartCountElement = document.getElementById('cartCount');
+                        if (cartCountElement) {
+                            cartCountElement.textContent = data.data.cart_count;
+                        }
+                    }
+                })
+                .catch(error => {
+                    // Silent fail - cart count update is not critical
+                });
             }
+
+            // Initialize cart count on page load
             updateCartCount();
 
-            // Add to cart functionality
+
+            // Add to cart functionality via AJAX
             document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('add-to-cart-btn')) {
+                // Check if clicked element or its parent is the add-to-cart button
+                const button = e.target.classList.contains('add-to-cart-btn') ? e.target : e.target.closest('.add-to-cart-btn');
+                
+                if (button) {
                     e.preventDefault();
-                    const productData = JSON.parse(e.target.getAttribute('data-product'));
+                    e.stopPropagation();
                     
-                    // Add to cart using localStorage
-                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-                    const existingItem = cart.find(item => item.id === productData.id);
+                    const productData = JSON.parse(button.getAttribute('data-product'));
                     
-                    if (existingItem) {
-                        existingItem.quantity += 1;
-                    } else {
-                        cart.push({...productData, quantity: 1});
-                    }
+                    // Show loading state
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '<i class="la la-spinner la-spin me-2"></i>Adding...';
+                    button.disabled = true;
                     
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    updateCartCount();
-                    
-                    // Show success message
-                    const originalText = e.target.innerHTML;
-                    e.target.innerHTML = '<i class="la la-check me-2"></i>Added!';
-                    e.target.classList.remove('btn-outline-light');
-                    e.target.classList.add('btn-success');
-                    
-                    setTimeout(() => {
-                        e.target.innerHTML = originalText;
-                        e.target.classList.remove('btn-success');
-                        e.target.classList.add('btn-outline-light');
-                    }, 2000);
+                    // Make AJAX call
+                    fetch('cart-ajax.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `action=add_to_cart&product_id=${productData.id}&quantity=1`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update cart count
+                            updateCartCount();
+                            
+                            // Show success message
+                            button.innerHTML = '<i class="la la-check me-2"></i>Added!';
+                            button.classList.remove('btn-outline-light');
+                            button.classList.add('btn-success');
+                            
+                            setTimeout(() => {
+                                button.innerHTML = originalText;
+                                button.classList.remove('btn-success');
+                                button.classList.add('btn-outline-light');
+                                button.disabled = false;
+                            }, 2000);
+                            
+                            // Show modal notification
+                            showModal('Success', data.message, 'success');
+                        } else {
+                            console.error('❌ Add to cart failed:', data.message);
+                            throw new Error(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error adding to cart:', error);
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                        showModal('Error', 'Error adding product to cart. Please try again.', 'error');
+                    });
                 }
             });
+
+            // Modal notification function
+            function showModal(title, message, type = 'info') {
+                // Remove existing modals
+                const existingModals = document.querySelectorAll('.shop-modal');
+                existingModals.forEach(modal => modal.remove());
+                
+                // Create modal element
+                const modal = document.createElement('div');
+                modal.className = 'shop-modal';
+                modal.innerHTML = `
+                    <div class="modal-overlay">
+                        <div class="modal-content">
+                            <div class="modal-header ${type}">
+                                <h5 class="modal-title">
+                                    <i class="la la-${type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : 'info-circle'} me-2"></i>
+                                    ${title}
+                                </h5>
+                                <button type="button" class="modal-close" onclick="this.closest('.shop-modal').remove()">
+                                    <i class="la la-times"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>${message}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" onclick="this.closest('.shop-modal').remove()">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Add to page
+                document.body.appendChild(modal);
+                
+                // Show modal with animation
+                setTimeout(() => modal.classList.add('show'), 100);
+                
+                // Auto-close after 3 seconds for success messages
+                if (type === 'success') {
+                    setTimeout(() => {
+                        modal.classList.remove('show');
+                        setTimeout(() => modal.remove(), 300);
+                    }, 3000);
+                }
+            }
 
             // Product card click to view details
             document.querySelectorAll('.product-card').forEach(card => {

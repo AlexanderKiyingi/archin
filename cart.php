@@ -1,3 +1,10 @@
+<?php
+require_once 'cms/db_connect.php';
+require_once 'cms/shipping-tax-functions.php';
+
+// Get shipping and tax settings
+$shipping_tax_settings = getShippingTaxSettingsJSON();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -338,6 +345,9 @@
 
     <!-- Cart JavaScript -->
     <script>
+        // Pass shipping and tax settings from PHP to JavaScript
+        window.shippingTaxSettings = <?php echo $shipping_tax_settings; ?>;
+        
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize WOW.js
             new WOW().init();
@@ -345,9 +355,29 @@
             // Cart functionality
             class ShoppingCart {
                 constructor() {
-                    this.cart = JSON.parse(localStorage.getItem('cart')) || [];
-                    this.renderCart();
-                    this.updateSummary();
+                    this.cart = [];
+                    this.loadCart();
+                }
+
+                async loadCart() {
+                    try {
+                        const response = await fetch('cart-ajax.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: 'action=get_cart'
+                        });
+                        
+                        const data = await response.json();
+                        if (data.success) {
+                            this.cart = data.data.cart;
+                            this.renderCart();
+                            this.updateSummary();
+                        }
+                    } catch (error) {
+                        console.error('Error loading cart:', error);
+                    }
                 }
 
                 addItem(product) {
@@ -391,87 +421,82 @@
                     }
                 }
 
-                updateQuantityAjax(productId, quantity) {
-                    const item = this.cart.find(item => item.id === productId);
-                    if (!item) return;
-
-                    // Don't allow quantity to go below 1
+                async updateQuantityAjax(productId, quantity) {
                     if (quantity < 1) {
-                        quantity = 1;
+                        this.removeItemAjax(productId);
+                        return;
                     }
 
-                    // Show loading state on buttons
-                    this.showButtonLoading(productId, true);
-                    
-                    // Simulate AJAX call
-                    this.makeAjaxCall({
-                        action: 'update_quantity',
-                        productId: productId,
-                        quantity: quantity
-                    }).then(response => {
-                        // Update cart data
-                        item.quantity = quantity;
-                        this.saveCart();
-                        
-                        // Update UI
-                        this.updateItemTotal(productId);
-                        this.updateSummary();
-                        this.updateCartCount();
-                        
-                        // Hide loading state
-                        this.showButtonLoading(productId, false);
-                        
-                        // Show success feedback
-                        this.showToast('Quantity updated successfully!', 'success');
-                    }).catch(error => {
-                        console.error('Error updating quantity:', error);
-                        this.showButtonLoading(productId, false);
-                        this.showToast('Error updating quantity. Please try again.', 'error');
-                    });
-                }
+                    // Show loading state on quantity controls
+                    this.showQuantityLoading(productId, true);
 
-                removeItemAjax(productId) {
-                    // Show loading state
-                    this.showButtonLoading(productId, true);
-                    
-                    // Simulate AJAX call
-                    this.makeAjaxCall({
-                        action: 'remove_item',
-                        productId: productId
-                    }).then(response => {
-                        // Remove from cart
-                        this.cart = this.cart.filter(item => item.id !== productId);
-                        this.saveCart();
+                    try {
+                        const response = await fetch('cart-ajax.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: `action=update_quantity&product_id=${productId}&quantity=${quantity}`
+                        });
                         
-                        // Update UI
-                        this.renderCart();
-                        this.updateSummary();
-                        this.updateCartCount();
-                        
-                        // Show success feedback
-                        this.showToast('Item removed from cart!', 'success');
-                    }).catch(error => {
-                        console.error('Error removing item:', error);
-                        this.showButtonLoading(productId, false);
-                        this.showToast('Error removing item. Please try again.', 'error');
-                    });
-                }
-
-                makeAjaxCall(data) {
-                    return new Promise((resolve, reject) => {
-                        // Simulate network delay
-                        setTimeout(() => {
-                            // Simulate successful response
-                            resolve({ success: true, data: data });
+                        const data = await response.json();
+                        if (data.success) {
+                            // Update the specific item quantity immediately
+                            const item = this.cart.find(item => item.id == productId);
+                            if (item) {
+                                item.quantity = quantity;
+                            }
                             
-                            // Simulate occasional errors (5% chance)
-                            // if (Math.random() < 0.05) {
-                            //     reject(new Error('Network error'));
-                            // } else {
-                            //     resolve({ success: true, data: data });
-                            // }
-                        }, 500 + Math.random() * 500); // Random delay between 500-1000ms
-                    });
+                            // Update UI immediately without reloading
+                            this.updateItemQuantity(productId, quantity);
+                            this.updateSummary();
+                            this.updateCartCount();
+                            
+                            this.showModal('Success', 'Quantity updated successfully!', 'success');
+                        } else {
+                            throw new Error(data.message);
+                        }
+                    } catch (error) {
+                        console.error('Error updating quantity:', error);
+                        this.showModal('Error', 'Error updating quantity. Please try again.', 'error');
+                    } finally {
+                        this.showQuantityLoading(productId, false);
+                    }
+                }
+
+                async removeItemAjax(productId) {
+                    // Show loading state
+                    this.showQuantityLoading(productId, true);
+
+                    try {
+                        const response = await fetch('cart-ajax.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: `action=remove_from_cart&product_id=${productId}`
+                        });
+                        
+                        const data = await response.json();
+                        if (data.success) {
+                            // Remove item immediately from UI
+                            this.cart = this.cart.filter(item => item.id != productId);
+                            
+                            // Update UI immediately
+                            this.renderCart();
+                            this.updateSummary();
+                            this.updateCartCount();
+                            
+                            this.showModal('Success', 'Item removed from cart!', 'success');
+                        } else {
+                            throw new Error(data.message);
+                        }
+                    } catch (error) {
+                        console.error('Error removing item:', error);
+                        this.showModal('Error', 'Error removing item. Please try again.', 'error');
+                    } finally {
+                        this.showQuantityLoading(productId, false);
+                    }
                 }
 
                 showButtonLoading(productId, isLoading) {
@@ -533,6 +558,125 @@
                     }
                 }
 
+                // Alias for showButtonLoading to maintain compatibility
+                showQuantityLoading(productId, isLoading) {
+                    this.showButtonLoading(productId, isLoading);
+                }
+
+                // Update specific item quantity in UI without reloading
+                updateItemQuantity(productId, quantity) {
+                    const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
+                    if (cartItem) {
+                        const quantityInput = cartItem.querySelector('.quantity-input');
+                        const itemTotal = cartItem.querySelector('.item-total');
+                        const item = this.cart.find(item => item.id == productId);
+                        
+                        if (quantityInput) {
+                            quantityInput.value = quantity;
+                        }
+                        
+                        if (itemTotal && item) {
+                            const total = parseFloat(item.price) * parseInt(quantity);
+                            itemTotal.textContent = `UGX ${total.toLocaleString()}`;
+                        }
+                    }
+                }
+
+                // Show modal instead of alerts
+                showModal(title, message, type = 'info') {
+                    // Remove existing modals
+                    const existingModals = document.querySelectorAll('.cart-modal');
+                    existingModals.forEach(modal => modal.remove());
+                    
+                    // Create modal element
+                    const modal = document.createElement('div');
+                    modal.className = 'cart-modal';
+                    modal.innerHTML = `
+                        <div class="modal-overlay">
+                            <div class="modal-content">
+                                <div class="modal-header ${type}">
+                                    <h5 class="modal-title">
+                                        <i class="la la-${type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : 'info-circle'} me-2"></i>
+                                        ${title}
+                                    </h5>
+                                    <button type="button" class="modal-close" onclick="this.closest('.cart-modal').remove()">
+                                        <i class="la la-times"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>${message}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" onclick="this.closest('.cart-modal').remove()">OK</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Add to page
+                    document.body.appendChild(modal);
+                    
+                    // Show modal with animation
+                    setTimeout(() => modal.classList.add('show'), 100);
+                    
+                    // Auto-close after 3 seconds for success messages
+                    if (type === 'success') {
+                        setTimeout(() => {
+                            modal.classList.remove('show');
+                            setTimeout(() => modal.remove(), 300);
+                        }, 3000);
+                    }
+                }
+
+                // Show confirmation modal
+                showConfirmModal(title, message, type = 'warning', onConfirm) {
+                    // Remove existing modals
+                    const existingModals = document.querySelectorAll('.cart-modal');
+                    existingModals.forEach(modal => modal.remove());
+                    
+                    // Create modal element
+                    const modal = document.createElement('div');
+                    modal.className = 'cart-modal';
+                    modal.innerHTML = `
+                        <div class="modal-overlay">
+                            <div class="modal-content">
+                                <div class="modal-header ${type}">
+                                    <h5 class="modal-title">
+                                        <i class="la la-${type === 'warning' ? 'exclamation-triangle' : type === 'error' ? 'times-circle' : 'info-circle'} me-2"></i>
+                                        ${title}
+                                    </h5>
+                                    <button type="button" class="modal-close" onclick="this.closest('.cart-modal').remove()">
+                                        <i class="la la-times"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>${message}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary me-2" onclick="this.closest('.cart-modal').remove()">Cancel</button>
+                                    <button type="button" class="btn btn-${type === 'warning' ? 'warning' : type === 'error' ? 'danger' : 'primary'}" onclick="this.closest('.cart-modal').remove(); ${onConfirm.toString().replace(/function\s*\(\)\s*{/, '').replace(/}$/, '')}">Confirm</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Add to page
+                    document.body.appendChild(modal);
+                    
+                    // Show modal with animation
+                    setTimeout(() => modal.classList.add('show'), 100);
+                    
+                    // Handle confirm button click properly
+                    const confirmBtn = modal.querySelector('.btn-primary, .btn-warning, .btn-danger');
+                    confirmBtn.addEventListener('click', function() {
+                        modal.classList.remove('show');
+                        setTimeout(() => {
+                            modal.remove();
+                            onConfirm();
+                        }, 300);
+                    });
+                }
+
                 showToast(message, type = 'info') {
                     // Create toast element
                     const toast = document.createElement('div');
@@ -562,15 +706,34 @@
                     return item ? item.quantity : 1;
                 }
 
-                clearCart() {
-                    this.cart = [];
-                    this.saveCart();
-                    this.renderCart();
-                    this.updateSummary();
-                }
-
-                saveCart() {
-                    localStorage.setItem('cart', JSON.stringify(this.cart));
+                async clearCart() {
+                    try {
+                        const response = await fetch('cart-ajax.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: 'action=clear_cart'
+                        });
+                        
+                        const data = await response.json();
+                        if (data.success) {
+                            // Clear cart immediately
+                            this.cart = [];
+                            
+                            // Update UI immediately
+                            this.renderCart();
+                            this.updateSummary();
+                            this.updateCartCount();
+                            
+                            this.showModal('Success', 'Cart cleared successfully!', 'success');
+                        } else {
+                            throw new Error(data.message);
+                        }
+                    } catch (error) {
+                        console.error('Error clearing cart:', error);
+                        this.showModal('Error', 'Error clearing cart. Please try again.', 'error');
+                    }
                 }
 
                 renderCart() {
@@ -598,14 +761,14 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="quantity-controls d-flex align-items-center position-relative">
-                                        <button class="btn btn-sm btn-outline-secondary" onclick="cart.updateQuantityAjax('${item.id}', cart.getQuantity('${item.id}') - 1)">
+                                        <button class="btn btn-sm btn-outline-secondary" onclick="cart.updateQuantityAjax(${item.id}, ${item.quantity} - 1)">
                                             <span class="btn-text">-</span>
                                             <span class="btn-loading d-none">
                                                 <i class="la la-spinner la-spin"></i>
                                             </span>
                                         </button>
-                                        <input type="number" class="form-control form-control-sm mx-2 quantity-input" value="${item.quantity}" min="1" onchange="cart.updateQuantityAjax('${item.id}', parseInt(this.value) || 1)" style="width: 60px;">
-                                        <button class="btn btn-sm btn-outline-secondary" onclick="cart.updateQuantityAjax('${item.id}', cart.getQuantity('${item.id}') + 1)">
+                                        <input type="number" class="form-control form-control-sm mx-2 quantity-input" value="${item.quantity}" min="1" onchange="cart.updateQuantityAjax(${item.id}, parseInt(this.value) || 1)" style="width: 60px;" readonly>
+                                        <button class="btn btn-sm btn-outline-secondary" onclick="cart.updateQuantityAjax(${item.id}, ${item.quantity} + 1)">
                                             <span class="btn-text">+</span>
                                             <span class="btn-loading d-none">
                                                 <i class="la la-spinner la-spin"></i>
@@ -617,7 +780,7 @@
                                     <span class="fw-bold item-total">UGX ${(item.price * item.quantity).toLocaleString()}</span>
                                 </div>
                                 <div class="col-md-2">
-                                    <button class="btn btn-sm btn-outline-danger" onclick="cart.removeItemAjax('${item.id}')">
+                                    <button class="btn btn-sm btn-outline-danger" onclick="cart.removeItemAjax(${item.id})">
                                         <span class="btn-text">
                                             <i class="la la-trash"></i>
                                         </span>
@@ -632,10 +795,17 @@
                 }
 
                 updateSummary() {
-                    const subtotal = this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                    const shipping = subtotal > 100000 ? 0 : 10000; // Free shipping over UGX 100,000
-                    const tax = subtotal * 0.18; // 18% tax (Uganda VAT)
-                    const total = subtotal + shipping + tax;
+                const subtotal = this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                
+                // Use CMS settings for shipping and tax calculations
+                const settings = window.shippingTaxSettings || {
+                    shipping: { standard_shipping_cost: 10000, free_shipping_threshold: 100000 },
+                    tax: { vat_rate: 18 }
+                };
+                
+                const shipping = subtotal >= settings.shipping.free_shipping_threshold ? 0 : settings.shipping.standard_shipping_cost;
+                const tax = (subtotal * settings.tax.vat_rate) / 100;
+                const total = subtotal + shipping + tax;
 
                     document.getElementById('cartSubtotal').textContent = `UGX ${subtotal.toLocaleString()}`;
                     document.getElementById('cartShipping').textContent = shipping === 0 ? 'FREE' : `UGX ${shipping.toLocaleString()}`;
@@ -670,9 +840,12 @@
 
             // Clear cart button
             document.getElementById('clearCartBtn').addEventListener('click', function() {
-                if (confirm('Are you sure you want to clear your cart?')) {
-                    cart.clearCart();
-                }
+                cart.showConfirmModal(
+                    'Clear Cart',
+                    'Are you sure you want to clear your cart? This action cannot be undone.',
+                    'warning',
+                    () => cart.clearCart()
+                );
             });
 
             // Make cart globally available

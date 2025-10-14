@@ -289,6 +289,46 @@ ON DUPLICATE KEY UPDATE name=name;
 -- DATABASE INFORMATION
 -- ============================================
 
+-- Shipping and Tax Settings Tables
+CREATE TABLE IF NOT EXISTS shipping_settings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    setting_key VARCHAR(100) NOT NULL UNIQUE,
+    setting_value DECIMAL(10,2) NOT NULL DEFAULT 0,
+    description TEXT,
+    is_active TINYINT(1) DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS tax_settings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    setting_key VARCHAR(100) NOT NULL UNIQUE,
+    setting_value DECIMAL(5,2) NOT NULL DEFAULT 0,
+    description TEXT,
+    is_active TINYINT(1) DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Insert default shipping settings
+INSERT INTO shipping_settings (setting_key, setting_value, description) VALUES
+('standard_shipping_cost', 10000.00, 'Standard shipping cost in UGX'),
+('free_shipping_threshold', 100000.00, 'Minimum order amount for free shipping in UGX'),
+('express_shipping_cost', 20000.00, 'Express shipping cost in UGX'),
+('international_shipping_cost', 50000.00, 'International shipping cost in UGX')
+ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value);
+
+-- Insert default tax settings
+INSERT INTO tax_settings (setting_key, setting_value, description) VALUES
+('vat_rate', 18.00, 'VAT rate percentage (Uganda)'),
+('service_tax_rate', 0.00, 'Service tax rate percentage'),
+('environmental_tax_rate', 0.00, 'Environmental tax rate percentage')
+ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value);
+
+-- Add indexes for shipping and tax settings
+CREATE INDEX idx_shipping_setting_key ON shipping_settings(setting_key);
+CREATE INDEX idx_tax_setting_key ON tax_settings(setting_key);
+
 -- Display table status
 SELECT 'Database Setup Complete!' AS Status;
 SELECT COUNT(*) AS admin_users FROM admin_users;
@@ -296,4 +336,6 @@ SELECT COUNT(*) AS site_settings FROM site_settings;
 SELECT COUNT(*) AS services FROM services;
 SELECT COUNT(*) AS project_categories FROM project_categories;
 SELECT COUNT(*) AS shop_products FROM shop_products;
+SELECT COUNT(*) AS shipping_settings FROM shipping_settings;
+SELECT COUNT(*) AS tax_settings FROM tax_settings;
 

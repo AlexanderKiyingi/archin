@@ -1,6 +1,7 @@
 <?php
 // Include centralized database connection
 require_once 'cms/db_connect.php';
+require_once 'cms/shipping-tax-functions.php';
 
 // Include Flutterwave configuration
 require_once 'cms/flutterwave-config.php';
@@ -36,8 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
     foreach ($cart_data as $item) {
         $subtotal += $item['price'] * $item['quantity'];
     }
-    $shipping_cost = $subtotal > 100000 ? 0 : 10000;
-    $tax_amount = $subtotal * 0.18;
+    $shipping_cost = calculateShipping($subtotal);
+    $tax_amount = calculateTax($subtotal);
     $total_amount = $subtotal + $shipping_cost + $tax_amount;
     
     // Generate order number
@@ -529,6 +530,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
 
     <!-- Checkout JavaScript -->
     <script>
+        // Pass shipping and tax settings from PHP to JavaScript
+        window.shippingTaxSettings = <?php echo getShippingTaxSettingsJSON(); ?>;
+        
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize WOW.js
             new WOW().init();
@@ -562,8 +566,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
             // Calculate and display totals
             function updateTotals() {
                 const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                const shipping = subtotal > 100000 ? 0 : 10000; // Free shipping over UGX 100,000
-                const tax = subtotal * 0.18; // 18% tax (Uganda VAT)
+                // Use CMS settings for shipping and tax calculations
+                const settings = window.shippingTaxSettings || {
+                    shipping: { standard_shipping_cost: 10000, free_shipping_threshold: 100000 },
+                    tax: { vat_rate: 18 }
+                };
+                
+                const shipping = subtotal >= settings.shipping.free_shipping_threshold ? 0 : settings.shipping.standard_shipping_cost;
+                const tax = (subtotal * settings.tax.vat_rate) / 100;
                 const total = subtotal + shipping + tax;
 
                 document.getElementById('orderSubtotal').textContent = `UGX ${subtotal.toLocaleString()}`;
@@ -683,8 +693,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
 
             // Calculate totals
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const shipping = subtotal > 100000 ? 0 : 10000;
-            const tax = subtotal * 0.18;
+            // Use CMS settings for shipping and tax calculations
+            const settings = window.shippingTaxSettings || {
+                shipping: { standard_shipping_cost: 10000, free_shipping_threshold: 100000 },
+                tax: { vat_rate: 18 }
+            };
+            
+            const shipping = subtotal >= settings.shipping.free_shipping_threshold ? 0 : settings.shipping.standard_shipping_cost;
+            const tax = (subtotal * settings.tax.vat_rate) / 100;
             const total = subtotal + shipping + tax;
 
             // Get customer details
@@ -725,8 +741,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                     }
                 },
                 onclose: function() {
-                    // Payment cancelled
-                    console.log('Payment cancelled');
+                    // Payment cancelled - user will remain on checkout page
                 }
             });
         }

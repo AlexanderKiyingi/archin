@@ -148,8 +148,8 @@ if ($settings_result) {
 
         
         <!--  Start page header  -->
-        <header class="tc-header-style1" style="min-height: 50vh;">
-            <div class="img">
+        <header class="tc-header-style1 contact-header" style="min-height: 18vh; height: 18vh; max-height: 18vh;">
+            <div class="img" style="min-height: 18vh !important; height: 18vh !important; max-height: 18vh !important;">
                 <img src="assets/img/home1/head_slide3.png" alt="" class="img-cover">
             </div>
             <div class="info section-padding-x pb-70">

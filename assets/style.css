@@ -407,6 +407,22 @@ html[lang=ar] .home-style1 .loader-wrap {
   position: relative;
   min-height: 100vh;
 }
+
+/* Override for all internal page headers */
+.tc-header-style1.shop-header .img,
+.tc-header-style1.blog-header .img,
+.tc-header-style1.portfolio-header .img {
+  min-height: 12vh !important;
+  height: 12vh !important;
+  max-height: 12vh !important;
+}
+
+.tc-header-style1.contact-header .img,
+.tc-header-style1.about-header .img {
+  min-height: 18vh !important;
+  height: 18vh !important;
+  max-height: 18vh !important;
+}
 .tc-header-style1 .slider-card .img::after {
   position: absolute;
   content: "";
@@ -483,14 +499,43 @@ html[lang=ar] .home-style1 .loader-wrap {
     font-size: 20px;
   }
 }
-/* Blog page header height override */
-.blog-header .img {
-  min-height: 15vh !important;
+/* Page header height overrides for all internal pages */
+.blog-header .img,
+.shop-header .img,
+.portfolio-header .img {
+  min-height: 12vh !important;
+  height: 12vh !important;
+  max-height: 12vh !important;
 }
 
-/* Shop page header height override */
-.shop-header .img {
-  min-height: 15vh !important;
+.contact-header .img,
+.about-header .img {
+  min-height: 18vh !important;
+  height: 18vh !important;
+  max-height: 18vh !important;
+}
+
+.blog-header,
+.shop-header,
+.portfolio-header {
+  min-height: 12vh !important;
+  height: 12vh !important;
+  max-height: 12vh !important;
+}
+
+.contact-header,
+.about-header {
+  min-height: 18vh !important;
+  height: 18vh !important;
+  max-height: 18vh !important;
+}
+
+.blog-header .info,
+.shop-header .info,
+.contact-header .info,
+.about-header .info,
+.portfolio-header .info {
+  position: relative !important;
 }
 
 /* Shop page styles */
@@ -9826,4 +9871,321 @@ home 9 style
 }
 .tc-footer-style10 .foot .foot-links a:last-of-type {
   margin: 0;
+}
+
+/* Toast notifications */
+.toast-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 16px 20px;
+    z-index: 9999;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    max-width: 300px;
+    border-left: 4px solid #007bff;
+}
+
+.toast-notification.show {
+    transform: translateX(0);
+}
+
+.toast-success {
+    border-left-color: #28a745;
+    background: #d4edda;
+    color: #155724;
+}
+
+.toast-error {
+    border-left-color: #dc3545;
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.toast-info {
+    border-left-color: #17a2b8;
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+/* Loading spinner */
+.la-spinner.la-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Hide quantity input spinners */
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.quantity-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* Make quantity input look better when readonly */
+.quantity-input[readonly] {
+    background-color: #f8f9fa;
+    cursor: default;
+}
+
+/* Cart Modal Styles */
+.cart-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.cart-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.cart-modal .modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.cart-modal .modal-content {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 100%;
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+}
+
+.cart-modal.show .modal-content {
+    transform: scale(1);
+}
+
+.cart-modal .modal-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cart-modal .modal-header.success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+}
+
+.cart-modal .modal-header.error {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+}
+
+.cart-modal .modal-header.info {
+    background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+    color: #0c5460;
+}
+
+.cart-modal .modal-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.cart-modal .modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.cart-modal .modal-close:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.cart-modal .modal-body {
+    padding: 20px 24px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.cart-modal .modal-footer {
+    padding: 16px 24px 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.cart-modal .btn {
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.cart-modal .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.cart-modal .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+/* Shop Modal Styles (same as cart modal but with different class name) */
+.shop-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.shop-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.shop-modal .modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.shop-modal .modal-content {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 100%;
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+}
+
+.shop-modal.show .modal-content {
+    transform: scale(1);
+}
+
+.shop-modal .modal-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.shop-modal .modal-header.success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+}
+
+.shop-modal .modal-header.error {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+}
+
+.shop-modal .modal-header.info {
+    background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+    color: #0c5460;
+}
+
+.shop-modal .modal-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.shop-modal .modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.shop-modal .modal-close:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.shop-modal .modal-body {
+    padding: 20px 24px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.shop-modal .modal-footer {
+    padding: 16px 24px 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.shop-modal .btn {
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.shop-modal .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.shop-modal .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    transform: translateY(-1px);
 }

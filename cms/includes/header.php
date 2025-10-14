@@ -1,5 +1,18 @@
 <?php
 requireLogin();
+
+// Validate session security
+if (!validateSessionSecurity()) {
+    header("Location: login.php?timeout=1");
+    exit();
+}
+
+// Regenerate session ID periodically
+if (!isset($_SESSION['last_regeneration']) || (time() - $_SESSION['last_regeneration'] > SESSION_REGENERATE_INTERVAL)) {
+    session_regenerate_id(true);
+    $_SESSION['last_regeneration'] = time();
+}
+
 $current_page = basename($_SERVER['PHP_SELF'], '.php');
 ?>
 <!DOCTYPE html>
@@ -90,6 +103,11 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                     <span>Sales Analytics</span>
                 </a>
                 
+                <a href="shipping-tax-settings.php" class="sidebar-link <?php echo $current_page === 'shipping-tax-settings' ? 'active' : ''; ?> flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+                    <i class="fas fa-shipping-fast w-5"></i>
+                    <span>Shipping & Tax Settings</span>
+                </a>
+                
                 <div class="pt-4 pb-2">
                     <p class="px-4 text-xs uppercase text-gray-500 font-semibold">System</p>
                 </div>
@@ -108,6 +126,22 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                     <i class="fas fa-cog w-5"></i>
                     <span>Settings</span>
                 </a>
+                
+                <?php if ($_SESSION['admin_role'] === 'super_admin' || $_SESSION['admin_role'] === 'admin'): ?>
+                <div class="pt-4 pb-2">
+                    <p class="px-4 text-xs uppercase text-gray-500 font-semibold">Security</p>
+                </div>
+                
+                <a href="security-dashboard.php" class="sidebar-link <?php echo $current_page === 'security-dashboard' ? 'active' : ''; ?> flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+                    <i class="fas fa-shield-alt w-5"></i>
+                    <span>Security Dashboard</span>
+                </a>
+                
+                <a href="change-password.php" class="sidebar-link <?php echo $current_page === 'change-password' ? 'active' : ''; ?> flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+                    <i class="fas fa-key w-5"></i>
+                    <span>Change Password</span>
+                </a>
+                <?php endif; ?>
             </nav>
         </aside>
         

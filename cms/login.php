@@ -8,48 +8,135 @@ if (isLoggedIn()) {
 
 $error = '';
 $success = '';
+$lockout_message = '';
+
+// Check for CSRF token
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
+        $error = 'Invalid security token. Please try again.';
+        logSecurityEvent('csrf_attack_attempt', 'Invalid CSRF token on login', null);
+    }
+}
 
 if (isset($_GET['logout'])) {
     $success = 'You have been successfully logged out.';
+    logSecurityEvent('user_logout', 'User logged out successfully', $_SESSION['admin_id'] ?? null);
 }
 
 if (isset($_GET['timeout'])) {
     $error = 'Your session has expired. Please login again.';
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
     $username = cleanInput($_POST['username']);
     $password = $_POST['password'];
+    $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
     
     if (empty($username) || empty($password)) {
         $error = 'Please enter both username and password';
     } else {
-        $stmt = $conn->prepare("SELECT id, username, email, password, full_name, role FROM admin_users WHERE username = ? AND is_active = 1");
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($result->num_rows === 1) {
-            $user = $result->fetch_assoc();
-            
-            if (password_verify($password, $user['password'])) {
-                // Set session variables
-                $_SESSION['admin_id'] = $user['id'];
-                $_SESSION['admin_username'] = $user['username'];
-                $_SESSION['admin_email'] = $user['email'];
-                $_SESSION['admin_name'] = $user['full_name'];
-                $_SESSION['admin_role'] = $user['role'];
-                $_SESSION['last_activity'] = time();
-                
-                // Update last login
-                $conn->query("UPDATE admin_users SET last_login = NOW() WHERE id = " . $user['id']);
-                
-                redirect(CMS_URL . '/index.php');
-            } else {
-                $error = 'Invalid username or password';
-            }
+        // Check for brute force attempts
+        if (checkBruteForce($username)) {
+            $lockout_message = 'Too many failed login attempts. Account locked for 15 minutes.';
+            $error = $lockout_message;
+            logSecurityEvent('brute_force_blocked', "Brute force attempt blocked for user: $username", null);
         } else {
-            $error = 'Invalid username or password';
+            $stmt = $conn->prepare("
+                SELECT id, username, email, password, full_name, role, two_factor_enabled, 
+                       account_locked_until, failed_login_count 
+                FROM admin_users 
+                WHERE username = ? AND is_active = 1
+            ");
+            $stmt->bind_param("s", $username);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            if ($result->num_rows === 1) {
+                $user = $result->fetch_assoc();
+                
+                // Check if account is locked
+                if ($user['account_locked_until'] && strtotime($user['account_locked_until']) > time()) {
+                    $error = 'Account is temporarily locked. Please try again later.';
+                    logSecurityEvent('locked_account_access', "Attempted login to locked account: $username", null);
+                } else {
+                    if (password_verify($password, $user['password'])) {
+                        // Clear failed attempts
+                        clearFailedAttempts($username);
+                        
+                        // Reset failed login count
+                        $stmt = $conn->prepare("UPDATE admin_users SET failed_login_count = 0, account_locked_until = NULL WHERE id = ?");
+                        $stmt->bind_param("i", $user['id']);
+                        $stmt->execute();
+                        
+                        // Generate new session token
+                        $session_token = bin2hex(random_bytes(32));
+                        
+                        // Set session variables
+                        $_SESSION['admin_id'] = $user['id'];
+                        $_SESSION['admin_username'] = $user['username'];
+                        $_SESSION['admin_email'] = $user['email'];
+                        $_SESSION['admin_name'] = $user['full_name'];
+                        $_SESSION['admin_role'] = $user['role'];
+                        $_SESSION['last_activity'] = time();
+                        $_SESSION['ip_address'] = $ip_address;
+                        $_SESSION['session_token'] = $session_token;
+                        $_SESSION['csrf_token'] = generateCSRFToken();
+                        
+                        // Store session in database
+                        $expires_at = date('Y-m-d H:i:s', time() + SESSION_TIMEOUT);
+                        $stmt = $conn->prepare("
+                            INSERT INTO admin_sessions (user_id, session_token, ip_address, user_agent, expires_at) 
+                            VALUES (?, ?, ?, ?, ?)
+                        ");
+                        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
+                        $stmt->bind_param("issss", $user['id'], $session_token, $ip_address, $user_agent, $expires_at);
+                        $stmt->execute();
+                        
+                        // Update last login
+                        $stmt = $conn->prepare("UPDATE admin_users SET last_login = NOW() WHERE id = ?");
+                        $stmt->bind_param("i", $user['id']);
+                        $stmt->execute();
+                        
+                        // Log successful login
+                        logSecurityEvent('successful_login', "User logged in: $username", $user['id']);
+                        
+                        // Check if 2FA is enabled
+                        if ($user['two_factor_enabled']) {
+                            $_SESSION['pending_2fa'] = true;
+                            redirect(CMS_URL . '/verify-2fa.php');
+                        } else {
+                            redirect(CMS_URL . '/index.php');
+                        }
+                    } else {
+                        // Record failed attempt
+                        recordFailedAttempt($username, $ip_address);
+                        
+                        // Increment failed login count
+                        $stmt = $conn->prepare("UPDATE admin_users SET failed_login_count = failed_login_count + 1 WHERE id = ?");
+                        $stmt->bind_param("i", $user['id']);
+                        $stmt->execute();
+                        
+                        // Check if we should lock the account
+                        $new_count = $user['failed_login_count'] + 1;
+                        if ($new_count >= MAX_LOGIN_ATTEMPTS) {
+                            $lockout_until = date('Y-m-d H:i:s', time() + LOCKOUT_TIME);
+                            $stmt = $conn->prepare("UPDATE admin_users SET account_locked_until = ? WHERE id = ?");
+                            $stmt->bind_param("si", $lockout_until, $user['id']);
+                            $stmt->execute();
+                            
+                            logSecurityEvent('account_locked', "Account locked due to failed attempts: $username", $user['id']);
+                        }
+                        
+                        $error = 'Invalid username or password';
+                        logSecurityEvent('failed_login', "Failed login attempt: $username", $user['id']);
+                    }
+                }
+            } else {
+                // Record failed attempt even for non-existent users to prevent username enumeration
+                recordFailedAttempt($username, $ip_address);
+                $error = 'Invalid username or password';
+                logSecurityEvent('failed_login_nonexistent', "Failed login attempt for non-existent user: $username", null);
+            }
         }
     }
 }
@@ -91,6 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
             
             <form method="POST" action="">
+                <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                 <div class="mb-4">
                     <label for="username" class="block text-gray-700 text-sm font-semibold mb-2">
                         <i class="fas fa-user mr-2"></i>Username
@@ -128,14 +216,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <i class="fas fa-sign-in-alt mr-2"></i>Sign In
                 </button>
             </form>
-        </div>
-        
-        <!-- Default Credentials Info -->
-        <div class="mt-6 bg-yellow-900 bg-opacity-50 backdrop-blur-sm border border-yellow-600 rounded-lg p-4">
-            <p class="text-yellow-200 text-sm text-center">
-                <i class="fas fa-info-circle mr-2"></i>
-                <strong>Default Login:</strong> admin / admin123
-            </p>
         </div>
         
         <p class="text-center text-gray-500 text-sm mt-6">

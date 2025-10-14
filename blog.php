@@ -175,7 +175,7 @@ $categories_result = $conn->query($categories_query);
 
         
         <!--  Start page header  -->
-        <header class="tc-header-style1 blog-header" style="min-height: 15vh;">
+        <header class="tc-header-style1 blog-header" style="min-height: 12vh;">
             <div class="img">
                 <img src="assets/img/home1/head_slide2.png" alt="" class="img-cover">
             </div>

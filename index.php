@@ -164,7 +164,11 @@ $current_year = date('Y');
                             <a class="nav-link" href="contact.php">Contact</a>
                         </li>
                     </ul>
-                    <a href="#" class="icon ms-5 fsz-21">
+                    <a href="cart.php" class="icon ms-5 fsz-21 position-relative">
+                        <span> <i class="la la-shopping-cart"></i> </span>
+                        <span class="cart-badge badge bg-orange1 rounded-pill position-absolute" id="cartCount">0</span>
+                    </a>
+                    <a href="#" class="icon ms-3 fsz-21">
                         <span> <i class="la la-search"></i> </span>
                     </a>
                     <a href="cms/login.php" class="butn border rounded-pill ms-3 hover-bg-orange1" target="_blank">
@@ -1045,6 +1049,35 @@ $current_year = date('Y');
 
     <!-- ===== home scripts ===== -->
     <script src="assets/main.js"></script>
+
+    <!-- Cart count update -->
+    <script>
+        // Update cart count via AJAX
+        function updateCartCount() {
+            fetch('cart-ajax.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=get_cart'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const cartCountElement = document.getElementById('cartCount');
+                    if (cartCountElement) {
+                        cartCountElement.textContent = data.data.cart_count;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error updating cart count:', error);
+            });
+        }
+
+        // Update cart count on page load
+        document.addEventListener('DOMContentLoaded', updateCartCount);
+    </script>
 
 </body>
 </html>

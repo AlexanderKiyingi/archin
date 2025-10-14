@@ -22,7 +22,7 @@ define('DB_NAME', 'u680675202_flipavenue_cms');  // Database name
 // ==========================================
 // APPLICATION CONFIGURATION
 // ==========================================
-define('SITE_URL', 'http://localhost/archin');  // Your site URL (no trailing slash)
+define('SITE_URL', 'https://yourdomain.com');  // Your site URL (no trailing slash)
 define('CMS_URL', SITE_URL . '/cms');           // CMS URL
 define('UPLOAD_PATH', dirname(__DIR__) . '/assets/uploads/');  // Upload directory path
 define('UPLOAD_URL', SITE_URL . '/assets/uploads/');           // Upload directory URL
