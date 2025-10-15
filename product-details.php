@@ -1,3 +1,30 @@
+<?php
+require_once 'cms/db_connect.php';
+
+// Get product ID from URL
+$product_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+// Fetch product from database
+$product = null;
+if ($product_id > 0) {
+    $stmt = $conn->prepare("SELECT * FROM shop_products WHERE id = ? AND is_active = 1");
+    $stmt->bind_param("i", $product_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        $product = $result->fetch_assoc();
+    }
+}
+
+// If product not found, redirect to shop
+if (!$product) {
+    header('Location: shop.php');
+    exit;
+}
+
+// Fix image path
+$product_image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $product['featured_image']) : 'assets/img/home1/projects/proj1.jpg';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -507,12 +534,18 @@
     <!-- Product Details JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Get product ID from URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id');
+            // Get product data from PHP
+            const productData = <?php echo json_encode($product); ?>;
+            const productId = productData.id;
 
-            // Product data (in a real application, this would come from a database)
+            // Create products object for compatibility
             const products = {
+                [productId]: productData
+            };
+            
+            // Remove hardcoded products - now using database
+            /*
+            const oldProducts = {
                 'tools-1': {
                     id: 'tools-1',
                     name: 'Architectural Design Toolkit',
@@ -574,6 +607,7 @@
                     tags: 'course, online, advanced, architecture'
                 }
             };
+            */
 
             // Load product data
             if (productId && products[productId]) {
@@ -600,14 +634,19 @@
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: 'action=get_cart'
+                    body: 'action=get_cart&cache_buster=' + Date.now(), // Cache busting for Chrome
+                    cache: 'no-store', // Prevent Chrome from caching
+                    credentials: 'same-origin'
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
                         const cartCountElement = document.getElementById('cartCount');
                         if (cartCountElement) {
-                            cartCountElement.textContent = data.data.cart_count;
+                            // Use innerHTML for better Chrome compatibility
+                            cartCountElement.innerHTML = data.data.cart_count;
+                            // Alternative: Force re-paint
+                            cartCountElement.offsetHeight; // Trigger reflow
                         }
                     }
                 })
@@ -640,53 +679,57 @@
             });
 
             // Add to cart
-            document.getElementById('addToCartBtn').addEventListener('click', async function() {
-                if (productId && products[productId]) {
-                    const product = products[productId];
-                    const quantity = parseInt(document.getElementById('productQuantity').value);
-                    const btn = this;
-                    
-                    // Show loading state
-                    const originalText = btn.innerHTML;
-                    btn.innerHTML = '<i class="la la-spinner la-spin me-2"></i>Adding...';
-                    btn.disabled = true;
-                    
-                    try {
-                        // Make AJAX call
-                        const response = await fetch('cart-ajax.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: `action=add_to_cart&product_id=${product.id}&quantity=${quantity}`
-                        });
+            const addToCartBtn = document.getElementById('addToCartBtn');
+            if (addToCartBtn) {
+                addToCartBtn.addEventListener('click', async function() {
+                    if (productId && products[productId]) {
+                        const product = products[productId];
+                        const quantity = parseInt(document.getElementById('productQuantity').value);
+                        const btn = this;
                         
-                        const data = await response.json();
+                        // Show loading state
+                        const originalText = btn.innerHTML;
+                        btn.innerHTML = '<i class="la la-spinner la-spin me-2"></i>Adding...';
+                        btn.disabled = true;
                         
-                        if (data.success) {
-                            // Update cart count
-                            updateCartCount();
+                        try {
+                            // Make AJAX call
+                            const response = await fetch('cart-ajax.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: `action=add_to_cart&product_id=${product.id}&quantity=${quantity}&cache_buster=${Date.now()}`,
+                                cache: 'no-store',
+                                credentials: 'same-origin'
+                            });
                             
-                            // Show success message
-                            btn.innerHTML = '<i class="la la-check me-2"></i>Added to Cart!';
-                            btn.classList.add('btn-success');
+                            const data = await response.json();
                             
-                            setTimeout(() => {
-                                btn.innerHTML = originalText;
-                                btn.classList.remove('btn-success');
-                                btn.disabled = false;
-                            }, 2000);
-                        } else {
-                            throw new Error(data.message);
+                            if (data.success) {
+                                // Update cart count
+                                updateCartCount();
+                                
+                                // Show success message
+                                btn.innerHTML = '<i class="la la-check me-2"></i>Added to Cart!';
+                                btn.classList.add('btn-success');
+                                
+                                setTimeout(() => {
+                                    btn.innerHTML = originalText;
+                                    btn.classList.remove('btn-success');
+                                    btn.disabled = false;
+                                }, 2000);
+                            } else {
+                                throw new Error(data.message);
+                            }
+                        } catch (error) {
+                            btn.innerHTML = originalText;
+                            btn.disabled = false;
+                            alert('Error adding product to cart. Please try again.');
                         }
-                    } catch (error) {
-                        console.error('Error adding to cart:', error);
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                        alert('Error adding product to cart. Please try again.');
                     }
-                }
-            });
+                });
+            }
         });
     </script>
 

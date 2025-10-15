@@ -4748,8 +4748,16 @@ html[lang=ar] .home-style1 .loader-wrap {
   max-height: 12vh !important;
 }
 
+.checkout-header {
+  min-height: 12vh !important;
+  height: 12vh !important;
+  max-height: 12vh !important;
+}
+
 .checkout-header .img {
-  min-height: 15vh !important;
+  min-height: 12vh !important;
+  height: 12vh !important;
+  max-height: 12vh !important;
 }
 
 .success-header .img {

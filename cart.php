@@ -71,9 +71,9 @@ $shipping_tax_settings = getShippingTaxSettingsJSON();
                 <ul>
                     <li> <a href="index.php" class="main_link"> home </a> </li>
                     <li><a href="about.html" class="main_link"> about us </a></li>
-                    <li> <a href="portfolio.html" class="main_link"> projects </a> </li>
+                    <li> <a href="portfolio.php" class="main_link"> projects </a> </li>
                     <li> <a href="shop.php" class="main_link"> shop </a> </li>
-                    <li> <a href="contact.html" class="main_link"> contact </a> </li>
+                    <li> <a href="contact.php" class="main_link"> contact </a> </li>
                 </ul>
             </div>
         </div>
@@ -104,13 +104,13 @@ $shipping_tax_settings = getShippingTaxSettingsJSON();
                             <a class="nav-link" href="about.html">About Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="portfolio.html">Projects</a>
+                            <a class="nav-link" href="portfolio.php">Projects</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="shop.php">Shop</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact</a>
+                            <a class="nav-link" href="contact.php">Contact</a>
                         </li>
                     </ul>
                     <div class="nav-side">
@@ -355,7 +355,9 @@ $shipping_tax_settings = getShippingTaxSettingsJSON();
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded',
                             },
-                            body: 'action=get_cart'
+                            body: 'action=get_cart&cache_buster=' + Date.now(),
+                            cache: 'no-store',
+                            credentials: 'same-origin'
                         });
                         
                         const data = await response.json();
@@ -729,23 +731,34 @@ $shipping_tax_settings = getShippingTaxSettingsJSON();
                     const cartItems = document.getElementById('cartItems');
                     const emptyCart = document.getElementById('emptyCart');
                     
+                    if (!cartItems) {
+                        return;
+                    }
+                    
                     if (this.cart.length === 0) {
                         cartItems.innerHTML = '';
-                        emptyCart.style.display = 'block';
+                        if (emptyCart) {
+                            emptyCart.style.display = 'block';
+                        }
                         return;
                     }
 
-                    emptyCart.style.display = 'none';
+                    if (emptyCart) {
+                        emptyCart.style.display = 'none';
+                    }
                     
-                    cartItems.innerHTML = this.cart.map(item => `
+                    cartItems.innerHTML = this.cart.map(item => {
+                        // Fix image path - ensure cms/ prefix is included
+                        const imagePath = item.image.startsWith('cms/') ? item.image : (item.image.startsWith('../') ? item.image.replace('../', 'cms/') : 'cms/' + item.image);
+                        return `
                         <div class="cart-item bg-white rounded p-4 mb-4 shadow-sm" data-product-id="${item.id}">
                             <div class="row align-items-center">
                                 <div class="col-md-2">
-                                    <img src="${item.image}" alt="${item.name}" class="img-fluid rounded">
+                                    <img src="${imagePath}" alt="${item.name}" class="img-fluid rounded" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
                                 </div>
                                 <div class="col-md-4">
                                     <h6 class="mb-2">${item.name}</h6>
-                                    <p class="text-muted mb-2">${item.description}</p>
+                                    <p class="text-muted mb-2">${item.description || ''}</p>
                                     <span class="badge bg-light text-dark">${item.category}</span>
                                 </div>
                                 <div class="col-md-2">
@@ -780,7 +793,8 @@ $shipping_tax_settings = getShippingTaxSettingsJSON();
                                 </div>
                             </div>
                         </div>
-                    `).join('');
+                    `;
+                    }).join('');
                 }
 
                 updateSummary() {
@@ -816,11 +830,31 @@ $shipping_tax_settings = getShippingTaxSettingsJSON();
                 }
 
                 updateCartCount() {
-                    const totalItems = this.cart.reduce((sum, item) => sum + item.quantity, 0);
-                    const cartCountElement = document.getElementById('cartCount');
-                    if (cartCountElement) {
-                        cartCountElement.textContent = totalItems;
-                    }
+                    // Fetch from server to ensure sync across browsers
+                    fetch('cart-ajax.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'action=get_cart&cache_buster=' + Date.now(), // Cache busting for Chrome
+                        cache: 'no-store', // Prevent Chrome from caching
+                        credentials: 'same-origin'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const cartCountElement = document.getElementById('cartCount');
+                            if (cartCountElement) {
+                                // Use innerHTML for better Chrome compatibility
+                                cartCountElement.innerHTML = data.data.cart_count;
+                                // Alternative: Force re-paint
+                                cartCountElement.offsetHeight; // Trigger reflow
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error updating cart count:', error);
+                    });
                 }
             }
 

@@ -141,10 +141,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                 <ul>
                     <li> <a href="index.php" class="main_link"> home </a> </li>
                     <li><a href="about.html" class="main_link"> about us </a></li>
-                    <li> <a href="portfolio.html" class="main_link"> projects </a> </li>
-                    <li> <a href="blog.php" class="main_link"> news </a> </li>
+                    <li> <a href="portfolio.php" class="main_link"> projects </a> </li>
                     <li> <a href="shop.php" class="main_link"> shop </a> </li>
-                    <li> <a href="contact.html" class="main_link"> contact </a> </li>
+                    <li> <a href="contact.php" class="main_link"> contact </a> </li>
                 </ul>
             </div>
         </div>
@@ -175,13 +174,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                             <a class="nav-link" href="about.html">About Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="portfolio.html">Projects</a>
+                            <a class="nav-link" href="portfolio.php">Projects</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="shop.php">Shop</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact</a>
+                            <a class="nav-link" href="contact.php">Contact</a>
                         </li>
                     </ul>
                     <div class="nav-side">
@@ -199,18 +198,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
 
         
         <!--  Start page header  -->
-        <header class="tc-header-style1 checkout-header" style="min-height: 15vh;">
-            <div class="img">
+        <header class="tc-header-style1 checkout-header" style="min-height: 12vh; height: 12vh; max-height: 12vh;">
+            <div class="img" style="min-height: 12vh !important; height: 12vh !important; max-height: 12vh !important;">
                 <img src="assets/img/home1/head_slide2.png" alt="" class="img-cover">
             </div>
-            <div class="info section-padding-x pb-40">
-                <div class="row align-items-end gx-5">
-                    <div class="col-lg-8 offset-lg-2">
-                        <h1 class="js-title wow fadeInUp"> Checkout </h1>
-                        <h5 class="fsz-30 mt-25 fw-400 wow fadeInUp" data-wow-delay="0.2s"> Complete Your Purchase <br> Securely and Confidently </h5>
-                    </div>
-                </div>
-            </div>
+           
         </header>
         <!--  End page header  -->
 
@@ -534,22 +526,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
             // Initialize WOW.js
             new WOW().init();
 
-            // Get cart from localStorage
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            // Get cart from session via AJAX
+            let cart = [];
             
+            // Fetch cart from server
+            fetch('cart-ajax.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=get_cart&cache_buster=' + Date.now(),
+                cache: 'no-store',
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.data.cart.length > 0) {
+                    cart = data.data.cart;
+                    renderCheckoutPage(cart);
+                } else {
+                    alert('Your cart is empty. Redirecting to shop...');
+                    window.location.href = 'shop.php';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading cart:', error);
+                alert('Error loading cart. Please try again.');
+            });
+        }); // Close DOMContentLoaded
+        
+        function renderCheckoutPage(cart) {
             if (cart.length === 0) {
                 alert('Your cart is empty. Redirecting to shop...');
-                window.location.href = 'shop.html';
+                window.location.href = 'shop.php';
                 return;
             }
 
             // Display order items
             function displayOrderItems() {
                 const orderItems = document.getElementById('orderItems');
-                orderItems.innerHTML = cart.map(item => `
+                
+                if (!orderItems) {
+                    return;
+                }
+                
+                const itemsHTML = cart.map(item => {
+                    // Fix image path  
+                    let imagePath = item.image || 'assets/img/home1/projects/proj1.jpg';
+                    if (imagePath.startsWith('../')) {
+                        imagePath = imagePath.replace('../', 'cms/');
+                    } else if (!imagePath.startsWith('cms/') && !imagePath.startsWith('assets/')) {
+                        imagePath = 'cms/' + imagePath;
+                    }
+                    return `
                     <div class="order-item d-flex justify-content-between align-items-center mb-3">
                         <div class="d-flex align-items-center">
-                            <img src="${item.image}" alt="${item.name}" class="img-fluid rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                            <img src="${imagePath}" alt="${item.name}" class="img-fluid rounded me-3" style="width: 50px; height: 50px; object-fit: cover;" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
                             <div>
                                 <h6 class="mb-1">${item.name}</h6>
                                 <small class="text-muted">Qty: ${item.quantity}</small>
@@ -557,7 +589,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                         </div>
                         <span class="fw-bold">UGX ${(item.price * item.quantity).toLocaleString()}</span>
                     </div>
-                `).join('');
+                `;
+                }).join('');
+                
+                orderItems.innerHTML = itemsHTML;
             }
 
             // Calculate and display totals
@@ -622,9 +657,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                 return isValid;
             }
 
-            // Global cart data for Flutterwave
+            // Global cart data for Flutterwave and payment functions
             window.cartData = cart;
-        });
+            window.checkoutCart = cart; // Make cart accessible to payment functions
+        } // Close renderCheckoutPage
 
         // Payment Method Selection
         let selectedPaymentMethod = null;
@@ -681,12 +717,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
 
         // Flutterwave Payment Function (Backend Integration)
         function payWithFlutterwave(paymentType) {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            
-            if (cart.length === 0) {
-                alert('Your cart is empty!');
-                return;
-            }
+            // Fetch cart from session
+            fetch('cart-ajax.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=get_cart&cache_buster=' + Date.now(),
+                cache: 'no-store',
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success || data.data.cart.length === 0) {
+                    alert('Your cart is empty!');
+                    return;
+                }
+                
+                const cart = data.data.cart;
+                processFlutterwavePayment(cart, paymentType);
+            })
+            .catch(error => {
+                console.error('Error loading cart:', error);
+                alert('Error processing payment. Please try again.');
+            });
+        }
+        
+        function processFlutterwavePayment(cart, paymentType) {
 
             // Calculate totals
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -745,7 +802,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
 
         // Submit order after successful payment
         function submitOrder(paymentData) {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            // Fetch cart from session
+            fetch('cart-ajax.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=get_cart&cache_buster=' + Date.now(),
+                cache: 'no-store',
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success || data.data.cart.length === 0) {
+                    alert('Cart is empty. Cannot submit order.');
+                    return;
+                }
+                
+                const cart = data.data.cart;
+                processOrderSubmission(cart, paymentData);
+            })
+            .catch(error => {
+                console.error('Error loading cart:', error);
+                alert('Error submitting order. Please try again.');
+            });
+        }
+        
+        function processOrderSubmission(cart, paymentData) {
             const form = document.getElementById('checkoutForm');
             
             // Create hidden input for cart data

@@ -283,12 +283,12 @@ $categories_result = $conn->query($categories_query);
                                 ]);
                             ?>
                             <div class="col-lg-4 col-md-6 mb-4">
-                                <div class="product-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s" onclick="window.location.href='product-details.php?id=<?php echo $product['id']; ?>'" style="cursor: pointer;">
+                                <div class="product-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s" data-product-url="product-details.php?id=<?php echo $product['id']; ?>" style="cursor: pointer;">
                                     <div class="img">
                                         <img src="<?php echo $image; ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="img-cover">
                                         <div class="overlay">
                                             <a href="product-details.php?id=<?php echo $product['id']; ?>" class="btn btn-sm btn-primary">Quick View</a>
-                                            <button type="button" class="btn btn-sm btn-outline-light add-to-cart-btn" data-product='<?php echo htmlspecialchars($product_json); ?>' onclick="event.stopPropagation();">
+                                            <button type="button" class="btn btn-sm btn-outline-light add-to-cart-btn" data-product='<?php echo htmlspecialchars($product_json); ?>'>
                                                 <i class="la la-shopping-cart me-1"></i>Add to Cart
                                             </button>
                                         </div>
@@ -448,88 +448,111 @@ $categories_result = $conn->query($categories_query);
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: 'action=get_cart'
+                    body: 'action=get_cart&cache_buster=' + Date.now(), // Cache busting for Chrome
+                    cache: 'no-store', // Prevent Chrome from caching
+                    credentials: 'same-origin'
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
                         const cartCountElement = document.getElementById('cartCount');
                         if (cartCountElement) {
-                            cartCountElement.textContent = data.data.cart_count;
+                            // Use innerHTML for better Chrome compatibility
+                            cartCountElement.innerHTML = data.data.cart_count;
+                            // Alternative: Force re-paint
+                            cartCountElement.offsetHeight; // Trigger reflow
                         }
                     }
                 })
                 .catch(error => {
                     // Silent fail - cart count update is not critical
+                    console.error('Cart count update error:', error);
                 });
             }
 
             // Initialize cart count on page load
             updateCartCount();
 
+            // Handle product card navigation (anywhere on card except buttons)
+            document.addEventListener('click', function(e) {
+                // Don't navigate if clicking on the add-to-cart button specifically
+                if (e.target.closest('.add-to-cart-btn')) {
+                    return; // Let the add to cart handler take over
+                }
+                
+                // Navigate if clicking anywhere on the product card (including Quick View link)
+                const productCard = e.target.closest('.product-card');
+                if (productCard) {
+                    const url = productCard.getAttribute('data-product-url');
+                    if (url) {
+                        window.location.href = url;
+                    }
+                }
+            });
 
-            // Add to cart functionality via AJAX
+            // Add to cart functionality via AJAX - Use capture phase to catch event first
             document.addEventListener('click', function(e) {
                 // Check if clicked element or its parent is the add-to-cart button
                 const button = e.target.classList.contains('add-to-cart-btn') ? e.target : e.target.closest('.add-to-cart-btn');
                 
                 if (button) {
+                    // CRITICAL: Stop propagation IMMEDIATELY before any other handlers
                     e.preventDefault();
                     e.stopPropagation();
+                    e.stopImmediatePropagation(); // Stop other listeners on same element
                     
-                    const productData = JSON.parse(button.getAttribute('data-product'));
-                    
-                    // Show loading state
-                    const originalText = button.innerHTML;
-                    button.innerHTML = '<i class="la la-spinner la-spin me-2"></i>Adding...';
-                    button.disabled = true;
-                    
-                    // Make AJAX call
-                    console.log('🛒 Adding to cart:', productData);
-                    fetch('cart-ajax.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: `action=add_to_cart&product_id=${productData.id}&quantity=1`
-                    })
-                    .then(response => {
-                        console.log('📡 Response status:', response.status);
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('📦 Cart response:', data);
-                        if (data.success) {
-                            // Update cart count
-                            updateCartCount();
-                            
-                            // Show success message
-                            button.innerHTML = '<i class="la la-check me-2"></i>Added!';
-                            button.classList.remove('btn-outline-light');
-                            button.classList.add('btn-success');
-                            
-                            setTimeout(() => {
-                                button.innerHTML = originalText;
-                                button.classList.remove('btn-success');
-                                button.classList.add('btn-outline-light');
-                                button.disabled = false;
-                            }, 2000);
-                            
-                            // Show modal notification
-                            showModal('Success', data.message, 'success');
-                        } else {
-                            console.error('❌ Add to cart failed:', data.message);
-                            throw new Error(data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error adding to cart:', error);
-                        button.innerHTML = originalText;
-                        button.disabled = false;
-                        showModal('Error', 'Error adding product to cart. Please try again.', 'error');
-                    });
+                    try {
+                        const productData = JSON.parse(button.getAttribute('data-product'));
+                        
+                        // Show loading state
+                        const originalText = button.innerHTML;
+                        button.innerHTML = '<i class="la la-spinner la-spin me-2"></i>Adding...';
+                        button.disabled = true;
+                        
+                        // Make AJAX call
+                        fetch('cart-ajax.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: `action=add_to_cart&product_id=${productData.id}&quantity=1&cache_buster=${Date.now()}`,
+                            cache: 'no-store',
+                            credentials: 'same-origin'
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Update cart count
+                                updateCartCount();
+                                
+                                // Show success message
+                                button.innerHTML = '<i class="la la-check me-2"></i>Added!';
+                                button.classList.remove('btn-outline-light');
+                                button.classList.add('btn-success');
+                                
+                                setTimeout(() => {
+                                    button.innerHTML = originalText;
+                                    button.classList.remove('btn-success');
+                                    button.classList.add('btn-outline-light');
+                                    button.disabled = false;
+                                }, 2000);
+                                
+                                // Show modal notification
+                                showModal('Success', data.message, 'success');
+                            } else {
+                                throw new Error(data.message);
+                            }
+                        })
+                        .catch(error => {
+                            button.innerHTML = originalText;
+                            button.disabled = false;
+                            showModal('Error', 'Error adding product to cart. Please try again.', 'error');
+                        });
+                    } catch (error) {
+                        // Silent error handling
+                    }
                 }
-            });
+            }, true); // Use capture phase to run BEFORE the product card click handler
 
             // Modal notification function
             function showModal(title, message, type = 'info') {

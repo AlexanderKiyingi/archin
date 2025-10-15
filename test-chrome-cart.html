@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chrome Cart Counter Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; background: #f9f9f9; }
+        button { padding: 12px 24px; margin: 10px 5px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        button:hover { background: #0056b3; }
+        .result { margin: 15px 0; padding: 15px; background: white; border-left: 4px solid #007bff; font-family: monospace; white-space: pre-wrap; }
+        .error { border-left-color: #dc3545; background: #f8d7da; }
+        .success { border-left-color: #28a745; background: #d4edda; }
+        .info { border-left-color: #17a2b8; background: #d1ecf1; }
+        h1 { color: #333; }
+        h2 { color: #666; margin-top: 30px; }
+        .cart-badge { 
+            display: inline-block;
+            background: #ff6b35;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Chrome Cart Counter Diagnostic Tool</h1>
+    <p>This tool will help identify why the cart counter isn't working in Chrome.</p>
+
+    <div class="test-section">
+        <h2>Current Cart Count: <span class="cart-badge" id="cartCountDisplay">0</span></h2>
+        <button onclick="getCurrentCartCount()">🔄 Refresh Cart Count</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 1: Add Item to Cart</h2>
+        <button onclick="testAddToCart()">➕ Add Product ID 1</button>
+        <div id="addResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Check Session Storage</h2>
+        <button onclick="checkSessionStorage()">📦 Check Session</button>
+        <div id="sessionResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Check Browser Info</h2>
+        <button onclick="checkBrowserInfo()">🌐 Check Browser</button>
+        <div id="browserResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: Direct AJAX Test (No Cache)</h2>
+        <button onclick="testDirectAjax()">🔗 Test AJAX</button>
+        <div id="ajaxResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Console Logs</h2>
+        <div id="consoleLog" class="result info">Check browser console (F12) for detailed logs...</div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            console.log(message);
+            const logDiv = document.getElementById('consoleLog');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}\n`;
+        }
+
+        function getCurrentCartCount() {
+            log('🔄 Fetching current cart count...');
+            
+            fetch('cart-ajax.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=get_cart&cache_buster=' + Date.now(),
+                cache: 'no-store',
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                log('📡 Response received, status: ' + response.status);
+                return response.json();
+            })
+            .then(data => {
+                log('📦 Cart data: ' + JSON.stringify(data, null, 2));
+                if (data.success) {
+                    const count = data.data.cart_count;
+                    document.getElementById('cartCountDisplay').textContent = count;
+                    log('✅ Cart count updated to: ' + count);
+                } else {
+                    log('❌ Failed to get cart: ' + data.message);
+                }
+            })
+            .catch(error => {
+                log('❌ Error: ' + error.message);
+            });
+        }
+
+        function testAddToCart() {
+            log('➕ Adding product to cart...');
+            const resultDiv = document.getElementById('addResult');
+            resultDiv.className = 'result';
+            resultDiv.textContent = 'Adding product...';
+
+            fetch('cart-ajax.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=add_to_cart&product_id=1&quantity=1&cache_buster=' + Date.now(),
+                cache: 'no-store',
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                log('📡 Add response status: ' + response.status);
+                return response.json();
+            })
+            .then(data => {
+                log('📦 Add response: ' + JSON.stringify(data, null, 2));
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.className = data.success ? 'result success' : 'result error';
+                
+                if (data.success) {
+                    getCurrentCartCount();
+                }
+            })
+            .catch(error => {
+                log('❌ Add error: ' + error.message);
+                resultDiv.textContent = 'Error: ' + error.message;
+                resultDiv.className = 'result error';
+            });
+        }
+
+        function checkSessionStorage() {
+            const resultDiv = document.getElementById('sessionResult');
+            log('📦 Checking session storage...');
+            
+            const info = {
+                'Cookies Enabled': navigator.cookieEnabled,
+                'Session Storage Available': typeof(Storage) !== "undefined",
+                'Local Storage Available': typeof(localStorage) !== "undefined",
+                'Document Cookie': document.cookie || 'No cookies found',
+                'User Agent': navigator.userAgent
+            };
+            
+            resultDiv.textContent = JSON.stringify(info, null, 2);
+            resultDiv.className = 'result info';
+            log('📦 Session info: ' + JSON.stringify(info, null, 2));
+        }
+
+        function checkBrowserInfo() {
+            const resultDiv = document.getElementById('browserResult');
+            log('🌐 Checking browser info...');
+            
+            const info = {
+                'Browser': navigator.userAgent,
+                'Platform': navigator.platform,
+                'Language': navigator.language,
+                'Online': navigator.onLine,
+                'Cookies Enabled': navigator.cookieEnabled,
+                'Fetch API': typeof fetch !== 'undefined',
+                'Chrome Detected': /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor)
+            };
+            
+            resultDiv.textContent = JSON.stringify(info, null, 2);
+            resultDiv.className = 'result info';
+            log('🌐 Browser info: ' + JSON.stringify(info, null, 2));
+        }
+
+        function testDirectAjax() {
+            const resultDiv = document.getElementById('ajaxResult');
+            log('🔗 Testing direct AJAX with multiple cache-busting methods...');
+            resultDiv.textContent = 'Testing AJAX...';
+            
+            const url = 'cart-ajax.php?' + new Date().getTime();
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                },
+                body: 'action=get_cart&t=' + Date.now() + '&rand=' + Math.random(),
+                cache: 'no-store',
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                log('📡 Direct AJAX status: ' + response.status);
+                log('📡 Headers: ' + JSON.stringify([...response.headers]));
+                return response.json();
+            })
+            .then(data => {
+                log('📦 Direct AJAX response: ' + JSON.stringify(data, null, 2));
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.className = data.success ? 'result success' : 'result error';
+            })
+            .catch(error => {
+                log('❌ Direct AJAX error: ' + error.message);
+                resultDiv.textContent = 'Error: ' + error.message;
+                resultDiv.className = 'result error';
+            });
+        }
+
+        // Auto-run on load
+        window.onload = function() {
+            log('🚀 Page loaded, running initial tests...');
+            checkBrowserInfo();
+            getCurrentCartCount();
+        };
+    </script>
+</body>
+</html>

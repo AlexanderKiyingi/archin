@@ -1,11 +1,23 @@
 <?php
 // Start session FIRST before any output
 if (session_status() === PHP_SESSION_NONE) {
+    // Set session cookie parameters for Chrome compatibility
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'domain' => '',
+        'secure' => false, // Set to true if using HTTPS
+        'httponly' => true,
+        'samesite' => 'Lax' // Chrome compatibility
+    ]);
     session_start();
 }
 
-// AJAX Cart Handler
+// AJAX Cart Handler - Set headers for Chrome
 header('Content-Type: application/json');
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
 
 // Include centralized database connection
 require_once 'cms/db_connect.php';
@@ -15,15 +27,10 @@ $action = $_POST['action'] ?? '';
 $response = ['success' => false, 'message' => '', 'data' => null];
 
 try {
-    // Debug logging
-    error_log("Cart AJAX - Action: $action, POST data: " . json_encode($_POST));
-    
     switch ($action) {
         case 'add_to_cart':
             $product_id = intval($_POST['product_id']);
             $quantity = intval($_POST['quantity'] ?? 1);
-            
-            error_log("Cart AJAX - Adding product ID: $product_id, Quantity: $quantity");
             
             // Get product details
             $stmt = $conn->prepare("SELECT * FROM shop_products WHERE id = ? AND is_active = 1");
@@ -32,13 +39,11 @@ try {
             $result = $stmt->get_result();
             
             if ($result->num_rows === 0) {
-                error_log("Cart AJAX - Product not found: $product_id");
                 $response['message'] = 'Product not found';
                 break;
             }
             
             $product = $result->fetch_assoc();
-            error_log("Cart AJAX - Product found: " . $product['name']);
             
             // Initialize cart if not exists
             if (!isset($_SESSION['cart'])) {
@@ -71,8 +76,6 @@ try {
             $cart_total = array_sum(array_map(function($item) { 
                 return $item['price'] * $item['quantity']; 
             }, $_SESSION['cart']));
-            
-            error_log("Cart AJAX - Cart updated. Count: $cart_count, Total: $cart_total");
             
             $response['success'] = true;
             $response['message'] = 'Product added to cart successfully';
@@ -162,8 +165,7 @@ try {
     }
     
 } catch (Exception $e) {
-    error_log("Cart AJAX - Exception: " . $e->getMessage());
-    $response['message'] = 'Server error occurred: ' . $e->getMessage();
+    $response['message'] = 'Server error occurred';
 }
 
 echo json_encode($response);
