@@ -4735,6 +4735,44 @@ html[lang=ar] .home-style1 .loader-wrap {
   padding: 5px 10px;
 }
 
+/* Mobile Money Network Selection */
+.network-option {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.network-card {
+  border: 2px solid #ddd;
+  transition: all 0.3s ease;
+}
+
+.network-card:hover {
+  border-color: #007bff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+}
+
+.network-card.selected {
+  border-color: #007bff;
+  background-color: #f0f8ff;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
+}
+
+.mobile-money-details {
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Cart page styles */
 .cart-header {
   min-height: 12vh !important;

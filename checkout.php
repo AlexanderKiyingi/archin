@@ -326,9 +326,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                                                             <h6 class="card-title">VISA Card</h6>
                                                             <small class="text-muted">Credit & Debit Cards</small>
                                                         </div>
+                                                    </div>
+                                        </div>
+                                        </div>
+                                        </div>
                                     </div>
-                                        </div>
-                                        </div>
+                                    
+                                    <!-- Mobile Money Details (Hidden by default) -->
+                                    <div id="mobileMoneyDetails" class="mobile-money-details mt-4" style="display: none;">
+                                        <div class="card border-primary">
+                                            <div class="card-body">
+                                                <h6 class="card-title mb-3"><i class="la la-mobile-alt me-2"></i>Mobile Money Payment Details</h6>
+                                                
+                                                <!-- Network Selection -->
+                                                <div class="mb-3">
+                                                    <label class="form-label">Select Network Provider <span class="text-danger">*</span></label>
+                                                    <div class="row">
+                                                        <div class="col-6 mb-2">
+                                                            <div class="network-option" onclick="selectNetwork('mtn')">
+                                                                <div class="card network-card" id="mtn-card">
+                                                                    <div class="card-body text-center py-3">
+                                                                        <div class="fw-bold text-warning" style="font-size: 1.2rem;">MTN</div>
+                                                                        <small class="text-muted">Mobile Money</small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6 mb-2">
+                                                            <div class="network-option" onclick="selectNetwork('airtel')">
+                                                                <div class="card network-card" id="airtel-card">
+                                                                    <div class="card-body text-center py-3">
+                                                                        <div class="fw-bold text-danger" style="font-size: 1.2rem;">Airtel</div>
+                                                                        <small class="text-muted">Mobile Money</small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Phone Number Input -->
+                                                <div class="mb-3">
+                                                    <label for="mobileMoneyPhone" class="form-label">Mobile Money Phone Number <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text"><i class="la la-phone"></i></span>
+                                                        <input type="tel" class="form-control" id="mobileMoneyPhone" name="mobileMoneyPhone" 
+                                                               placeholder="e.g., 0701234567" pattern="[0-9]{10}" maxlength="10" required>
+                                                    </div>
+                                                    <small class="text-muted">Enter the phone number to debit from</small>
+                                                </div>
+                                                
+                                                <div class="alert alert-info mb-0">
+                                                    <i class="la la-info-circle me-2"></i>
+                                                    <small>You will receive a prompt on your phone to authorize the payment.</small>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     
@@ -664,6 +716,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
 
         // Payment Method Selection
         let selectedPaymentMethod = null;
+        let selectedNetwork = null;
 
         function selectPaymentMethod(method) {
             selectedPaymentMethod = method;
@@ -676,11 +729,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
             // Add selected class to clicked card
             document.getElementById(method + '-card').classList.add('selected');
             
-            // Enable pay button and update text
+            // Show/hide mobile money details
+            const mobileMoneyDetails = document.getElementById('mobileMoneyDetails');
+            if (method === 'mobilemoney') {
+                mobileMoneyDetails.style.display = 'block';
+                // Initially disable pay button until network and phone are provided
+                document.getElementById('pay-btn').disabled = true;
+            } else {
+                mobileMoneyDetails.style.display = 'none';
+                selectedNetwork = null;
+                // Enable pay button for VISA
+                document.getElementById('pay-btn').disabled = false;
+            }
+            
+            // Update pay button text
             const payBtn = document.getElementById('pay-btn');
             const payBtnText = document.getElementById('pay-btn-text');
-            
-            payBtn.disabled = false;
             
             if (method === 'mobilemoney') {
                 payBtnText.textContent = 'Pay with Mobile Money';
@@ -690,6 +754,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                 payBtn.innerHTML = '<i class="la la-credit-card me-2"></i><span id="pay-btn-text">Pay with VISA Card</span>';
             }
         }
+        
+        // Network Selection for Mobile Money
+        function selectNetwork(network) {
+            selectedNetwork = network;
+            
+            // Remove selected class from all network cards
+            document.querySelectorAll('.network-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked network card
+            document.getElementById(network + '-card').classList.add('selected');
+            
+            // Enable pay button if phone number is also filled
+            validateMobileMoneyPayment();
+        }
+        
+        // Validate Mobile Money Payment Details
+        function validateMobileMoneyPayment() {
+            const phoneNumber = document.getElementById('mobileMoneyPhone').value;
+            const payBtn = document.getElementById('pay-btn');
+            
+            // Enable pay button only if network is selected and phone number is valid
+            if (selectedNetwork && phoneNumber && phoneNumber.length === 10) {
+                payBtn.disabled = false;
+            } else {
+                payBtn.disabled = true;
+            }
+        }
+        
+        // Add event listener to phone number input
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInput = document.getElementById('mobileMoneyPhone');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', validateMobileMoneyPayment);
+            }
+        });
 
         // Process Payment Function
         function processPayment() {
@@ -699,6 +800,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
             }
 
             if (selectedPaymentMethod === 'mobilemoney') {
+                // Validate mobile money details
+                if (!selectedNetwork) {
+                    alert('Please select a mobile money network (MTN or Airtel)');
+                    return;
+                }
+                
+                const phoneNumber = document.getElementById('mobileMoneyPhone').value;
+                if (!phoneNumber || phoneNumber.length !== 10) {
+                    alert('Please enter a valid 10-digit phone number');
+                    return;
+                }
+                
                 payWithMobileMoney();
             } else if (selectedPaymentMethod === 'visa') {
                 payWithVisa();
@@ -761,12 +874,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
             const customerName = document.getElementById('firstName').value + ' ' + document.getElementById('lastName').value;
             const customerEmail = document.getElementById('email').value;
             const customerPhone = document.getElementById('phone').value;
+            
+            // Get mobile money details if applicable
+            let mobileMoneyPhone = customerPhone; // Default to customer phone
+            let mobileMoneyNetwork = '';
+            
+            if (paymentType === 'mobilemoney') {
+                const mmPhone = document.getElementById('mobileMoneyPhone').value;
+                if (mmPhone && mmPhone.length === 10) {
+                    mobileMoneyPhone = mmPhone;
+                }
+                mobileMoneyNetwork = selectedNetwork ? selectedNetwork.toUpperCase() : '';
+            }
 
             // Generate unique transaction reference
             const txRef = 'FA-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
 
             // Flutterwave payment configuration
-            FlutterwaveCheckout({
+            const paymentConfig = {
                 public_key: "<?php echo getFlutterwavePublicKey(); ?>",
                 tx_ref: txRef,
                 amount: total,
@@ -775,7 +900,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                 redirect_url: "order-success.php",
                 customer: {
                     email: customerEmail,
-                    phone_number: customerPhone,
+                    phone_number: paymentType === 'mobilemoney' ? mobileMoneyPhone : customerPhone,
                     name: customerName,
                 },
                 customizations: {
@@ -790,14 +915,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                         document.getElementById('payment_status').value = 'paid';
                         document.getElementById('transaction_id').value = data.transaction_id;
                         
-                        // Submit form to process order
-                        submitOrder(data);
+                        // Submit form to process order with mobile money details
+                        const paymentDetails = {
+                            ...data,
+                            mobile_money_network: mobileMoneyNetwork,
+                            mobile_money_phone: mobileMoneyPhone
+                        };
+                        submitOrder(paymentDetails);
                     }
                 },
                 onclose: function() {
                     // Payment cancelled - user will remain on checkout page
                 }
-            });
+            };
+            
+            // Add mobile money specific options if applicable
+            if (paymentType === 'mobilemoney' && mobileMoneyNetwork) {
+                paymentConfig.meta = {
+                    network: mobileMoneyNetwork,
+                    phone: mobileMoneyPhone
+                };
+            }
+            
+            FlutterwaveCheckout(paymentConfig);
         }
 
         // Submit order after successful payment
