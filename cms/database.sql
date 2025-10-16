@@ -4,7 +4,7 @@
 CREATE DATABASE IF NOT EXISTS flipavenue_cms;
 USE flipavenue_cms;
 
--- Admin Users Table
+-- Admin Users Table with Enhanced Security
 CREATE TABLE IF NOT EXISTS admin_users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -12,9 +12,12 @@ CREATE TABLE IF NOT EXISTS admin_users (
     password VARCHAR(255) NOT NULL,
     full_name VARCHAR(100),
     role ENUM('super_admin', 'admin', 'editor') DEFAULT 'editor',
+    two_factor_enabled BOOLEAN DEFAULT FALSE COMMENT 'Two-factor authentication enabled',
+    account_locked_until TIMESTAMP NULL COMMENT 'Account lockout expiration time',
+    failed_login_count INT DEFAULT 0 COMMENT 'Number of consecutive failed login attempts',
+    last_login TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    last_login TIMESTAMP NULL,
     is_active BOOLEAN DEFAULT TRUE
 );
 
@@ -162,6 +165,18 @@ CREATE TABLE IF NOT EXISTS career_applications (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Login Attempts (for brute force protection)
+CREATE TABLE IF NOT EXISTS login_attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    attempt_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    success BOOLEAN DEFAULT FALSE,
+    user_agent TEXT,
+    INDEX idx_username_time (username, attempt_time),
+    INDEX idx_ip_time (ip_address, attempt_time)
+);
+
 -- Insert Default Admin User (password: admin123 - CHANGE THIS!)
 INSERT INTO admin_users (username, email, password, full_name, role) 
 VALUES ('admin', 'admin@flipavenueltd.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'System Administrator', 'super_admin');
@@ -214,7 +229,7 @@ CREATE TABLE IF NOT EXISTS shop_products (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Create shop_orders table
+-- Create shop_orders table with Flutterwave payment integration
 CREATE TABLE IF NOT EXISTS shop_orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     order_number VARCHAR(50) UNIQUE NOT NULL,
@@ -229,7 +244,11 @@ CREATE TABLE IF NOT EXISTS shop_orders (
     total_amount DECIMAL(10,2) NOT NULL,
     payment_status ENUM('pending', 'paid', 'failed', 'refunded') DEFAULT 'pending',
     order_status ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending',
-    order_notes TEXT,
+    transaction_id VARCHAR(255) NULL COMMENT 'Flutterwave transaction ID',
+    payment_method ENUM('mobilemoney', 'visa', 'card') NULL COMMENT 'Payment method used',
+    mobile_money_network ENUM('MTN', 'AIRTEL', 'AFRICELL') NULL COMMENT 'Mobile money network provider',
+    mobile_money_phone VARCHAR(20) NULL COMMENT 'Mobile money phone number',
+    order_notes TEXT NULL COMMENT 'Customer notes and special instructions for the order',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -250,10 +269,175 @@ CREATE TABLE IF NOT EXISTS shop_order_items (
 
 -- Insert sample shop products
 INSERT INTO shop_products (name, description, price, category, tags, featured_image) VALUES
-('Architectural Design Toolkit', 'Complete set of professional architectural design tools, templates, and digital resources for modern architects.', 89.00, 'Design Tools', 'architectural, design, toolkit, professional', '../assets/uploads/shop/toolkit.jpg'),
-('Modern Architecture Guide', 'Comprehensive 300-page guide covering contemporary architectural principles, sustainable design, and innovative building techniques.', 45.00, 'Books & Guides', 'architecture, guide, modern, sustainable', '../assets/uploads/shop/guide.jpg'),
-('Professional CAD Software', 'Industry-leading CAD software with advanced architectural modeling, 3D rendering, and BIM capabilities for professional architects.', 299.00, 'Software', 'cad, software, bim, 3d, modeling', '../assets/uploads/shop/cad-software.jpg'),
-('Modern Building 3D Models', 'High-quality 3D building models with detailed textures, perfect for architectural visualization and presentation projects.', 25.00, '3D Models', '3d, models, buildings, visualization', '../assets/uploads/shop/3d-models.jpg'),
-('Architecture Templates Pack', 'Professional presentation templates, drawing layouts, and documentation formats for architectural projects.', 35.00, 'Templates', 'templates, presentation, documentation', '../assets/uploads/shop/templates.jpg'),
-('Advanced Architecture Course', 'Comprehensive 40-hour online course covering advanced architectural concepts, sustainable design, and modern construction techniques.', 149.00, 'Courses', 'course, online, advanced, architecture', '../assets/uploads/shop/course.jpg');
+('Architectural Design Toolkit', 'Complete set of professional architectural design tools, templates, and digital resources for modern architects.', 32500.00, 'Design Tools', 'architectural, design, toolkit, professional', '../assets/uploads/shop/toolkit.jpg'),
+('Modern Architecture Guide', 'Comprehensive 300-page guide covering contemporary architectural principles, sustainable design, and innovative building techniques.', 45000.00, 'Books & Guides', 'architecture, guide, modern, sustainable', '../assets/uploads/shop/guide.jpg'),
+('Professional CAD Software', 'Industry-leading CAD software with advanced architectural modeling, 3D rendering, and BIM capabilities for professional architects.', 299000.00, 'Software', 'cad, software, bim, 3d, modeling', '../assets/uploads/shop/cad-software.jpg'),
+('Modern Building 3D Models', 'High-quality 3D building models with detailed textures, perfect for architectural visualization and presentation projects.', 32500.00, '3D Models', '3d, models, buildings, visualization', '../assets/uploads/shop/3d-models.jpg'),
+('Architecture Templates Pack', 'Professional presentation templates, drawing layouts, and documentation formats for architectural projects.', 35000.00, 'Templates', 'templates, presentation, documentation', '../assets/uploads/shop/templates.jpg'),
+('Advanced Architecture Course', 'Comprehensive 40-hour online course covering advanced architectural concepts, sustainable design, and modern construction techniques.', 149000.00, 'Courses', 'course, online, advanced, architecture', '../assets/uploads/shop/course.jpg');
+
+-- ========================================
+-- MIGRATION SECTION FOR EXISTING INSTALLATIONS
+-- ========================================
+-- Run this section if you have an existing installation that needs to be updated
+
+-- Add Flutterwave payment columns to existing shop_orders table
+-- Check if columns exist before adding (MySQL 5.7+)
+
+-- Add transaction_id column
+SET @dbname = DATABASE();
+SET @tablename = 'shop_orders';
+SET @columnname = 'transaction_id';
+SET @preparedStatement = (SELECT IF(
+  (
+    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE
+      (table_name = @tablename)
+      AND (table_schema = @dbname)
+      AND (column_name = @columnname)
+  ) > 0,
+  'SELECT 1',
+  CONCAT('ALTER TABLE ', @tablename, ' ADD COLUMN ', @columnname, ' VARCHAR(255) NULL COMMENT "Flutterwave transaction ID" AFTER order_status')
+));
+PREPARE alterIfNotExists FROM @preparedStatement;
+EXECUTE alterIfNotExists;
+DEALLOCATE PREPARE alterIfNotExists;
+
+-- Add payment_method column
+SET @columnname = 'payment_method';
+SET @preparedStatement = (SELECT IF(
+  (
+    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE
+      (table_name = @tablename)
+      AND (table_schema = @dbname)
+      AND (column_name = @columnname)
+  ) > 0,
+  'SELECT 1',
+  CONCAT('ALTER TABLE ', @tablename, ' ADD COLUMN ', @columnname, ' ENUM("mobilemoney", "visa", "card") NULL COMMENT "Payment method used" AFTER transaction_id')
+));
+PREPARE alterIfNotExists FROM @preparedStatement;
+EXECUTE alterIfNotExists;
+DEALLOCATE PREPARE alterIfNotExists;
+
+-- Add mobile_money_network column
+SET @columnname = 'mobile_money_network';
+SET @preparedStatement = (SELECT IF(
+  (
+    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE
+      (table_name = @tablename)
+      AND (table_schema = @dbname)
+      AND (column_name = @columnname)
+  ) > 0,
+  'SELECT 1',
+  CONCAT('ALTER TABLE ', @tablename, ' ADD COLUMN ', @columnname, ' ENUM("MTN", "AIRTEL", "AFRICELL") NULL COMMENT "Mobile money network provider" AFTER payment_method')
+));
+PREPARE alterIfNotExists FROM @preparedStatement;
+EXECUTE alterIfNotExists;
+DEALLOCATE PREPARE alterIfNotExists;
+
+-- Add mobile_money_phone column
+SET @columnname = 'mobile_money_phone';
+SET @preparedStatement = (SELECT IF(
+  (
+    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE
+      (table_name = @tablename)
+      AND (table_schema = @dbname)
+      AND (column_name = @columnname)
+  ) > 0,
+  'SELECT 1',
+  CONCAT('ALTER TABLE ', @tablename, ' ADD COLUMN ', @columnname, ' VARCHAR(20) NULL COMMENT "Mobile money phone number" AFTER mobile_money_network')
+));
+PREPARE alterIfNotExists FROM @preparedStatement;
+EXECUTE alterIfNotExists;
+DEALLOCATE PREPARE alterIfNotExists;
+
+-- Add order_notes column
+SET @columnname = 'order_notes';
+SET @preparedStatement = (SELECT IF(
+  (
+    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE
+      (table_name = @tablename)
+      AND (table_schema = @dbname)
+      AND (column_name = @columnname)
+  ) > 0,
+  'SELECT 1',
+  CONCAT('ALTER TABLE ', @tablename, ' ADD COLUMN ', @columnname, ' TEXT NULL COMMENT "Customer notes and special instructions for the order" AFTER mobile_money_phone')
+));
+PREPARE alterIfNotExists FROM @preparedStatement;
+EXECUTE alterIfNotExists;
+DEALLOCATE PREPARE alterIfNotExists;
+
+-- Add missing security columns to admin_users table
+SET @tablename = 'admin_users';
+
+-- Add two_factor_enabled column
+SET @columnname = 'two_factor_enabled';
+SET @preparedStatement = (SELECT IF(
+  (
+    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE
+      (table_name = @tablename)
+      AND (table_schema = @dbname)
+      AND (column_name = @columnname)
+  ) > 0,
+  'SELECT 1',
+  CONCAT('ALTER TABLE ', @tablename, ' ADD COLUMN ', @columnname, ' BOOLEAN DEFAULT FALSE COMMENT "Two-factor authentication enabled" AFTER role')
+));
+PREPARE alterIfNotExists FROM @preparedStatement;
+EXECUTE alterIfNotExists;
+DEALLOCATE PREPARE alterIfNotExists;
+
+-- Add account_locked_until column
+SET @columnname = 'account_locked_until';
+SET @preparedStatement = (SELECT IF(
+  (
+    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE
+      (table_name = @tablename)
+      AND (table_schema = @dbname)
+      AND (column_name = @columnname)
+  ) > 0,
+  'SELECT 1',
+  CONCAT('ALTER TABLE ', @tablename, ' ADD COLUMN ', @columnname, ' TIMESTAMP NULL COMMENT "Account lockout expiration time" AFTER two_factor_enabled')
+));
+PREPARE alterIfNotExists FROM @preparedStatement;
+EXECUTE alterIfNotExists;
+DEALLOCATE PREPARE alterIfNotExists;
+
+-- Add failed_login_count column
+SET @columnname = 'failed_login_count';
+SET @preparedStatement = (SELECT IF(
+  (
+    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE
+      (table_name = @tablename)
+      AND (table_schema = @dbname)
+      AND (column_name = @columnname)
+  ) > 0,
+  'SELECT 1',
+  CONCAT('ALTER TABLE ', @tablename, ' ADD COLUMN ', @columnname, ' INT DEFAULT 0 COMMENT "Number of consecutive failed login attempts" AFTER account_locked_until')
+));
+PREPARE alterIfNotExists FROM @preparedStatement;
+EXECUTE alterIfNotExists;
+DEALLOCATE PREPARE alterIfNotExists;
+
+-- Add login_attempts table for security system
+CREATE TABLE IF NOT EXISTS login_attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    attempt_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    success BOOLEAN DEFAULT FALSE,
+    user_agent TEXT,
+    INDEX idx_username_time (username, attempt_time),
+    INDEX idx_ip_time (ip_address, attempt_time)
+);
+
+-- ========================================
+-- END OF MIGRATION SECTION
+-- ========================================
 

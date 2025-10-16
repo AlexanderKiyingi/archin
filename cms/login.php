@@ -82,17 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
                         $_SESSION['session_token'] = $session_token;
                         $_SESSION['csrf_token'] = generateCSRFToken();
                         
-                        // Store session in database
-                        $expires_at = date('Y-m-d H:i:s', time() + SESSION_TIMEOUT);
-                        $stmt = $conn->prepare("
-                            INSERT INTO admin_sessions (user_id, session_token, ip_address, user_agent, expires_at) 
-                            VALUES (?, ?, ?, ?, ?)
-                        ");
-                        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
-                        $stmt->bind_param("issss", $user['id'], $session_token, $ip_address, $user_agent, $expires_at);
-                        $stmt->execute();
-                        
-                        // Update last login
+                        // Update last login time (no need for separate sessions table)
                         $stmt = $conn->prepare("UPDATE admin_users SET last_login = NOW() WHERE id = ?");
                         $stmt->bind_param("i", $user['id']);
                         $stmt->execute();

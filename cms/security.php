@@ -199,17 +199,9 @@ function base32_decode($data) {
  * Log security events
  */
 function logSecurityEvent($event, $details = '', $user_id = null) {
-    global $conn;
-    
-    $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-    $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
-    
-    $stmt = $conn->prepare("
-        INSERT INTO security_logs (event_type, details, user_id, ip_address, user_agent, created_at) 
-        VALUES (?, ?, ?, ?, ?, NOW())
-    ");
-    $stmt->bind_param("ssiss", $event, $details, $user_id, $ip_address, $user_agent);
-    $stmt->execute();
+    // Simple file-based logging instead of database table
+    $log_entry = date('Y-m-d H:i:s') . " - Event: $event, Details: $details, User ID: $user_id, IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown') . "\n";
+    error_log($log_entry, 3, __DIR__ . '/security.log');
 }
 
 /**
@@ -327,29 +319,36 @@ function getEncryptionKey() {
  * Rate limiting
  */
 function checkRateLimit($identifier, $max_requests = 100, $time_window = 3600) {
-    global $conn;
+    // Simple file-based rate limiting instead of database table
+    $rate_limit_file = __DIR__ . '/rate_limits.json';
+    $rate_limits = [];
     
-    $stmt = $conn->prepare("
-        SELECT COUNT(*) as requests 
-        FROM rate_limits 
-        WHERE identifier = ? AND created_at > DATE_SUB(NOW(), INTERVAL ? SECOND)
-    ");
-    $stmt->bind_param("si", $identifier, $time_window);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
+    if (file_exists($rate_limit_file)) {
+        $rate_limits = json_decode(file_get_contents($rate_limit_file), true) ?: [];
+    }
     
-    if ($row['requests'] >= $max_requests) {
+    $now = time();
+    $window_start = $now - $time_window;
+    
+    // Clean old entries
+    if (isset($rate_limits[$identifier])) {
+        $rate_limits[$identifier] = array_filter($rate_limits[$identifier], function($timestamp) use ($window_start) {
+            return $timestamp > $window_start;
+        });
+    }
+    
+    // Check if limit exceeded
+    if (isset($rate_limits[$identifier]) && count($rate_limits[$identifier]) >= $max_requests) {
         return false;
     }
     
     // Record this request
-    $stmt = $conn->prepare("
-        INSERT INTO rate_limits (identifier, created_at) 
-        VALUES (?, NOW())
-    ");
-    $stmt->bind_param("s", $identifier);
-    $stmt->execute();
+    if (!isset($rate_limits[$identifier])) {
+        $rate_limits[$identifier] = [];
+    }
+    $rate_limits[$identifier][] = $now;
+    
+    file_put_contents($rate_limit_file, json_encode($rate_limits));
     
     return true;
 }

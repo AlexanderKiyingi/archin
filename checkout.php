@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
     $shipping_address = isset($_POST['different_shipping']) ? 
         $conn->real_escape_string($_POST['shipping_address'] . ', ' . $_POST['shipping_city'] . ', ' . $_POST['shipping_zip']) : 
         $billing_address;
+    $order_notes = isset($_POST['orderNotes']) ? $conn->real_escape_string($_POST['orderNotes']) : '';
     
     // Get cart data from POST
     $cart_data = json_decode($_POST['cart_data'], true);
@@ -26,10 +27,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
     // Get payment data if available
     $payment_status = 'pending';
     $transaction_id = '';
+    $payment_method = '';
+    $mobile_money_network = '';
+    $mobile_money_phone = '';
+    
     if (isset($_POST['payment_data'])) {
         $payment_data = json_decode($_POST['payment_data'], true);
         $payment_status = $payment_data['status'] === 'successful' ? 'paid' : 'pending';
         $transaction_id = $payment_data['transaction_id'] ?? '';
+        $payment_method = $payment_data['payment_method'] ?? '';
+        $mobile_money_network = $payment_data['mobile_money_network'] ?? '';
+        $mobile_money_phone = $payment_data['mobile_money_phone'] ?? '';
     }
     
     // Calculate totals
@@ -47,10 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
     // Insert order
     $order_query = "INSERT INTO shop_orders (order_number, customer_name, customer_email, customer_phone, 
                     billing_address, shipping_address, subtotal, shipping_cost, tax_amount, total_amount, 
-                    payment_status, order_status, transaction_id) 
+                    payment_status, order_status, transaction_id, payment_method, mobile_money_network, mobile_money_phone, order_notes) 
                     VALUES ('$order_number', '$customer_name', '$customer_email', '$customer_phone', 
                     '$billing_address', '$shipping_address', $subtotal, $shipping_cost, $tax_amount, $total_amount, 
-                    '$payment_status', 'pending', '$transaction_id')";
+                    '$payment_status', 'pending', '$transaction_id', '$payment_method', '$mobile_money_network', '$mobile_money_phone', '$order_notes')";
     
     if ($conn->query($order_query)) {
         $order_id = $conn->insert_id;
@@ -65,13 +73,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
             
             $item_query = "INSERT INTO shop_order_items (order_id, product_id, product_name, product_price, quantity, total_price) 
                           VALUES ($order_id, $product_id, '$product_name', $product_price, $quantity, $total_price)";
-            $conn->query($item_query);
+            if (!$conn->query($item_query)) {
+                error_log("Order item insertion failed: " . $conn->error);
+            }
         }
         
         $order_placed = true;
         // Redirect to success page
         header("Location: order-success.php?order=" . $order_number);
         exit();
+    } else {
+        // Log the error for debugging
+        error_log("Order insertion failed: " . $conn->error);
+        error_log("Order query: " . $order_query);
+        $error_message = "Failed to process order. Please try again.";
     }
 }
 ?>
@@ -239,63 +254,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                         <div class="row">
                             <!-- Billing Information -->
                             <div class="col-lg-8">
-                                <div class="checkout-form bg-white rounded p-4 shadow-sm mb-4">
+                                <div class="checkout-form bg-white rounded p-4 shadow-sm">
                                     <h5 class="mb-4">Billing Information</h5>
                                     
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="firstName" class="form-label">First Name *</label>
-                                            <input type="text" class="form-control" id="firstName" required>
+                                            <input type="text" class="form-control" id="firstName" name="firstName" required>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="lastName" class="form-label">Last Name *</label>
-                                            <input type="text" class="form-control" id="lastName" required>
+                                            <input type="text" class="form-control" id="lastName" name="lastName" required>
                                         </div>
                                     </div>
                                     
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="email" class="form-label">Email Address *</label>
-                                            <input type="email" class="form-control" id="email" required>
+                                            <input type="email" class="form-control" id="email" name="email" required>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="phone" class="form-label">Phone Number *</label>
-                                            <input type="tel" class="form-control" id="phone" required>
+                                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="e.g., 0701234567" required>
                                         </div>
                                     </div>
                                     
                                     <div class="mb-3">
                                         <label for="address" class="form-label">Street Address *</label>
-                                        <input type="text" class="form-control" id="address" required>
+                                        <input type="text" class="form-control" id="address" name="address" placeholder="House number and street name" required>
                                     </div>
                                     
                                     <div class="row">
                                         <div class="col-md-4 mb-3">
                                             <label for="city" class="form-label">City *</label>
-                                            <input type="text" class="form-control" id="city" required>
+                                            <input type="text" class="form-control" id="city" name="city" required>
                                         </div>
                                         <div class="col-md-4 mb-3">
                                             <label for="state" class="form-label">State/Province *</label>
-                                            <input type="text" class="form-control" id="state" required>
+                                            <input type="text" class="form-control" id="state" name="state" required>
                                         </div>
                                         <div class="col-md-4 mb-3">
                                             <label for="zipCode" class="form-label">ZIP/Postal Code *</label>
-                                            <input type="text" class="form-control" id="zipCode" required>
+                                            <input type="text" class="form-control" id="zipCode" name="zipCode" required>
                                         </div>
                                     </div>
                                     
                                     <div class="mb-3">
                                         <label for="country" class="form-label">Country *</label>
-                                        <select class="form-select" id="country" required>
+                                        <select class="form-select" id="country" name="country" required>
                                             <option value="">Select Country</option>
-                                            <option value="UG">Uganda</option>
+                                            <option value="UG" selected>Uganda</option>
                                             <option value="KE">Kenya</option>
                                             <option value="TZ">Tanzania</option>
                                             <option value="RW">Rwanda</option>
-                                            <option value="US">United States</option>
-                                            <option value="GB">United Kingdom</option>
-                                            <option value="CA">Canada</option>
+                                            <option value="NG">Nigeria</option>
+                                            <option value="GH">Ghana</option>
+                                            <option value="ZA">South Africa</option>
                                         </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="orderNotes" class="form-label">Order Notes (Optional)</label>
+                                        <textarea class="form-control" id="orderNotes" name="orderNotes" rows="4" placeholder="Add any special instructions or comments about your order..."></textarea>
+                                        <small class="text-muted">e.g., Preferred delivery time, special requests, project details, etc.</small>
                                     </div>
                                 </div>
 
@@ -308,28 +329,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                                         <h6 class="mb-3">Select Payment Method</h6>
                                         <div class="row">
                                             <div class="col-md-6 mb-3">
-                                                <div class="payment-option" onclick="selectPaymentMethod('mobilemoney')">
-                                                    <div class="card payment-card" id="mobilemoney-card">
-                                                        <div class="card-body text-center">
-                                                            <i class="la la-mobile-alt fa-2x text-primary mb-2"></i>
-                                                            <h6 class="card-title">Mobile Money</h6>
-                                                            <small class="text-muted">MTN, Airtel, Africell</small>
+                                                <button type="button" class="butn w-100 payment-card bg-blue1" id="mobilemoney-card" onclick="selectPaymentMethod('mobilemoney')">
+                                                    <div class="d-flex align-items-center justify-content-center py-3">
+                                                        <i class="la la-mobile-alt fa-2x text-white me-3"></i>
+                                                        <div class="text-start">
+                                                            <div class="fw-bold text-white">Mobile Money</div>
+                                                            <small class="text-white-50">MTN, Airtel, Africell</small>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </button>
                                             </div>
                                             <div class="col-md-6 mb-3">
-                                                <div class="payment-option" onclick="selectPaymentMethod('visa')">
-                                                    <div class="card payment-card" id="visa-card">
-                                                        <div class="card-body text-center">
-                                                            <i class="la la-credit-card fa-2x text-primary mb-2"></i>
-                                                            <h6 class="card-title">VISA Card</h6>
-                                                            <small class="text-muted">Credit & Debit Cards</small>
+                                                <button type="button" class="butn w-100 payment-card bg-blue1" id="visa-card" onclick="selectPaymentMethod('visa')">
+                                                    <div class="d-flex align-items-center justify-content-center py-3">
+                                                        <i class="la la-credit-card fa-2x text-white me-3"></i>
+                                                        <div class="text-start">
+                                                            <div class="fw-bold text-white">VISA Card</div>
+                                                            <small class="text-white-50">Credit & Debit Cards</small>
                                                         </div>
                                                     </div>
-                                        </div>
-                                        </div>
-                                        </div>
+                                                </button>
+                                            </div>
                                     </div>
                                     
                                     <!-- Mobile Money Details (Hidden by default) -->
@@ -341,82 +361,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                                                 <!-- Network Selection -->
                                                 <div class="mb-3">
                                                     <label class="form-label">Select Network Provider <span class="text-danger">*</span></label>
-                                                    <div class="row">
+                                    <div class="row">
                                                         <div class="col-6 mb-2">
-                                                            <div class="network-option" onclick="selectNetwork('mtn')">
-                                                                <div class="card network-card" id="mtn-card">
-                                                                    <div class="card-body text-center py-3">
-                                                                        <div class="fw-bold text-warning" style="font-size: 1.2rem;">MTN</div>
-                                                                        <small class="text-muted">Mobile Money</small>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                            <button type="button" class="butn w-100 network-card bg-yellow1" id="mtn-card" onclick="selectNetwork('mtn')">
+                                                                <div class="d-flex align-items-center justify-content-center py-3">
+                                                                    <div class="text-center">
+                                                                        <div class="fw-bold text-white" style="font-size: 1.2rem;">MTN</div>
+                                                                        <small class="text-white-50">Mobile Money</small>
+                                        </div>
+                                        </div>
+                                                            </button>
                                                         </div>
                                                         <div class="col-6 mb-2">
-                                                            <div class="network-option" onclick="selectNetwork('airtel')">
-                                                                <div class="card network-card" id="airtel-card">
-                                                                    <div class="card-body text-center py-3">
-                                                                        <div class="fw-bold text-danger" style="font-size: 1.2rem;">Airtel</div>
-                                                                        <small class="text-muted">Mobile Money</small>
+                                                            <button type="button" class="butn w-100 network-card bg-green1" id="airtel-card" onclick="selectNetwork('airtel')">
+                                                                <div class="d-flex align-items-center justify-content-center py-3">
+                                                                    <div class="text-center">
+                                                                        <div class="fw-bold text-white" style="font-size: 1.2rem;">Airtel</div>
+                                                                        <small class="text-white-50">Mobile Money</small>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            </button>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                
+                                        </div>
+                                    </div>
+                                    
                                                 <!-- Phone Number Input -->
-                                                <div class="mb-3">
+                                    <div class="mb-3">
                                                     <label for="mobileMoneyPhone" class="form-label">Mobile Money Phone Number <span class="text-danger">*</span></label>
                                                     <div class="input-group">
                                                         <span class="input-group-text"><i class="la la-phone"></i></span>
                                                         <input type="tel" class="form-control" id="mobileMoneyPhone" name="mobileMoneyPhone" 
-                                                               placeholder="e.g., 0701234567" pattern="[0-9]{10}" maxlength="10" required>
+                                                               placeholder="e.g., 0701234567" pattern="[0-9]{10}" maxlength="10">
                                                     </div>
                                                     <small class="text-muted">Enter the phone number to debit from</small>
-                                                </div>
-                                                
+                                    </div>
+                                    
                                                 <div class="alert alert-info mb-0">
                                                     <i class="la la-info-circle me-2"></i>
                                                     <small>You will receive a prompt on your phone to authorize the payment.</small>
                                                 </div>
                                             </div>
-                                        </div>
                                     </div>
-                                    
-                                    <!-- Payment Button -->
-                                    <div class="text-center mb-4">
-                                        <button type="button" class="btn btn-primary btn-lg w-100" id="pay-btn" onclick="processPayment()" disabled>
-                                            <i class="la la-credit-card me-2"></i>
-                                            <span id="pay-btn-text">Select Payment Method</span>
-                                        </button>
-                                    </div>
-                                    
-                                    <div class="mt-3 text-center">
-                                        <small class="color-666">
-                                            <i class="la la-shield me-2"></i>
-                                            Secure payment processing
-                                        </small>
-                                    </div>
+                                </div>
+
                                     
                                     <!-- Hidden payment status -->
                                     <input type="hidden" id="payment_status" name="payment_status" value="pending">
                                     <input type="hidden" id="transaction_id" name="transaction_id" value="">
                                 </div>
-
-                                <!-- Order Notes -->
-                                <div class="checkout-form bg-white rounded p-4 shadow-sm">
-                                    <h5 class="mb-4">Order Notes (Optional)</h5>
-                                    <div class="mb-3">
-                                        <label for="orderNotes" class="form-label">Special Instructions</label>
-                                        <textarea class="form-control" id="orderNotes" rows="3" placeholder="Any special instructions for your order..."></textarea>
-                                    </div>
-                                </div>
                             </div>
 
                             <!-- Order Summary -->
                             <div class="col-lg-4">
-                                <div class="order-summary bg-light p-4 rounded">
+                                <div class="cart-summary bg-light p-4 rounded">
                                     <h5 class="mb-4">Order Summary</h5>
                                     
                                     <div id="orderItems">
@@ -448,8 +445,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                                     </div>
                                     
                                     <div class="d-grid gap-2">
-                                        <button type="submit" class="butn bg-orange1 text-white rounded-pill" id="placeOrderBtn">
-                                            <span>Place Order - UGX <span id="orderTotalBtn">0</span></span>
+                                        <button type="submit" class="butn bg-orange1 text-white rounded-pill" id="pay-btn" onclick="processPayment()">
+                                            <span>Pay with Flutterwave - UGX <span id="orderTotalBtn">0</span></span>
                                         </button>
                                     </div>
                                     
@@ -468,6 +465,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
             <!--  End checkout form  -->
 
         </main>
+
 
         <!--  Start footer  -->
         <footer class="tc-footer-style1">
@@ -568,6 +566,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
     
     <!-- Flutterwave Payment SDK -->
     <script src="https://checkout.flutterwave.com/v3.js"></script>
+    
+    <!-- Flutterwave Settings -->
+    <script>
+        window.flutterwaveSettings = {
+            publicKey: "<?php echo getFlutterwavePublicKey(); ?>",
+            currency: "<?php echo FLUTTERWAVE_CURRENCY; ?>",
+            country: "<?php echo FLUTTERWAVE_COUNTRY; ?>",
+            environment: "<?php echo FLUTTERWAVE_ENVIRONMENT; ?>",
+            successUrl: "<?php echo FLUTTERWAVE_SUCCESS_URL; ?>",
+            cancelUrl: "<?php echo FLUTTERWAVE_CANCEL_URL; ?>"
+        };
+    </script>
 
     <!-- Checkout JavaScript -->
     <script>
@@ -623,13 +633,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                 }
                 
                 const itemsHTML = cart.map(item => {
-                    // Fix image path  
-                    let imagePath = item.image || 'assets/img/home1/projects/proj1.jpg';
-                    if (imagePath.startsWith('../')) {
-                        imagePath = imagePath.replace('../', 'cms/');
-                    } else if (!imagePath.startsWith('cms/') && !imagePath.startsWith('assets/')) {
-                        imagePath = 'cms/' + imagePath;
+                    // Use a reliable fallback image that we know exists
+                    let imagePath = 'assets/img/home1/projects/proj1.jpg';
+                    
+                    if (item.image) {
+                        // If image path starts with ../, convert to cms/
+                        if (item.image.startsWith('../')) {
+                            imagePath = item.image.replace('../', 'cms/');
+                        }
+                        // If it starts with assets/, use directly
+                        else if (item.image.startsWith('assets/')) {
+                            imagePath = item.image;
+                        }
+                        // Otherwise, assume it's a CMS path
+                        else if (!item.image.startsWith('cms/')) {
+                            imagePath = 'cms/' + item.image;
+                        } else {
+                            imagePath = item.image;
+                        }
+                        
                     }
+                    
                     return `
                     <div class="order-item d-flex justify-content-between align-items-center mb-3">
                         <div class="d-flex align-items-center">
@@ -672,16 +696,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
             updateTotals();
 
             // Form validation before payment
-            document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            const checkoutForm = document.getElementById('checkoutForm');
+            if (checkoutForm) {
+                checkoutForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                // Validate form before proceeding to payment
-                if (validateForm()) {
-                    // Enable Flutterwave payment button
-                    document.getElementById('flutterwave-pay-btn').disabled = false;
-                    alert('Form validated! Click "Pay Securely with Flutterwave" to complete your order.');
-                }
-            });
+                    // Validate form before proceeding to payment
+                    if (validateForm()) {
+                        // Enable payment button if a payment method is selected
+                        const payBtn = document.getElementById('pay-btn');
+                        if (payBtn && selectedPaymentMethod) {
+                            payBtn.disabled = false;
+                        }
+                    }
+                });
+            }
 
             // Form validation function
             function validateForm() {
@@ -712,11 +741,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
             // Global cart data for Flutterwave and payment functions
             window.cartData = cart;
             window.checkoutCart = cart; // Make cart accessible to payment functions
+            
+            // Debug logs
         } // Close renderCheckoutPage
 
         // Payment Method Selection
         let selectedPaymentMethod = null;
         let selectedNetwork = null;
+
 
         function selectPaymentMethod(method) {
             selectedPaymentMethod = method;
@@ -724,10 +756,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
             // Remove selected class from all cards
             document.querySelectorAll('.payment-card').forEach(card => {
                 card.classList.remove('selected');
+                card.classList.remove('bg-orange1');
+                card.classList.add('bg-blue1'); // Reset to default color
             });
             
             // Add selected class to clicked card
-            document.getElementById(method + '-card').classList.add('selected');
+            const selectedCard = document.getElementById(method + '-card');
+            selectedCard.classList.add('selected');
+            selectedCard.classList.remove('bg-blue1');
+            selectedCard.classList.add('bg-orange1'); // Orange for selected state
             
             // Show/hide mobile money details
             const mobileMoneyDetails = document.getElementById('mobileMoneyDetails');
@@ -744,14 +781,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
             
             // Update pay button text
             const payBtn = document.getElementById('pay-btn');
-            const payBtnText = document.getElementById('pay-btn-text');
             
-            if (method === 'mobilemoney') {
-                payBtnText.textContent = 'Pay with Mobile Money';
-                payBtn.innerHTML = '<i class="la la-mobile-alt me-2"></i><span id="pay-btn-text">Pay with Mobile Money</span>';
-            } else if (method === 'visa') {
-                payBtnText.textContent = 'Pay with VISA Card';
-                payBtn.innerHTML = '<i class="la la-credit-card me-2"></i><span id="pay-btn-text">Pay with VISA Card</span>';
+            if (payBtn) {
+                if (method === 'mobilemoney') {
+                    payBtn.innerHTML = '<i class="la la-mobile-alt me-2"></i><span id="pay-btn-text">Pay with Mobile Money</span>';
+                } else if (method === 'visa') {
+                    payBtn.innerHTML = '<i class="la la-credit-card me-2"></i><span id="pay-btn-text">Pay with VISA Card</span>';
+                }
             }
         }
         
@@ -762,10 +798,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
             // Remove selected class from all network cards
             document.querySelectorAll('.network-card').forEach(card => {
                 card.classList.remove('selected');
+                card.classList.remove('bg-orange1');
+                // Reset to original colors
+                if (card.id === 'mtn-card') {
+                    card.classList.add('bg-yellow1');
+                } else if (card.id === 'airtel-card') {
+                    card.classList.add('bg-green1');
+                }
             });
             
             // Add selected class to clicked network card
-            document.getElementById(network + '-card').classList.add('selected');
+            const selectedCard = document.getElementById(network + '-card');
+            selectedCard.classList.add('selected');
+            selectedCard.classList.remove('bg-yellow1', 'bg-green1');
+            selectedCard.classList.add('bg-orange1'); // Orange for selected state
             
             // Enable pay button if phone number is also filled
             validateMobileMoneyPayment();
@@ -794,12 +840,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
 
         // Process Payment Function
         function processPayment() {
+            
             if (!selectedPaymentMethod) {
-                alert('Please select a payment method');
+                alert('Please select a payment method (Mobile Money or VISA Card)');
                 return;
             }
 
             if (selectedPaymentMethod === 'mobilemoney') {
+                
                 // Validate mobile money details
                 if (!selectedNetwork) {
                     alert('Please select a mobile money network (MTN or Airtel)');
@@ -807,8 +855,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                 }
                 
                 const phoneNumber = document.getElementById('mobileMoneyPhone').value;
+                
                 if (!phoneNumber || phoneNumber.length !== 10) {
-                    alert('Please enter a valid 10-digit phone number');
+                    alert('Please enter a valid 10-digit phone number (e.g., 0750637486)');
                     return;
                 }
                 
@@ -843,7 +892,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
             .then(response => response.json())
             .then(data => {
                 if (!data.success || data.data.cart.length === 0) {
-                    alert('Your cart is empty!');
+                    alert('Your cart is empty. Please add items before checkout.');
                     return;
                 }
                 
@@ -851,15 +900,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                 processFlutterwavePayment(cart, paymentType);
             })
             .catch(error => {
-                console.error('Error loading cart:', error);
                 alert('Error processing payment. Please try again.');
             });
         }
         
         function processFlutterwavePayment(cart, paymentType) {
-
             // Calculate totals
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
             // Use CMS settings for shipping and tax calculations
             const settings = window.shippingTaxSettings || {
                 shipping: { standard_shipping_cost: 10000, free_shipping_threshold: 100000 },
@@ -892,12 +940,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
 
             // Flutterwave payment configuration
             const paymentConfig = {
-                public_key: "<?php echo getFlutterwavePublicKey(); ?>",
+                public_key: window.flutterwaveSettings.publicKey,
                 tx_ref: txRef,
                 amount: total,
-                currency: "UGX",
+                currency: window.flutterwaveSettings.currency,
                 payment_options: paymentType === 'mobilemoney' ? "mobilemoney" : "card",
-                redirect_url: "order-success.php",
+                redirect_url: window.flutterwaveSettings.successUrl,
                 customer: {
                     email: customerEmail,
                     phone_number: paymentType === 'mobilemoney' ? mobileMoneyPhone : customerPhone,
@@ -919,13 +967,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                         const paymentDetails = {
                             ...data,
                             mobile_money_network: mobileMoneyNetwork,
-                            mobile_money_phone: mobileMoneyPhone
+                            mobile_money_phone: mobileMoneyPhone,
+                            payment_method: paymentType
                         };
+                        
                         submitOrder(paymentDetails);
+                    } else {
+                        alert('Payment was not successful. Please try again or use a different payment method.');
                     }
                 },
                 onclose: function() {
-                    // Payment cancelled - user will remain on checkout page
+                    // Payment cancelled - user remains on checkout page
                 }
             };
             
@@ -963,8 +1015,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                 processOrderSubmission(cart, paymentData);
             })
             .catch(error => {
-                console.error('Error loading cart:', error);
-                alert('Error submitting order. Please try again.');
+                alert('Error submitting order. Please try again or contact support.');
             });
         }
         

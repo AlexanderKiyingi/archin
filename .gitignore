@@ -389,8 +389,10 @@ archive/
 !cms/config.example.php
 !cms/db_connect.example.php
 !cms/flutterwave-config.example.php
+!env.local.example
 !cms/database-complete.sql
 !cms/DATABASE_README.md
 !README.md
 !.gitignore
+!FLUTTERWAVE_INTEGRATION.md
 

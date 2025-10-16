@@ -29,6 +29,16 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
             color: white;
         }
         
+        /* Layout improvements */
+        .main-content-mobile {
+            min-height: 100vh;
+        }
+        
+        .desktop-header, .mobile-header {
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
         /* Mobile responsive styles */
         @media (max-width: 768px) {
             .mobile-sidebar {
@@ -61,6 +71,9 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
             
             .mobile-header {
                 display: flex;
+                position: sticky;
+                top: 0;
+                z-index: 30;
             }
             
             .desktop-header {
@@ -92,6 +105,12 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
             .btn-mobile {
                 width: 100%;
                 margin-bottom: 0.5rem;
+            }
+            
+            /* Improve mobile header spacing */
+            .mobile-header .flex {
+                align-items: center;
+                min-height: 60px;
             }
         }
         
@@ -140,17 +159,19 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
     
     <div class="flex h-screen overflow-hidden">
         <!-- Mobile Sidebar -->
-        <aside class="mobile-sidebar fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white lg:relative lg:translate-x-0 lg:z-auto">
+        <aside class="mobile-sidebar fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white lg:relative lg:translate-x-0 lg:z-auto shadow-xl">
             <div class="p-6 border-b border-gray-700">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <i class="fas fa-building text-3xl text-blue-400"></i>
+                        <div class="bg-blue-500 rounded-lg p-2">
+                            <i class="fas fa-building text-2xl text-white"></i>
+                        </div>
                         <div>
-                            <h1 class="text-xl font-bold">FlipAvenue</h1>
-                            <p class="text-xs text-gray-400">CMS Panel</p>
+                            <h1 class="text-xl font-bold text-white">FlipAvenue</h1>
+                            <p class="text-xs text-gray-300">CMS Panel</p>
                         </div>
                     </div>
-                    <button class="lg:hidden text-white hover:text-gray-300" onclick="toggleMobileSidebar()">
+                    <button class="lg:hidden text-white hover:text-gray-300 p-1 rounded-lg hover:bg-gray-700 transition-colors" onclick="toggleMobileSidebar()">
                         <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>
@@ -215,6 +236,11 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                     <span>Sales Analytics</span>
                 </a>
                 
+                <a href="transactions.php" class="sidebar-link <?php echo $current_page === 'transactions' ? 'active' : ''; ?> flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+                    <i class="fas fa-credit-card w-5"></i>
+                    <span>Transactions</span>
+                </a>
+                
                 <a href="shipping-tax-settings.php" class="sidebar-link <?php echo $current_page === 'shipping-tax-settings' ? 'active' : ''; ?> flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
                     <i class="fas fa-shipping-fast w-5"></i>
                     <span>Shipping & Tax Settings</span>
@@ -260,40 +286,40 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden main-content-mobile">
             <!-- Mobile Header -->
-            <header class="mobile-header bg-white shadow-sm z-10 lg:hidden">
+            <header class="mobile-header bg-white shadow-sm z-10 lg:hidden border-b border-gray-200">
                 <div class="flex items-center justify-between px-4 py-3">
-                    <div class="flex items-center space-x-3">
-                        <button class="mobile-menu-btn text-gray-600 hover:text-gray-900" onclick="toggleMobileSidebar()">
+                    <div class="flex items-center space-x-3 flex-1">
+                        <button class="mobile-menu-btn text-gray-600 hover:text-gray-900 p-1" onclick="toggleMobileSidebar()">
                             <i class="fas fa-bars text-xl"></i>
                         </button>
-                        <div>
-                            <h2 class="text-lg font-bold text-gray-800"><?php echo $page_title ?? 'Dashboard'; ?></h2>
+                        <div class="flex-1">
+                            <h2 class="text-lg font-bold text-gray-800 leading-tight"><?php echo $page_title ?? 'Dashboard'; ?></h2>
                             <?php if (isset($page_description)): ?>
-                                <p class="text-xs text-gray-600"><?php echo $page_description; ?></p>
+                                <p class="text-xs text-gray-600 leading-tight"><?php echo $page_description; ?></p>
                             <?php endif; ?>
                         </div>
                     </div>
                     
                     <div class="flex items-center space-x-2">
-                        <a href="<?php echo SITE_URL; ?>" target="_blank" class="text-gray-600 hover:text-gray-900 p-2">
+                        <a href="<?php echo SITE_URL; ?>" target="_blank" class="text-gray-600 hover:text-blue-600 p-2 rounded-lg hover:bg-gray-100 transition-colors">
                             <i class="fas fa-external-link-alt"></i>
                         </a>
                         
                         <div class="relative group">
-                            <button class="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg hover:bg-gray-200 transition">
-                                <i class="fas fa-user-circle text-xl text-gray-600"></i>
+                            <button class="flex items-center space-x-2 bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-lg transition-all duration-200 border border-gray-200">
+                                <i class="fas fa-user-circle text-lg text-gray-600"></i>
                                 <div class="text-left hidden sm:block">
-                                    <p class="text-xs font-semibold text-gray-800"><?php echo $_SESSION['admin_name']; ?></p>
-                                    <p class="text-xs text-gray-500"><?php echo ucfirst($_SESSION['admin_role']); ?></p>
+                                    <p class="text-xs font-semibold text-gray-800 leading-tight"><?php echo $_SESSION['admin_name']; ?></p>
+                                    <p class="text-xs text-gray-500 leading-tight"><?php echo ucfirst($_SESSION['admin_role']); ?></p>
                                 </div>
-                                <i class="fas fa-chevron-down text-xs text-gray-600"></i>
+                                <i class="fas fa-chevron-down text-xs text-gray-400"></i>
                             </button>
                             
-                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 hidden group-hover:block">
-                                <a href="profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-t-lg">
+                            <div class="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg border border-gray-200 hidden group-hover:block z-50">
+                                <a href="profile.php" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg transition-colors">
                                     <i class="fas fa-user mr-2"></i>Profile
                                 </a>
-                                <a href="logout.php" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-b-lg">
+                                <a href="logout.php" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-b-lg transition-colors">
                                     <i class="fas fa-sign-out-alt mr-2"></i>Logout
                                 </a>
                             </div>
@@ -303,37 +329,37 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
             </header>
             
             <!-- Desktop Header -->
-            <header class="desktop-header bg-white shadow-sm z-10">
+            <header class="desktop-header bg-white shadow-sm z-10 border-b border-gray-200">
                 <div class="flex items-center justify-between px-6 py-4">
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-800"><?php echo $page_title ?? 'Dashboard'; ?></h2>
+                    <div class="flex-1">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-1"><?php echo $page_title ?? 'Dashboard'; ?></h2>
                         <?php if (isset($page_description)): ?>
                             <p class="text-sm text-gray-600"><?php echo $page_description; ?></p>
                         <?php endif; ?>
                     </div>
                     
-                    <div class="flex items-center space-x-4">
-                        <a href="<?php echo SITE_URL; ?>" target="_blank" class="text-gray-600 hover:text-gray-900">
+                    <div class="flex items-center space-x-6">
+                        <a href="<?php echo SITE_URL; ?>" target="_blank" class="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors duration-200">
                             <i class="fas fa-external-link-alt"></i>
-                            <span class="ml-2 text-sm">View Site</span>
+                            <span class="text-sm font-medium">View Site</span>
                         </a>
                         
                         <div class="relative group">
-                            <button class="flex items-center space-x-2 bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200 transition">
-                                <i class="fas fa-user-circle text-2xl text-gray-600"></i>
+                            <button class="flex items-center space-x-3 bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-xl transition-all duration-200 border border-gray-200 hover:border-gray-300">
+                                <i class="fas fa-user-circle text-xl text-gray-600"></i>
                                 <div class="text-left">
-                                    <p class="text-sm font-semibold text-gray-800"><?php echo $_SESSION['admin_name']; ?></p>
-                                    <p class="text-xs text-gray-500"><?php echo ucfirst($_SESSION['admin_role']); ?></p>
+                                    <p class="text-sm font-semibold text-gray-800 leading-tight"><?php echo $_SESSION['admin_name']; ?></p>
+                                    <p class="text-xs text-gray-500 leading-tight"><?php echo ucfirst($_SESSION['admin_role']); ?></p>
                                 </div>
-                                <i class="fas fa-chevron-down text-xs text-gray-600"></i>
+                                <i class="fas fa-chevron-down text-xs text-gray-400"></i>
                             </button>
                             
-                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 hidden group-hover:block">
-                                <a href="profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-t-lg">
-                                    <i class="fas fa-user mr-2"></i>Profile
+                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 hidden group-hover:block z-50">
+                                <a href="profile.php" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-t-xl transition-colors">
+                                    <i class="fas fa-user mr-3"></i>Profile
                                 </a>
-                                <a href="logout.php" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-b-lg">
-                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                <a href="logout.php" class="flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50 rounded-b-xl transition-colors">
+                                    <i class="fas fa-sign-out-alt mr-3"></i>Logout
                                 </a>
                             </div>
                         </div>

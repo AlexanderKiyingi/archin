@@ -134,22 +134,28 @@ $( function() {
         zIndex: -1,
         display: "none",
     });
-    tl.from(
-        "header , .header",
-        {
-            y: 200,
-        },
-        "-=1.5"
-    );
-    tl.from(
-        "header .container , .header .container",
-        {
-            y: 40,
-            opacity: 0,
-            delay: 0.3,
-        },
-        "-=1.5"
-    );
+    // Only animate header elements if they exist
+    if (document.querySelector("header, .header")) {
+        tl.from(
+            "header , .header",
+            {
+                y: 200,
+            },
+            "-=1.5"
+        );
+    }
+    
+    if (document.querySelector("header .container, .header .container")) {
+        tl.from(
+            "header .container , .header .container",
+            {
+                y: 40,
+                opacity: 0,
+                delay: 0.3,
+            },
+            "-=1.5"
+        );
+    }
 });
 
 

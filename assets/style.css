@@ -2606,6 +2606,37 @@ html[lang=ar] .home-style1 .loader-wrap {
   }
 }
 
+/* Enhanced Payment Buttons */
+.payment-card.butn {
+    transition: all 0.3s ease !important;
+    border: 2px solid transparent !important;
+}
+
+.payment-card.butn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+.payment-card.butn.selected {
+    border-color: var(--color-orange1) !important;
+    box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2) !important;
+}
+
+.network-card.butn {
+    transition: all 0.3s ease !important;
+    border: 2px solid transparent !important;
+}
+
+.network-card.butn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+.network-card.butn.selected {
+    border-color: var(--color-orange1) !important;
+    box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2) !important;
+}
+
 /* Touch-friendly improvements */
 @media (hover: none) and (pointer: coarse) {
   .product-card .overlay .btn {
@@ -4942,7 +4973,25 @@ html[lang=ar] .home-style1 .loader-wrap {
   
   /* Order summary */
   .order-summary {
-    margin-top: 30px;
+    margin-top: 0;
+    height: fit-content;
+  }
+  
+  /* Checkout form layout improvements */
+  .tc-checkout-form .row {
+    align-items: flex-start;
+  }
+  
+  .checkout-form {
+    height: fit-content;
+  }
+  
+  /* Mobile responsive for checkout */
+  @media (max-width: 991px) {
+    .tc-checkout-form .col-lg-8,
+    .tc-checkout-form .col-lg-4 {
+      margin-bottom: 30px;
+    }
   }
   
   .order-item {

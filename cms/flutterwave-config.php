@@ -5,32 +5,96 @@
  * Instructions:
  * 1. Sign up for a Flutterwave account at https://dashboard.flutterwave.com/
  * 2. Get your public and secret keys from the dashboard
- * 3. Replace the placeholder values below with your actual keys
- * 4. For testing, use the test keys (FLWPUBK_TEST-... and FLWSECK_TEST-...)
- * 5. For production, use the live keys (FLWPUBK-... and FLWSECK-...)
+ * 3. Copy env.local.example to .env.local
+ * 4. Add your Flutterwave API keys to .env.local
+ * 5. For testing, use the test keys (FLWPUBK_TEST-... and FLWSECK_TEST-...)
+ * 6. For production, use the live keys (FLWPUBK-... and FLWSECK-...)
  */
 
-// Flutterwave Configuration
-define('FLUTTERWAVE_PUBLIC_KEY', 'FLWPUBK_TEST-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'); // Replace with your public key
-define('FLUTTERWAVE_SECRET_KEY', 'FLWSECK_TEST-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'); // Replace with your secret key
-define('FLUTTERWAVE_ENCRYPTION_KEY', 'xxxxxxxxxxxxxxxxxxxxxxxx'); // Replace with your encryption key
+// Load environment variables from .env.local
+loadEnvFile();
+
+// Flutterwave Configuration from environment variables
+define('FLUTTERWAVE_PUBLIC_KEY', getEnvVar('FLUTTERWAVE_PUBLIC_KEY', 'FLWPUBK_TEST-4cf45196e03d8437c55f87faf06d3d79-X'));
+define('FLUTTERWAVE_SECRET_KEY', getEnvVar('FLUTTERWAVE_SECRET_KEY', 'FLWSECK_TEST-b6aaa00dcbc5fd8c0e156d3ddb74a818-X'));
+define('FLUTTERWAVE_ENCRYPTION_KEY', getEnvVar('FLUTTERWAVE_ENCRYPTION_KEY', 'FLWSECK_TESTd7e56fdeb2d7'));
 
 // Environment (test or live)
-define('FLUTTERWAVE_ENVIRONMENT', 'test'); // Change to 'live' for production
+define('FLUTTERWAVE_ENVIRONMENT', getEnvVar('FLUTTERWAVE_ENVIRONMENT', 'test'));
 
 // Currency and Country
-define('FLUTTERWAVE_CURRENCY', 'UGX');
-define('FLUTTERWAVE_COUNTRY', 'UG');
+define('FLUTTERWAVE_CURRENCY', getEnvVar('FLUTTERWAVE_CURRENCY', 'UGX'));
+define('FLUTTERWAVE_COUNTRY', getEnvVar('FLUTTERWAVE_COUNTRY', 'UG'));
 
-// Webhook URL (update this to your actual domain)
-define('FLUTTERWAVE_WEBHOOK_URL', 'https://yourdomain.com/cms/flutterwave-webhook.php');
+// Webhook URL
+define('FLUTTERWAVE_WEBHOOK_URL', getEnvVar('FLUTTERWAVE_WEBHOOK_URL', 'https://yourdomain.com/cms/flutterwave-webhook.php'));
 
 // Payment Options
-define('FLUTTERWAVE_PAYMENT_OPTIONS', 'card,mobilemoney');
+define('FLUTTERWAVE_PAYMENT_OPTIONS', getEnvVar('FLUTTERWAVE_PAYMENT_OPTIONS', 'card,mobilemoney'));
 
 // Redirect URLs
-define('FLUTTERWAVE_SUCCESS_URL', 'https://yourdomain.com/order-success.php');
-define('FLUTTERWAVE_CANCEL_URL', 'https://yourdomain.com/checkout.php');
+define('FLUTTERWAVE_SUCCESS_URL', getEnvVar('FLUTTERWAVE_SUCCESS_URL', 'https://yourdomain.com/order-success.php'));
+define('FLUTTERWAVE_CANCEL_URL', getEnvVar('FLUTTERWAVE_CANCEL_URL', 'https://yourdomain.com/checkout.php'));
+
+/**
+ * Load environment variables from .env.local file
+ */
+function loadEnvFile() {
+    $envFile = __DIR__ . '/../.env.local';
+    
+    if (!file_exists($envFile)) {
+        // Try alternative path
+        $envFile = dirname(__DIR__) . '/.env.local';
+    }
+    
+    if (file_exists($envFile)) {
+        $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        
+        foreach ($lines as $line) {
+            // Skip comments
+            if (strpos(trim($line), '#') === 0) {
+                continue;
+            }
+            
+            // Parse line
+            if (strpos($line, '=') !== false) {
+                list($key, $value) = explode('=', $line, 2);
+                $key = trim($key);
+                $value = trim($value);
+                
+                // Remove quotes if present
+                $value = trim($value, '"\'');
+                
+                // Set environment variable
+                if (!empty($key)) {
+                    $_ENV[$key] = $value;
+                    putenv("$key=$value");
+                }
+            }
+        }
+    } else {
+        error_log('Warning: .env.local file not found. Using default Flutterwave configuration.');
+    }
+}
+
+/**
+ * Get environment variable with fallback
+ */
+function getEnvVar($key, $default = null) {
+    // Check $_ENV first
+    if (isset($_ENV[$key])) {
+        return $_ENV[$key];
+    }
+    
+    // Check getenv()
+    $value = getenv($key);
+    if ($value !== false) {
+        return $value;
+    }
+    
+    // Return default
+    return $default;
+}
 
 /**
  * Get Flutterwave public key based on environment
