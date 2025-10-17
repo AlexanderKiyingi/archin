@@ -10,7 +10,7 @@ USE u680675202_flipavenue_cms;
 -- CORE CMS TABLES
 -- ============================================
 
--- Admin Users Table
+-- Admin Users Table with Enhanced Security
 CREATE TABLE IF NOT EXISTS admin_users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -18,9 +18,12 @@ CREATE TABLE IF NOT EXISTS admin_users (
     password VARCHAR(255) NOT NULL,
     full_name VARCHAR(100),
     role ENUM('super_admin', 'admin', 'editor') DEFAULT 'editor',
+    two_factor_enabled BOOLEAN DEFAULT FALSE COMMENT 'Two-factor authentication enabled',
+    account_locked_until TIMESTAMP NULL COMMENT 'Account lockout expiration time',
+    failed_login_count INT DEFAULT 0 COMMENT 'Number of consecutive failed login attempts',
+    last_login TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    last_login TIMESTAMP NULL,
     is_active BOOLEAN DEFAULT TRUE
 );
 
@@ -203,9 +206,12 @@ CREATE TABLE IF NOT EXISTS shop_orders (
     tax_amount DECIMAL(10,2) DEFAULT 0,
     total_amount DECIMAL(10,2) NOT NULL,
     payment_status ENUM('pending', 'paid', 'failed', 'refunded') DEFAULT 'pending',
-    transaction_id VARCHAR(255) DEFAULT NULL,
     order_status ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending',
-    order_notes TEXT,
+    transaction_id VARCHAR(255) NULL COMMENT 'Flutterwave transaction ID',
+    payment_method ENUM('mobilemoney', 'visa', 'card') NULL COMMENT 'Payment method used',
+    mobile_money_network ENUM('MTN', 'AIRTEL', 'AFRICELL') NULL COMMENT 'Mobile money network provider',
+    mobile_money_phone VARCHAR(20) NULL COMMENT 'Mobile money phone number',
+    order_notes TEXT NULL COMMENT 'Customer notes and special instructions for the order',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_order_number (order_number),
@@ -325,9 +331,29 @@ INSERT INTO tax_settings (setting_key, setting_value, description) VALUES
 ('environmental_tax_rate', 0.00, 'Environmental tax rate percentage')
 ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value);
 
--- Add indexes for shipping and tax settings
-CREATE INDEX idx_shipping_setting_key ON shipping_settings(setting_key);
-CREATE INDEX idx_tax_setting_key ON tax_settings(setting_key);
+-- Add indexes for shipping and tax settings (safe to run multiple times)
+CREATE INDEX IF NOT EXISTS idx_shipping_setting_key ON shipping_settings(setting_key);
+CREATE INDEX IF NOT EXISTS idx_tax_setting_key ON tax_settings(setting_key);
+
+-- ============================================
+-- SECURITY TABLES
+-- ============================================
+
+-- Login Attempts Table for Brute Force Protection
+CREATE TABLE IF NOT EXISTS login_attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    attempt_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    success BOOLEAN DEFAULT FALSE,
+    user_agent TEXT,
+    INDEX idx_username_time (username, attempt_time),
+    INDEX idx_ip_time (ip_address, attempt_time)
+);
+
+-- ============================================
+-- DISPLAY STATUS
+-- ============================================
 
 -- Display table status
 SELECT 'Database Setup Complete!' AS Status;
@@ -336,6 +362,9 @@ SELECT COUNT(*) AS site_settings FROM site_settings;
 SELECT COUNT(*) AS services FROM services;
 SELECT COUNT(*) AS project_categories FROM project_categories;
 SELECT COUNT(*) AS shop_products FROM shop_products;
+SELECT COUNT(*) AS shop_orders FROM shop_orders;
+SELECT COUNT(*) AS shop_order_items FROM shop_order_items;
 SELECT COUNT(*) AS shipping_settings FROM shipping_settings;
 SELECT COUNT(*) AS tax_settings FROM tax_settings;
+SELECT COUNT(*) AS login_attempts FROM login_attempts;
 

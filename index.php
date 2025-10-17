@@ -212,7 +212,7 @@ $current_year = date('Y');
                     <div class="swiper-slide">
                         <div class="slider-card">
                             <div class="img">
-                                <img src="assets/img/home1/head_slide2.png" alt="" class="img-cover">
+                                <img src="assets/img/home1/head_slide2.jpg" alt="" class="img-cover">
                             </div>
                             <div class="info section-padding-x pb-70">
                                 <div class="row align-items-end gx-5">
@@ -237,7 +237,7 @@ $current_year = date('Y');
                     <div class="swiper-slide">
                         <div class="slider-card">
                             <div class="img">
-                                <img src="assets/img/home1/head_slide3.png" alt="" class="img-cover">
+                                <img src="assets/img/home1/head_slide3.jpg" alt="" class="img-cover">
                             </div>
                             <div class="info section-padding-x pb-70">
                                 <div class="row align-items-end gx-5">
@@ -503,7 +503,7 @@ $current_year = date('Y');
                                                             <a href="#"> Architecture </a>
                                                             <a href="#"> Furniture </a>
                                                         </div>
-                                                        <h3 class="title"> <a href="#"> Townhouse in San Joe </a> </h3>
+                                                        <h3 class="title"> <a href="#">Ssi Resort in Katosi </a> </h3>
                                                         <div class="text"> This area will is short description of project, you can select to show or hide it, <br> this a sample short paragraph for this. </div>
                                                     </div>
                                                 </div>
@@ -518,7 +518,7 @@ $current_year = date('Y');
                                                             <a href="#"> Furniture </a>
                                                             <a href="#"> Furniture </a>
                                                         </div>
-                                                        <h3 class="title"> <a href="#"> Homestay Rennovation and Interior Design </a> </h3>
+                                                        <h3 class="title"> <a href="#"> Eve's bold chic modern home </a> </h3>
                                                         <div class="text"> This area will is short description of project, you can select to show or hide it, <br> this a sample short paragraph for this. </div>
                                                     </div>
                                                 </div>
