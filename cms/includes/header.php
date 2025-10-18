@@ -255,8 +255,12 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                     <span>Contact Forms</span>
                 </a>
                 
-                <a href="careers.php" class="sidebar-link <?php echo $current_page === 'careers' ? 'active' : ''; ?> flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+                <a href="job-openings.php" class="sidebar-link <?php echo $current_page === 'job-openings' ? 'active' : ''; ?> flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
                     <i class="fas fa-briefcase w-5"></i>
+                    <span>Job Openings</span>
+                </a>
+                <a href="careers.php" class="sidebar-link <?php echo $current_page === 'careers' ? 'active' : ''; ?> flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+                    <i class="fas fa-user-tie w-5"></i>
                     <span>Career Applications</span>
                 </a>
                 

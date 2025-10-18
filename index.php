@@ -4,7 +4,7 @@
 require_once 'cms/db_connect.php';
 
 // Fetch services (active only, ordered by display_order)
-$services_query = "SELECT * FROM services WHERE is_active = 1 ORDER BY display_order ASC LIMIT 4";
+$services_query = "SELECT * FROM services WHERE is_active = 1 ORDER BY display_order ASC, created_at DESC LIMIT 8";
 $services_result = $conn->query($services_query);
 
 // Fetch featured projects
@@ -333,22 +333,38 @@ $current_year = date('Y');
                                     $count = 0;
                                     while ($service = $services_result->fetch_assoc()): 
                                     $mt_class = ($count % 2 == 1) ? 'mt-150' : '';
+                                    
+                                    // Handle service image with proper fallback
+                                    $service_image = '';
+                                    if (!empty($service['image'])) {
+                                        // Clean the image path and ensure it exists
+                                        $image_path = str_replace('../', '', $service['image']);
+                                        $full_path = 'cms/' . $image_path;
+                                        if (file_exists($full_path)) {
+                                            $service_image = $full_path;
+                                        }
+                                    }
+                                    
+                                    // Use fallback image if no service image or file doesn't exist
+                                    if (empty($service_image)) {
+                                        $fallback_images = [
+                                            'assets/img/home1/services/ser1.jpg',
+                                            'assets/img/home1/services/ser2.jpg',
+                                            'assets/img/home1/services/ser3.jpg',
+                                            'assets/img/home1/services/ser4.jpg'
+                                        ];
+                                        $service_image = $fallback_images[$count % count($fallback_images)];
+                                    }
                                     ?>
                                     <div class="col-lg-3">
-                                        <a href="#" class="service-card <?php echo $mt_class; ?> wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
+                                        <a href="services.php?id=<?php echo $service['id']; ?>" class="service-card <?php echo $mt_class; ?> wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
                                             <div class="icon">
                                                 <i class="<?php echo htmlspecialchars($service['icon'] ?: 'la la-cube'); ?>"></i>
                                             </div>
                                             <h5 class="fsz-24 mb-20"><?php echo htmlspecialchars($service['title']); ?></h5>
-                                            <?php if ($service['image']): ?>
-                                                <div class="img">
-                                                    <img src="cms/<?php echo str_replace('../', '', $service['image']); ?>" alt="" class="img-cover">
-                                                </div>
-                                            <?php else: ?>
-                                                <div class="img">
-                                                    <img src="assets/img/home1/services/ser1.jpg" alt="" class="img-cover">
-                                                </div>
-                                            <?php endif; ?>
+                                            <div class="img">
+                                                <img src="<?php echo htmlspecialchars($service_image); ?>" alt="<?php echo htmlspecialchars($service['title']); ?>" class="img-cover" onerror="this.src='assets/img/home1/services/ser1.jpg'">
+                                            </div>
                                             <div class="text color-666 mt-50">
                                                 <?php echo htmlspecialchars($service['description']); ?>
                                             </div>
@@ -368,7 +384,7 @@ $current_year = date('Y');
                             </div>
                         </div>
                         <div class="text-center">
-                            <a href="#" class="butn rounded-pill mt-80 hover-bg-black bg-orange1 text-white">
+                            <a href="contact.php" class="butn rounded-pill mt-80 hover-bg-black bg-orange1 text-white">
                                 <span> Get A Free Quote Now <i class="small ms-1 ti-arrow-top-right"></i> </span>
                             </a>
                         </div>

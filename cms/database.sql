@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS admin_users (
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
+    password_changed_at TIMESTAMP NULL DEFAULT NULL COMMENT 'Timestamp when password was last changed',
     full_name VARCHAR(100),
     role ENUM('super_admin', 'admin', 'editor') DEFAULT 'editor',
     two_factor_enabled BOOLEAN DEFAULT FALSE COMMENT 'Two-factor authentication enabled',
@@ -150,6 +151,25 @@ CREATE TABLE IF NOT EXISTS contact_submissions (
 );
 
 -- Career Applications
+-- Job Openings/Positions
+CREATE TABLE IF NOT EXISTS job_openings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    employment_type ENUM('Full-time', 'Part-time', 'Contract', 'Internship') DEFAULT 'Full-time',
+    location VARCHAR(200) DEFAULT 'Kampala, Uganda',
+    description TEXT NOT NULL,
+    requirements TEXT NOT NULL,
+    responsibilities TEXT,
+    salary_range VARCHAR(100),
+    status ENUM('active', 'closed', 'draft') DEFAULT 'active',
+    posted_date DATE NOT NULL,
+    application_deadline DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_status (status),
+    INDEX idx_posted_date (posted_date)
+);
+
 CREATE TABLE IF NOT EXISTS career_applications (
     id INT AUTO_INCREMENT PRIMARY KEY,
     full_name VARCHAR(100) NOT NULL,
@@ -425,6 +445,23 @@ PREPARE alterIfNotExists FROM @preparedStatement;
 EXECUTE alterIfNotExists;
 DEALLOCATE PREPARE alterIfNotExists;
 
+-- ========================================
+-- MIGRATION SECTION FOR EXISTING INSTALLATIONS
+-- ========================================
+
+-- Add password_changed_at column if it doesn't exist
+SET @sql = (SELECT IF(
+    (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS 
+     WHERE TABLE_SCHEMA = DATABASE() 
+     AND TABLE_NAME = 'admin_users' 
+     AND COLUMN_NAME = 'password_changed_at') = 0,
+    'ALTER TABLE admin_users ADD COLUMN password_changed_at TIMESTAMP NULL DEFAULT NULL COMMENT ''Timestamp when password was last changed'' AFTER password',
+    'SELECT ''Column password_changed_at already exists'' as message'
+));
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
 -- Add login_attempts table for security system
 CREATE TABLE IF NOT EXISTS login_attempts (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -436,6 +473,70 @@ CREATE TABLE IF NOT EXISTS login_attempts (
     INDEX idx_username_time (username, attempt_time),
     INDEX idx_ip_time (ip_address, attempt_time)
 );
+
+-- Create job_openings table if it doesn't exist (for existing installations)
+CREATE TABLE IF NOT EXISTS job_openings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    employment_type ENUM('Full-time', 'Part-time', 'Contract', 'Internship') DEFAULT 'Full-time',
+    location VARCHAR(200) DEFAULT 'Kampala, Uganda',
+    description TEXT NOT NULL,
+    requirements TEXT NOT NULL,
+    responsibilities TEXT,
+    salary_range VARCHAR(100),
+    status ENUM('active', 'closed', 'draft') DEFAULT 'active',
+    posted_date DATE NOT NULL,
+    application_deadline DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_status (status),
+    INDEX idx_posted_date (posted_date)
+);
+
+-- Insert sample job openings (only if table is empty)
+INSERT INTO job_openings (title, employment_type, location, description, requirements, responsibilities, posted_date, status)
+SELECT * FROM (
+    SELECT 
+        'Senior Architect' as title,
+        'Full-time' as employment_type,
+        'Kampala, Uganda' as location,
+        'Lead architectural projects from concept to completion. Work with clients and design teams to create innovative solutions.' as description,
+        '5+ years of experience in architecture|Licensed architect|Proficiency in AutoCAD, Revit, and SketchUp|Strong portfolio of completed projects|Excellent communication and leadership skills' as requirements,
+        'Lead design team and coordinate with clients|Develop architectural concepts and detailed drawings|Ensure compliance with building codes|Mentor junior architects' as responsibilities,
+        CURDATE() as posted_date,
+        'active' as status
+    UNION ALL
+    SELECT 
+        'Interior Designer',
+        'Full-time',
+        'Kampala, Uganda',
+        'Create beautiful and functional interior spaces for residential and commercial projects.',
+        'Bachelor\'s degree in Interior Design|3+ years of experience|Proficiency in 3D visualization software|Strong understanding of materials and finishes|Creative portfolio',
+        'Develop interior design concepts|Select materials, furniture, and fixtures|Create mood boards and presentations|Work with contractors and suppliers',
+        CURDATE(),
+        'active'
+    UNION ALL
+    SELECT 
+        'Project Manager',
+        'Full-time',
+        'Kampala, Uganda',
+        'Oversee construction projects from planning through completion, ensuring timely delivery and quality standards.',
+        'Bachelor\'s degree in Architecture or Construction Management|5+ years of project management experience|Strong organizational and leadership skills|Budget management experience|Excellent problem-solving abilities',
+        'Coordinate project timelines and resources|Manage budgets and contracts|Communicate with clients and stakeholders|Ensure quality control and compliance',
+        CURDATE(),
+        'active'
+    UNION ALL
+    SELECT 
+        'Junior Architect',
+        'Full-time',
+        'Kampala, Uganda',
+        'Entry-level position for recent graduates. Work alongside senior architects on exciting projects while developing your skills.',
+        'Bachelor\'s degree in Architecture|0-2 years of experience|Basic knowledge of AutoCAD and design software|Strong design fundamentals|Willingness to learn',
+        'Assist with design development|Prepare architectural drawings|Conduct site visits|Support senior architects with project tasks',
+        CURDATE(),
+        'active'
+) AS sample_data
+WHERE NOT EXISTS (SELECT 1 FROM job_openings LIMIT 1);
 
 -- ========================================
 -- END OF MIGRATION SECTION

@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS admin_users (
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
+    password_changed_at TIMESTAMP NULL DEFAULT NULL COMMENT 'Timestamp when password was last changed',
     full_name VARCHAR(100),
     role ENUM('super_admin', 'admin', 'editor') DEFAULT 'editor',
     two_factor_enabled BOOLEAN DEFAULT FALSE COMMENT 'Two-factor authentication enabled',
@@ -156,6 +157,25 @@ CREATE TABLE IF NOT EXISTS contact_submissions (
 );
 
 -- Career Applications
+-- Job Openings/Positions
+CREATE TABLE IF NOT EXISTS job_openings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    employment_type ENUM('Full-time', 'Part-time', 'Contract', 'Internship') DEFAULT 'Full-time',
+    location VARCHAR(200) DEFAULT 'Kampala, Uganda',
+    description TEXT NOT NULL,
+    requirements TEXT NOT NULL,
+    responsibilities TEXT,
+    salary_range VARCHAR(100),
+    status ENUM('active', 'closed', 'draft') DEFAULT 'active',
+    posted_date DATE NOT NULL,
+    application_deadline DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_status (status),
+    INDEX idx_posted_date (posted_date)
+);
+
 CREATE TABLE IF NOT EXISTS career_applications (
     id INT AUTO_INCREMENT PRIMARY KEY,
     full_name VARCHAR(100) NOT NULL,

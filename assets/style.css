@@ -581,11 +581,19 @@ html[lang=ar] .home-style1 .loader-wrap {
 /* Override for all internal page headers */
 .tc-header-style1.shop-header .img,
 .tc-header-style1.blog-header .img,
-.tc-header-style1.portfolio-header .img {
+.tc-header-style1.portfolio-header .img,
+.tc-header-style1.careers-header .img {
   min-height: 12vh !important;
   height: 12vh !important;
   max-height: 12vh !important;
   position: relative;
+}
+
+/* Careers header specific styling - since content was removed */
+.tc-header-style1.careers-header {
+  min-height: 12vh !important;
+  height: 12vh !important;
+  max-height: 12vh !important;
 }
 
 .tc-header-style1.contact-header .img,
@@ -599,7 +607,8 @@ html[lang=ar] .home-style1 .loader-wrap {
 /* Header overlays for tc-header-style1 pages */
 .tc-header-style1.shop-header .img::after,
 .tc-header-style1.blog-header .img::after,
-.tc-header-style1.portfolio-header .img::after {
+.tc-header-style1.portfolio-header .img::after,
+.tc-header-style1.careers-header .img::after {
   content: "";
   position: absolute;
   top: 0;
@@ -855,7 +864,8 @@ html[lang=ar] .home-style1 .loader-wrap {
   .tc-header-style1.portfolio-header,
   .tc-header-style1.contact-header,
   .tc-header-style1.about-header,
-  .tc-header-style1.blog-header {
+  .tc-header-style1.blog-header,
+  .tc-header-style1.careers-header {
     min-height: 15vh !important;
   }
   
@@ -950,7 +960,8 @@ html[lang=ar] .home-style1 .loader-wrap {
   .tc-header-style1.portfolio-header,
   .tc-header-style1.contact-header,
   .tc-header-style1.about-header,
-  .tc-header-style1.blog-header {
+  .tc-header-style1.blog-header,
+  .tc-header-style1.careers-header {
     min-height: 12vh !important;
   }
   
@@ -1080,7 +1091,8 @@ html[lang=ar] .home-style1 .loader-wrap {
   .tc-header-style1.portfolio-header,
   .tc-header-style1.contact-header,
   .tc-header-style1.about-header,
-  .tc-header-style1.blog-header {
+  .tc-header-style1.blog-header,
+  .tc-header-style1.careers-header {
     min-height: 10vh !important;
   }
   

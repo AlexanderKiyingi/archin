@@ -11,6 +11,16 @@ if ($settings_result) {
         $settings[$row['setting_key']] = $row['setting_value'];
     }
 }
+
+// Fetch active job openings
+$jobs_query = "SELECT * FROM job_openings WHERE status = 'active' ORDER BY posted_date DESC";
+$jobs_result = $conn->query($jobs_query);
+$active_jobs = [];
+if ($jobs_result) {
+    while ($row = $jobs_result->fetch_assoc()) {
+        $active_jobs[] = $row;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -131,6 +141,10 @@ if ($settings_result) {
                         </li>
                     </ul>
                     <div class="nav-side">
+                        <a href="cart.php" class="icon ms-5 fsz-21 position-relative">
+                            <span> <i class="la la-shopping-cart"></i> </span>
+                            <span class="cart-badge badge bg-orange1 rounded-pill position-absolute" id="cartCount">0</span>
+                        </a>
                         <a href="cms/login.php" class="butn border rounded-pill ms-3 hover-bg-orange1" target="_blank">
                             <span> <i class="la la-user me-2"></i> Login </span>
                         </a>
@@ -145,17 +159,9 @@ if ($settings_result) {
 
         
         <!--  Start page header  -->
-        <header class="tc-header-style1" style="min-height: 50vh;">
+        <header class="tc-header-style1 careers-header" style="min-height: 12vh;">
             <div class="img">
                 <img src="assets/img/home1/head_slide1.jpg" alt="" class="img-cover">
-            </div>
-            <div class="info section-padding-x pb-70">
-                <div class="row align-items-end gx-5">
-                    <div class="col-lg-8 offset-lg-2 text-center">
-                        <h1 class="js-title wow fadeInUp"> Join Our Team </h1>
-                        <h5 class="fsz-30 mt-30 fw-400 wow fadeInUp" data-wow-delay="0.2s"> Build Your Career in <br> Architecture & Design </h5>
-                    </div>
-                </div>
             </div>
         </header>
         <!--  End page header  -->
@@ -164,212 +170,125 @@ if ($settings_result) {
         <!--Contents-->
         <main>
 
-            <!--  Start careers intro  -->
-            <section class="tc-experience-style1 section-padding-x">
-                <div class="container-fluid">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-8 text-center">
-                            <div class="info wow fadeInUp">
-                                <h2 class="fsz-45 fw-600 mb-30"> Why Work With Us? </h2>
-                                <p class="text fsz-16 color-666 mb-40">
-                                    At FlipAvenue Limited, we believe that great architecture comes from great people. Join our passionate team of architects, designers, and innovators who are shaping the future of built environments in East Africa.
-                                </p>
-                                <p class="text fsz-16 color-666">
-                                    We offer competitive compensation, professional development opportunities, and the chance to work on exciting projects that make a real difference in communities.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <img src="assets/img/home1/c_line.png" alt="" class="c-line wow">
-            </section>
-            <!--  End careers intro  -->
+            
 
 
-            <!--  Start benefits  -->
-            <section class="tc-services-style1">
-                <div class="content section-padding section-padding-x">
-                    <div class="container">
-                        <div class="title mb-80 text-center">
-                            <h2 class="fsz-45 mb-30 wow fadeInUp"> Employee Benefits </h2>
-                            <p class="color-666 wow fadeInUp" data-wow-delay="0.2s"> We take care of our team with comprehensive benefits and perks </p>
-                        </div>
-                        <div class="row gx-4">
-                            <div class="col-lg-3 col-md-6">
-                                <div class="benefit-card text-center p-4 mb-4 wow fadeInUp" data-wow-delay="0.2s">
-                                    <div class="icon mb-3">
-                                        <i class="la la-money-bill-wave fsz-50 color-orange1"></i>
-                                    </div>
-                                    <h5 class="fsz-20 fw-600 mb-3">Competitive Salary</h5>
-                                    <p class="color-666 fsz-14">Market-competitive compensation packages with performance bonuses</p>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6">
-                                <div class="benefit-card text-center p-4 mb-4 wow fadeInUp" data-wow-delay="0.3s">
-                                    <div class="icon mb-3">
-                                        <i class="la la-graduation-cap fsz-50 color-orange1"></i>
-                                    </div>
-                                    <h5 class="fsz-20 fw-600 mb-3">Professional Development</h5>
-                                    <p class="color-666 fsz-14">Training programs, conferences, and skill enhancement opportunities</p>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6">
-                                <div class="benefit-card text-center p-4 mb-4 wow fadeInUp" data-wow-delay="0.4s">
-                                    <div class="icon mb-3">
-                                        <i class="la la-heart fsz-50 color-orange1"></i>
-                                    </div>
-                                    <h5 class="fsz-20 fw-600 mb-3">Health Insurance</h5>
-                                    <p class="color-666 fsz-14">Comprehensive health coverage for you and your family</p>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6">
-                                <div class="benefit-card text-center p-4 mb-4 wow fadeInUp" data-wow-delay="0.5s">
-                                    <div class="icon mb-3">
-                                        <i class="la la-clock fsz-50 color-orange1"></i>
-                                    </div>
-                                    <h5 class="fsz-20 fw-600 mb-3">Flexible Hours</h5>
-                                    <p class="color-666 fsz-14">Work-life balance with flexible scheduling options</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <!--  End benefits  -->
+           
 
 
             <!--  Start open positions  -->
             <section class="tc-process-style1 section-padding">
                 <div class="container">
-                    <div class="title mb-80 text-center">
-                        <h2 class="fsz-45 wow fadeInUp"> Open Positions </h2>
+                    
+                    <div class="title mb-80 text-left">
+                        <h2 class="fsz-45 mb-30 wow fadeInUp"> Open Positions </h2>
                         <p class="color-666 mt-3 wow fadeInUp" data-wow-delay="0.2s"> Explore current job opportunities and find your perfect role </p>
                     </div>
                     
                     <div class="jobs-list">
-                        <!-- Senior Architect -->
-                        <div class="job-card bg-white p-5 mb-4 radius-4 shadow-sm wow fadeInUp" data-wow-delay="0.2s">
-                            <div class="row align-items-center">
-                                <div class="col-lg-8">
-                                    <h4 class="fw-600 mb-2">Senior Architect</h4>
-                                    <div class="job-meta mb-3">
-                                        <span class="badge bg-orange1 text-white me-2">Full-time</span>
-                                        <span class="color-666 me-3"><i class="la la-map-marker me-1"></i>Kampala, Uganda</span>
-                                        <span class="color-666"><i class="la la-clock me-1"></i>Posted 2 days ago</span>
+                        <?php if (count($active_jobs) > 0): ?>
+                            <?php 
+                            $delay = 0.2;
+                            foreach ($active_jobs as $job): 
+                                // Calculate days since posted
+                                $posted_date = new DateTime($job['posted_date']);
+                                $today = new DateTime();
+                                $days_ago = $today->diff($posted_date)->days;
+                                
+                                if ($days_ago == 0) {
+                                    $posted_text = 'Posted today';
+                                } elseif ($days_ago == 1) {
+                                    $posted_text = 'Posted yesterday';
+                                } elseif ($days_ago < 7) {
+                                    $posted_text = 'Posted ' . $days_ago . ' days ago';
+                                } elseif ($days_ago < 14) {
+                                    $posted_text = 'Posted 1 week ago';
+                                } else {
+                                    $weeks = floor($days_ago / 7);
+                                    $posted_text = 'Posted ' . $weeks . ' weeks ago';
+                                }
+                                
+                                // Split requirements and responsibilities by pipe separator
+                                $requirements = explode('|', $job['requirements']);
+                                $responsibilities = !empty($job['responsibilities']) ? explode('|', $job['responsibilities']) : [];
+                            ?>
+                            <div class="job-card bg-white p-5 mb-4 radius-4 shadow-sm wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-8">
+                                        <h4 class="fw-600 mb-2"><?php echo htmlspecialchars($job['title']); ?></h4>
+                                        <div class="job-meta mb-3">
+                                            <span class="badge bg-orange1 text-white me-2"><?php echo htmlspecialchars($job['employment_type']); ?></span>
+                                            <span class="color-666 me-3">
+                                                <i class="la la-map-marker me-1"></i><?php echo htmlspecialchars($job['location']); ?>
+                                            </span>
+                                            <span class="color-666">
+                                                <i class="la la-clock me-1"></i><?php echo $posted_text; ?>
+                                            </span>
+                                            <?php if (!empty($job['salary_range'])): ?>
+                                                <span class="color-666 ms-2">
+                                                    <i class="la la-money-bill me-1"></i><?php echo htmlspecialchars($job['salary_range']); ?>
+                                                </span>
+                                            <?php endif; ?>
+                                        </div>
+                                        <p class="color-666 mb-3">
+                                            <?php echo htmlspecialchars($job['description']); ?>
+                                        </p>
+                                        
+                                        <?php if (count($requirements) > 0): ?>
+                                            <div class="requirements mb-3">
+                                                <h6 class="fw-600 mb-2">Requirements:</h6>
+                                                <ul class="list-unstyled fsz-14 color-666">
+                                                    <?php foreach ($requirements as $req): ?>
+                                                        <?php if (trim($req)): ?>
+                                                            <li><i class="la la-check me-2 color-orange1"></i><?php echo htmlspecialchars(trim($req)); ?></li>
+                                                        <?php endif; ?>
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if (count($responsibilities) > 0): ?>
+                                            <div class="responsibilities">
+                                                <h6 class="fw-600 mb-2">Responsibilities:</h6>
+                                                <ul class="list-unstyled fsz-14 color-666">
+                                                    <?php foreach ($responsibilities as $resp): ?>
+                                                        <?php if (trim($resp)): ?>
+                                                            <li><i class="la la-arrow-right me-2 color-orange1"></i><?php echo htmlspecialchars(trim($resp)); ?></li>
+                                                        <?php endif; ?>
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if (!empty($job['application_deadline'])): ?>
+                                            <div class="alert alert-warning mt-3 p-2 fsz-14">
+                                                <i class="la la-calendar me-1"></i>
+                                                Application deadline: <?php echo date('M d, Y', strtotime($job['application_deadline'])); ?>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
-                                    <p class="color-666 mb-3">
-                                        Lead architectural projects from concept to completion. Minimum 8 years experience in residential and commercial design. Proficiency in AutoCAD, Revit, and 3D modeling required.
-                                    </p>
-                                    <div class="requirements">
-                                        <h6 class="fw-600 mb-2">Requirements:</h6>
-                                        <ul class="list-unstyled fsz-14 color-666">
-                                            <li><i class="la la-check me-2 color-orange1"></i>Bachelor's degree in Architecture</li>
-                                            <li><i class="la la-check me-2 color-orange1"></i>8+ years professional experience</li>
-                                            <li><i class="la la-check me-2 color-orange1"></i>Proficiency in AutoCAD, Revit, SketchUp</li>
-                                            <li><i class="la la-check me-2 color-orange1"></i>Strong project management skills</li>
-                                        </ul>
+                                    <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                                        <a href="#apply-form" class="butn rounded-pill bg-orange1 text-white hover-bg-black">
+                                            <span> Apply Now <i class="small ms-1 ti-arrow-top-right"></i> </span>
+                                        </a>
                                     </div>
-                                </div>
-                                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
-                                    <a href="#apply-form" class="butn rounded-pill bg-orange1 text-white hover-bg-black">
-                                        <span> Apply Now <i class="small ms-1 ti-arrow-top-right"></i> </span>
-                                    </a>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Interior Designer -->
-                        <div class="job-card bg-white p-5 mb-4 radius-4 shadow-sm wow fadeInUp" data-wow-delay="0.3s">
-                            <div class="row align-items-center">
-                                <div class="col-lg-8">
-                                    <h4 class="fw-600 mb-2">Interior Designer</h4>
-                                    <div class="job-meta mb-3">
-                                        <span class="badge bg-orange1 text-white me-2">Full-time</span>
-                                        <span class="color-666 me-3"><i class="la la-map-marker me-1"></i>Kampala, Uganda</span>
-                                        <span class="color-666"><i class="la la-clock me-1"></i>Posted 1 week ago</span>
-                                    </div>
-                                    <p class="color-666 mb-3">
-                                        Create stunning interior spaces for residential and commercial clients. Work with clients to understand their vision and bring it to life through innovative design solutions.
-                                    </p>
-                                    <div class="requirements">
-                                        <h6 class="fw-600 mb-2">Requirements:</h6>
-                                        <ul class="list-unstyled fsz-14 color-666">
-                                            <li><i class="la la-check me-2 color-orange1"></i>Degree in Interior Design or related field</li>
-                                            <li><i class="la la-check me-2 color-orange1"></i>3+ years design experience</li>
-                                            <li><i class="la la-check me-2 color-orange1"></i>Proficiency in 3D modeling software</li>
-                                            <li><i class="la la-check me-2 color-orange1"></i>Strong communication skills</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
-                                    <a href="#apply-form" class="butn rounded-pill bg-orange1 text-white hover-bg-black">
-                                        <span> Apply Now <i class="small ms-1 ti-arrow-top-right"></i> </span>
-                                    </a>
-                                </div>
+                            <?php 
+                                $delay += 0.1;
+                            endforeach; 
+                            ?>
+                        <?php else: ?>
+                            <!-- No jobs available message -->
+                            <div class="text-center py-5">
+                                <i class="la la-briefcase text-gray-300" style="font-size: 80px; color: #ddd;"></i>
+                                <h5 class="mt-4 color-666">No Open Positions Currently Available</h5>
+                                <p class="color-666 mt-2">Please check back later or submit your application for future opportunities.</p>
+                                <a href="#apply-form" class="butn rounded-pill bg-orange1 text-white hover-bg-black mt-4">
+                                    <span> Submit General Application <i class="small ms-1 ti-arrow-top-right"></i> </span>
+                                </a>
                             </div>
-                        </div>
-
-                        <!-- Project Manager -->
-                        <div class="job-card bg-white p-5 mb-4 radius-4 shadow-sm wow fadeInUp" data-wow-delay="0.4s">
-                            <div class="row align-items-center">
-                                <div class="col-lg-8">
-                                    <h4 class="fw-600 mb-2">Project Manager</h4>
-                                    <div class="job-meta mb-3">
-                                        <span class="badge bg-orange1 text-white me-2">Full-time</span>
-                                        <span class="color-666 me-3"><i class="la la-map-marker me-1"></i>Kampala, Uganda</span>
-                                        <span class="color-666"><i class="la la-clock me-1"></i>Posted 3 days ago</span>
-                                    </div>
-                                    <p class="color-666 mb-3">
-                                        Oversee construction projects from planning to completion. Coordinate with clients, contractors, and design team to ensure projects are delivered on time and within budget.
-                                    </p>
-                                    <div class="requirements">
-                                        <h6 class="fw-600 mb-2">Requirements:</h6>
-                                        <ul class="list-unstyled fsz-14 color-666">
-                                            <li><i class="la la-check me-2 color-orange1"></i>Bachelor's degree in Construction Management</li>
-                                            <li><i class="la la-check me-2 color-orange1"></i>5+ years project management experience</li>
-                                            <li><i class="la la-check me-2 color-orange1"></i>PMP certification preferred</li>
-                                            <li><i class="la la-check me-2 color-orange1"></i>Strong leadership and communication skills</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
-                                    <a href="#apply-form" class="butn rounded-pill bg-orange1 text-white hover-bg-black">
-                                        <span> Apply Now <i class="small ms-1 ti-arrow-top-right"></i> </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Junior Architect -->
-                        <div class="job-card bg-white p-5 mb-4 radius-4 shadow-sm wow fadeInUp" data-wow-delay="0.5s">
-                            <div class="row align-items-center">
-                                <div class="col-lg-8">
-                                    <h4 class="fw-600 mb-2">Junior Architect</h4>
-                                    <div class="job-meta mb-3">
-                                        <span class="badge bg-orange1 text-white me-2">Full-time</span>
-                                        <span class="color-666 me-3"><i class="la la-map-marker me-1"></i>Kampala, Uganda</span>
-                                        <span class="color-666"><i class="la la-clock me-1"></i>Posted 1 week ago</span>
-                                    </div>
-                                    <p class="color-666 mb-3">
-                                        Entry-level position for recent graduates. Work alongside senior architects on exciting projects while developing your skills and building your portfolio.
-                                    </p>
-                                    <div class="requirements">
-                                        <h6 class="fw-600 mb-2">Requirements:</h6>
-                                        <ul class="list-unstyled fsz-14 color-666">
-                                            <li><i class="la la-check me-2 color-orange1"></i>Bachelor's degree in Architecture</li>
-                                            <li><i class="la la-check me-2 color-orange1"></i>0-2 years experience</li>
-                                            <li><i class="la la-check me-2 color-orange1"></i>Basic knowledge of AutoCAD, SketchUp</li>
-                                            <li><i class="la la-check me-2 color-orange1"></i>Strong portfolio and passion for design</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
-                                    <a href="#apply-form" class="butn rounded-pill bg-orange1 text-white hover-bg-black">
-                                        <span> Apply Now <i class="small ms-1 ti-arrow-top-right"></i> </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <img src="assets/img/home1/c_line2.png" alt="" class="c-line wow">
@@ -406,11 +325,12 @@ if ($settings_result) {
                                             <label class="form-label fsz-14 color-666 mb-2">Position Applied For *</label>
                                             <select name="position" class="form-control" required>
                                                 <option value="">Select Position</option>
-                                                <option value="Senior Architect">Senior Architect</option>
-                                                <option value="Interior Designer">Interior Designer</option>
-                                                <option value="Project Manager">Project Manager</option>
-                                                <option value="Junior Architect">Junior Architect</option>
-                                                <option value="Other">Other</option>
+                                                <?php foreach ($active_jobs as $job): ?>
+                                                    <option value="<?php echo htmlspecialchars($job['title']); ?>">
+                                                        <?php echo htmlspecialchars($job['title']); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                                <option value="Other">Other / General Application</option>
                                             </select>
                                         </div>
                                         <div class="col-lg-12 mb-4">
@@ -662,6 +582,35 @@ if ($settings_result) {
                 });
             });
         });
+
+        // Update cart count via AJAX
+        function updateCartCount() {
+            fetch('cart-ajax.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=get_cart&cache_buster=' + Date.now(),
+                cache: 'no-store',
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const cartCountElement = document.getElementById('cartCount');
+                    if (cartCountElement) {
+                        cartCountElement.innerHTML = data.data.cart_count;
+                        cartCountElement.offsetHeight;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Cart count update error:', error);
+            });
+        }
+
+        // Initialize cart count on page load
+        updateCartCount();
     </script>
 
 </body>
