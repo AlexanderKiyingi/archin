@@ -14007,6 +14007,66 @@ home 9 style
 .tc-cases-style10 .nav .nav-link:hover {
   color: #000;
 }
+
+/* Services Section Overlay */
+.services-with-overlay {
+  position: relative;
+}
+
+.services-with-overlay::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.8) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.services-with-overlay .content {
+  position: relative;
+  z-index: 2;
+}
+
+.services-with-overlay .ser-img {
+  position: relative;
+  z-index: 0;
+}
+
+/* Ensure text content is visible */
+.services-with-overlay .content h2,
+.services-with-overlay .content h5,
+.services-with-overlay .content p,
+.services-with-overlay .content .color-666 {
+  color: white !important;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+.services-with-overlay .content .color-orange1 {
+  color: #ff6b35 !important;
+}
+
+.services-with-overlay .service-card {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white !important;
+}
+
+.services-with-overlay .service-card h5 {
+  color: white !important;
+}
+
+.services-with-overlay .service-card .text {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.services-with-overlay .butn {
+  background: rgba(255, 107, 53, 0.9) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+}
 .tc-cases-style10 .case-item {
   margin-top: 30px;
   position: relative;

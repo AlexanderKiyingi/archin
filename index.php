@@ -319,7 +319,7 @@ $current_year = date('Y');
 
 
             <!--  Start services  -->
-            <section class="tc-services-style1">
+            <section class="tc-services-style1 services-with-overlay">
                 <div class="content section-padding section-padding-x">
                     <div class="container">
                         <div class="title mb-80 text-center">
@@ -391,7 +391,7 @@ $current_year = date('Y');
                     </div>
                 </div>
                 <div class="ser-img">
-                    <img src="assets/img/home1/services/ser.jpg" alt="">
+                    <img src="assets/img/home1/services/serv.png" alt="">
                 </div>
             </section>
             <!--  End services  -->
@@ -763,7 +763,7 @@ $current_year = date('Y');
 
 
             <!--  Start blog  -->
-            <section class="tc-blog-style1">
+            <section class="tc-blog-style1 pt-100 mt-80">
                 <div class="container">
                     <div class="mb-80 js-splittext-lines">
                         <div class="row">
@@ -779,6 +779,54 @@ $current_year = date('Y');
                     </div>
                     <div class="blog-slider position-relative overflow-hidden">
                         <div class="swiper-wrapper">
+                            <?php 
+                            if ($blog_result && $blog_result->num_rows > 0):
+                                while ($blog = $blog_result->fetch_assoc()): 
+                                    // Parse publish date
+                                    $publish_date = new DateTime($blog['publish_date']);
+                                    $day = $publish_date->format('d');
+                                    $month = $publish_date->format('F');
+                                    $year = $publish_date->format('Y');
+                                    
+                                    // Get featured image or use fallback
+                                    $featured_image = !empty($blog['featured_image']) ? 'cms/' . $blog['featured_image'] : 'assets/img/home1/blog/blog1.jpg';
+                                    
+                                    // Create excerpt from content
+                                    $excerpt = !empty($blog['excerpt']) ? $blog['excerpt'] : strip_tags(substr($blog['content'], 0, 150)) . '...';
+                            ?>
+                            <div class="swiper-slide">
+                                <div class="blog-card">
+                                    <div class="img">
+                                        <img src="<?php echo htmlspecialchars($featured_image); ?>" 
+                                             alt="<?php echo htmlspecialchars($blog['title']); ?>" 
+                                             class="img-cover"
+                                             onerror="this.src='assets/img/home1/blog/blog1.jpg'">
+                                    </div>
+                                    <div class="info">
+                                        <div class="date">
+                                            <div class="num fsz-45 mb-2"><?php echo $day; ?></div>
+                                            <small class="fsz-12 text-uppercase color-666"><?php echo $month; ?> <br> <?php echo $year; ?></small>
+                                        </div>
+                                        <div class="cont">
+                                            <a href="single.php?id=<?php echo $blog['id']; ?>" 
+                                               class="title d-block fsz-24 hover-orange1 mb-15 fw-600">
+                                                <?php echo htmlspecialchars($blog['title']); ?>
+                                            </a>
+                                            <small class="fsz-12 color-orange1">
+                                                <?php echo htmlspecialchars($blog['category']); ?>
+                                                <?php if (!empty($blog['author_name'])): ?>
+                                                    • By <?php echo htmlspecialchars($blog['author_name']); ?>
+                                                <?php endif; ?>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php 
+                                endwhile;
+                            else:
+                                // Fallback: Show default blog posts if no posts in database
+                            ?>
                             <div class="swiper-slide">
                                 <div class="blog-card">
                                     <div class="img">
@@ -813,23 +861,7 @@ $current_year = date('Y');
                                     </div>
                                 </div>
                             </div>
-                            <div class="swiper-slide">
-                                <div class="blog-card">
-                                    <div class="img">
-                                        <img src="assets/img/home1/blog/blog1.jpg" alt="" class="img-cover">
-                                    </div>
-                                    <div class="info">
-                                        <div class="date">
-                                            <div class="num fsz-45 mb-2"> 25 </div>
-                                            <small class="fsz-12 text-uppercase color-666"> december <br> 2023 </small>
-                                        </div>
-                                        <div class="cont">
-                                            <a href="#" class="title d-block fsz-24 hover-orange1 mb-15 fw-600"> How to handle the day light in Vray for best reality </a>
-                                            <small class="fsz-12 color-orange1"> Architecture, Guide </small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

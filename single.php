@@ -271,6 +271,10 @@ $read_time = ceil($word_count / 200);
                         </li>
                     </ul>
                     <div class="nav-side">
+                        <a href="cart.php" class="icon ms-5 fsz-21 position-relative">
+                            <span> <i class="la la-shopping-cart"></i> </span>
+                            <span class="cart-badge badge bg-orange1 rounded-pill position-absolute" id="cartCount">0</span>
+                        </a>
                         <a href="cms/login.php" class="butn border rounded-pill ms-3 hover-bg-orange1" target="_blank">
                             <span> <i class="la la-user me-2"></i> Login </span>
                         </a>
@@ -283,14 +287,13 @@ $read_time = ceil($word_count / 200);
         </nav>
         <!--  End navbar  -->
 
-        
-        <!--  Start page header  -->
-        <header class="tc-header-style1" style="min-height: 40vh;">
+        <!--  Start hero section  -->
+        <header class="tc-header-style1">
             <div class="img">
                 <?php if ($post['featured_image']): ?>
-                    <img src="<?php echo 'cms/' . str_replace('../', '', $post['featured_image']); ?>" alt="" class="img-cover">
+                    <img src="<?php echo 'cms/' . str_replace('../', '', $post['featured_image']); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" class="img-cover">
                 <?php else: ?>
-                    <img src="assets/img/home1/blog/blog1.jpg" alt="" class="img-cover">
+                    <img src="assets/img/home1/blog/blog1.jpg" alt="<?php echo htmlspecialchars($post['title']); ?>" class="img-cover">
                 <?php endif; ?>
             </div>
             <div class="info section-padding-x pb-70">
@@ -303,7 +306,7 @@ $read_time = ceil($word_count / 200);
                             <span class="mx-2 color-666">/</span>
                             <span class="color-000">Article</span>
                         </div>
-                        <h1 class="js-title wow fadeInUp"> <?php echo htmlspecialchars($post['title']); ?> </h1>
+                        <h1 class="js-title wow fadeInUp"><?php echo htmlspecialchars($post['title']); ?></h1>
                         <div class="meta mt-30 wow fadeInUp" data-wow-delay="0.2s">
                             <span class="me-4"><i class="la la-calendar me-2 color-orange1"></i><?php echo date('F d, Y', strtotime($post['publish_date'])); ?></span>
                             <span class="me-4"><i class="la la-user me-2 color-orange1"></i>By <?php echo htmlspecialchars($post['author_name'] ?: 'Admin'); ?></span>
@@ -313,7 +316,8 @@ $read_time = ceil($word_count / 200);
                 </div>
             </div>
         </header>
-        <!--  End page header  -->
+        <!--  End hero section  -->
+
 
 
         <!--Contents-->
@@ -656,6 +660,35 @@ $read_time = ceil($word_count / 200);
                 });
             });
         });
+
+        // Update cart count via AJAX
+        function updateCartCount() {
+            fetch('cart-ajax.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=get_cart&cache_buster=' + Date.now(),
+                cache: 'no-store',
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const cartCountElement = document.getElementById('cartCount');
+                    if (cartCountElement) {
+                        cartCountElement.innerHTML = data.data.cart_count;
+                        cartCountElement.offsetHeight;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Cart count update error:', error);
+            });
+        }
+
+        // Initialize cart count on page load
+        updateCartCount();
     </script>
 
 </body>
