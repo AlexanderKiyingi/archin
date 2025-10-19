@@ -134,7 +134,7 @@ $shipping_tax_settings = getShippingTaxSettingsJSON();
         <!--  Start page header  -->
         <header class="tc-header-style1 cart-header" style="min-height: 12vh; height: 12vh; max-height: 12vh;">
             <div class="img" style="min-height: 12vh !important; height: 12vh !important; max-height: 12vh !important;">
-                <img src="assets/img/home1/head_slide2.png" alt="" class="img-cover">
+                <img src="assets/img/home1/head_slide.jpg" alt="" class="img-cover">
             </div>
         </header>
         <!--  End page header  -->
