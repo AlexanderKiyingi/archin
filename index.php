@@ -192,7 +192,7 @@ $current_year = date('Y');
                             <div class="info section-padding-x pb-70">
                                 <div class="row align-items-end gx-5">
                                     <div class="col-lg-6 offset-lg-2">
-                                        <h1 data-swiper-parallax="-2000" class="js-title"> flipavenuelimited </h1>
+                                        <h1 data-swiper-parallax="-2000" class="js-title"> Flip Avenue Limited </h1>
                                         <h5 class="fsz-30 mt-30 fw-400"> Architecture Design <br> Studio </h5>
                                     </div>
                                     <div class="col-lg-3">
@@ -668,45 +668,48 @@ $current_year = date('Y');
                             <div class="tc-clients-style1">
                                 <div class="clients-slider1">
                                     <div class="swiper-wrapper">
-                                        <div class="swiper-slide">
-                                            <div class="clients-card">
-                                                <div class="text fsz-45 fw-600 lh-2 js-splittext-lines">
-                                                    “The entire team tactfully delivered a project of exceptional quality while staying on schedule and under budget. More than what i'm expected. I’m really satisfied and recommended!.”
+                                        <?php if ($testimonials_result && $testimonials_result->num_rows > 0): ?>
+                                            <?php while ($testimonial = $testimonials_result->fetch_assoc()): ?>
+                                                <div class="swiper-slide">
+                                                    <div class="clients-card">
+                                                        <div class="text fsz-45 fw-600 lh-2 js-splittext-lines">
+                                                            "<?php echo htmlspecialchars($testimonial['testimonial_text']); ?>"
+                                                        </div>
+                                                        <div class="author">
+                                                            <div class="au-inf">
+                                                                <h6 class="text-capitalize mb-2 fsz-16 fw-bold"><?php echo htmlspecialchars($testimonial['client_name']); ?></h6>
+                                                                <p class="text-capitalize fsz-14 color-666">
+                                                                    <?php 
+                                                                    echo htmlspecialchars($testimonial['client_position']); 
+                                                                    if (!empty($testimonial['client_company'])) {
+                                                                        echo ' - ' . htmlspecialchars($testimonial['client_company']);
+                                                                    }
+                                                                    if (!empty($testimonial['project_name'])) {
+                                                                        echo ' (' . htmlspecialchars($testimonial['project_name']) . ')';
+                                                                    }
+                                                                    ?>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="author">
-                                                    <div class="au-inf">
-                                                        <h6 class="text-capitalize mb-2 fsz-16 fw-bold"> M. Salah </h6>
-                                                        <p class="text-capitalize fsz-14 color-666"> Dash Private Villa Project Investor  </p>
+                                            <?php endwhile; ?>
+                                        <?php else: ?>
+                                            <!-- Fallback testimonials if database is empty -->
+                                            <div class="swiper-slide">
+                                                <div class="clients-card">
+                                                    <div class="text fsz-45 fw-600 lh-2 js-splittext-lines">
+                                                        "The entire team tactfully delivered a project of exceptional quality while staying on schedule and under budget. More than what i'm expected. I'm really satisfied and recommended!."
+                                                    </div>
+                                                    <div class="author">
+                                                        <div class="au-inf">
+                                                            <h6 class="text-capitalize mb-2 fsz-16 fw-bold">M. Salah</h6>
+                                                            <p class="text-capitalize fsz-14 color-666">Dash Private Villa Project Investor</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="clients-card">
-                                                <div class="text fsz-45 fw-600 lh-2 js-splittext-lines">
-                                                    “The entire team tactfully delivered a project of exceptional quality while staying on schedule and under budget. More than what i'm expected. I’m really satisfied and recommended!.”
-                                                </div>
-                                                <div class="author">
-                                                    <div class="au-inf">
-                                                        <h6 class="text-capitalize mb-2 fsz-16 fw-bold"> M. Salah </h6>
-                                                        <p class="text-capitalize fsz-14 color-666"> Dash Private Villa Project Investor  </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="clients-card">
-                                                <div class="text fsz-45 fw-600 lh-2 js-splittext-lines">
-                                                    “The entire team tactfully delivered a project of exceptional quality while staying on schedule and under budget. More than what i'm expected. I’m really satisfied and recommended!.”
-                                                </div>
-                                                <div class="author">
-                                                    <div class="au-inf">
-                                                        <h6 class="text-capitalize mb-2 fsz-16 fw-bold"> M. Salah </h6>
-                                                        <p class="text-capitalize fsz-14 color-666"> Dash Private Villa Project Investor  </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <?php endif; ?>
                                     </div>
                                     <div class="slider-controls">
                                         <div class="swiper-button-prev"></div>
