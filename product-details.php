@@ -152,21 +152,9 @@ $product_image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $p
 
         
         <!--  Start page header  -->
-        <header class="tc-header-style1 shop-header" style="min-height: 15vh; background-color: #1a1a1a;">
+        <header class="tc-header-style1 shop-header" style="min-height: 8vh; background-color: #1a1a1a;">
             <!-- Image removed - using solid background color instead -->
-            <div class="info section-padding-x pb-40">
-                <div class="row align-items-end gx-5">
-                    <div class="col-lg-12">
-                        <div class="breadcrumb-nav">
-                            <a href="index.php" class="text-white">Home</a>
-                            <span class="mx-2 text-white">/</span>
-                            <a href="shop.php" class="text-white">Shop</a>
-                            <span class="mx-2 text-white">/</span>
-                            <span class="text-white opacity-75" id="breadcrumbTitle">Product</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- Breadcrumbs removed -->
         </header>
         <!--  End page header  -->
 
