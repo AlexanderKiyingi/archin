@@ -15142,12 +15142,18 @@ home 9 style
 }
 
 /* Product Details Header and Breadcrumb Styling */
+.shop-header {
+    background-color: #1a1a1a !important;
+    position: relative;
+}
+
+.shop-header .img {
+    display: none !important;
+}
+
 .shop-header .info {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 10;
+    position: relative;
+    padding: 40px 0 !important;
 }
 
 .breadcrumb-nav {

@@ -152,10 +152,8 @@ $product_image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $p
 
         
         <!--  Start page header  -->
-        <header class="tc-header-style1 shop-header" style="min-height: 15vh;">
-            <div class="img">
-                <img src="assets/img/home1/head_slide2.png" alt="" class="img-cover">
-            </div>
+        <header class="tc-header-style1 shop-header" style="min-height: 15vh; background-color: #1a1a1a;">
+            <!-- Image removed - using solid background color instead -->
             <div class="info section-padding-x pb-40">
                 <div class="row align-items-end gx-5">
                     <div class="col-lg-12">

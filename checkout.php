@@ -253,8 +253,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                     <form id="checkoutForm" method="POST" action="checkout.php">
                         <div class="row">
                             <!-- Billing Information -->
-                            <div class="col-lg-7">
-                                <div class="checkout-form bg-white rounded p-4 shadow-sm">
+                            <div class="col-lg-8>
+                                <div class="checkout-form bg-white rounded p-2 shadow-sm">
                                     <h5 class="mb-4">Billing Information</h5>
                                     
                                     <div class="row">
@@ -413,7 +413,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
 
                             <!-- Order Summary -->
                             <div class="col-lg-4">
-                                <div class="cart-summary bg-light p-4 rounded">
+                                <div class="cart-summary bg-light p-2 rounded">
                                     <h5 class="mb-4">Order Summary</h5>
                                     
                                     <div id="orderItems">
