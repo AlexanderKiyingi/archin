@@ -15040,3 +15040,154 @@ home 9 style
     border-color: #0056b3;
     transform: translateY(-1px);
 }
+
+/* ============================================
+   CHECKOUT PAYMENT CARDS - MOBILE RESPONSIVE
+   ============================================ */
+
+@media screen and (max-width: 768px) {
+    /* Payment method cards - full width on mobile */
+    .payment-card.butn,
+    .network-card.butn {
+        width: 100% !important;
+        margin-bottom: 15px !important;
+    }
+    
+    /* Reduce card height on mobile */
+    .payment-card.butn {
+        height: auto !important;
+        min-height: 80px !important;
+    }
+    
+    /* Network cards - stack on mobile instead of side-by-side */
+    .mobile-money-details .row .col-6 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
+    /* Mobile money details - better spacing */
+    .mobile-money-details .card-body {
+        padding: 15px !important;
+    }
+    
+    /* Improve text sizing on cards */
+    .payment-card .fw-bold,
+    .network-card .fw-bold {
+        font-size: 1rem !important;
+    }
+    
+    .payment-card small,
+    .network-card small {
+        font-size: 0.8rem !important;
+    }
+    
+    /* Reduce icon size on mobile */
+    .payment-card i.la,
+    .network-card i.la {
+        font-size: 1.5rem !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    /* Even more compact on small screens */
+    .payment-card.butn,
+    .network-card.butn {
+        min-height: 70px !important;
+        padding: 10px !important;
+    }
+    
+    /* Smaller icons */
+    .payment-card i.la,
+    .network-card i.la {
+        font-size: 1.2rem !important;
+    }
+    
+    /* Smaller text */
+    .payment-card .fw-bold,
+    .network-card .fw-bold {
+        font-size: 0.9rem !important;
+    }
+    
+    .payment-card small,
+    .network-card small {
+        font-size: 0.75rem !important;
+    }
+    
+    /* Better button text alignment */
+    .payment-card .d-flex,
+    .network-card .d-flex {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+}
+
+/* Payment cards with border styling (no background colors) */
+.payment-card.border,
+.network-card.border {
+    background-color: #fff !important;
+    border: 2px solid #ddd !important;
+}
+
+.payment-card.border:hover,
+.network-card.border:hover {
+    border-color: var(--color-orange1) !important;
+    background-color: #f8f9fa !important;
+}
+
+.payment-card.border.selected,
+.network-card.border.selected {
+    border-color: var(--color-orange1) !important;
+    box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2) !important;
+}
+
+/* Product Details Header and Breadcrumb Styling */
+.shop-header .info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+.breadcrumb-nav {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.breadcrumb-nav a {
+    color: #fff !important;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb-nav a:hover {
+    color: var(--color-orange1) !important;
+    text-decoration: underline;
+}
+
+.breadcrumb-nav span {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Mobile responsive breadcrumb */
+@media screen and (max-width: 768px) {
+    .shop-header .info {
+        padding: 20px 15px !important;
+    }
+    
+    .breadcrumb-nav {
+        font-size: 14px !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .breadcrumb-nav {
+        font-size: 12px !important;
+    }
+    
+    .breadcrumb-nav span.mx-2 {
+        margin-left: 4px !important;
+        margin-right: 4px !important;
+    }
+}

@@ -158,7 +158,7 @@ $product_image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $p
             </div>
             <div class="info section-padding-x pb-40">
                 <div class="row align-items-end gx-5">
-                    <div class="col-lg-8 offset-lg-2">
+                    <div class="col-lg-12">
                         <div class="breadcrumb-nav">
                             <a href="index.php" class="text-white">Home</a>
                             <span class="mx-2 text-white">/</span>

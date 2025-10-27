@@ -391,7 +391,7 @@ $current_year = date('Y');
                     </div>
                 </div>
                 <div class="ser-img">
-                    <img src="assets/img/home1/services/serv.png" alt="">
+                    <img src="assets/img/home1/services/ser.png" alt="">
                 </div>
             </section>
             <!--  End services  -->

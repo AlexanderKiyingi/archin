@@ -253,7 +253,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                     <form id="checkoutForm" method="POST" action="checkout.php">
                         <div class="row">
                             <!-- Billing Information -->
-                            <div class="col-lg-8">
+                            <div class="col-lg-7">
                                 <div class="checkout-form bg-white rounded p-4 shadow-sm">
                                     <h5 class="mb-4">Billing Information</h5>
                                     
@@ -329,23 +329,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                                         <h6 class="mb-3">Select Payment Method</h6>
                                         <div class="row">
                                             <div class="col-md-6 mb-3">
-                                                <button type="button" class="butn w-100 payment-card bg-blue1" id="mobilemoney-card" onclick="selectPaymentMethod('mobilemoney')">
+                                                <button type="button" class="butn w-100 payment-card border" id="mobilemoney-card" onclick="selectPaymentMethod('mobilemoney')">
                                                     <div class="d-flex align-items-center justify-content-center py-3">
-                                                        <i class="la la-mobile-alt fa-2x text-white me-3"></i>
+                                                        <i class="la la-mobile-alt fa-2x text-gray-800 me-3"></i>
                                                         <div class="text-start">
-                                                            <div class="fw-bold text-white">Mobile Money</div>
-                                                            <small class="text-white-50">MTN, Airtel, Africell</small>
+                                                            <div class="fw-bold text-gray-800">Mobile Money</div>
+                                                            <small class="text-gray-600">MTN, Airtel, Africell</small>
                                                         </div>
                                                     </div>
                                                 </button>
                                             </div>
                                             <div class="col-md-6 mb-3">
-                                                <button type="button" class="butn w-100 payment-card bg-blue1" id="visa-card" onclick="selectPaymentMethod('visa')">
+                                                <button type="button" class="butn w-100 payment-card border" id="visa-card" onclick="selectPaymentMethod('visa')">
                                                     <div class="d-flex align-items-center justify-content-center py-3">
-                                                        <i class="la la-credit-card fa-2x text-white me-3"></i>
+                                                        <i class="la la-credit-card fa-2x text-gray-800 me-3"></i>
                                                         <div class="text-start">
-                                                            <div class="fw-bold text-white">VISA Card</div>
-                                                            <small class="text-white-50">Credit & Debit Cards</small>
+                                                            <div class="fw-bold text-gray-800">VISA Card</div>
+                                                            <small class="text-gray-600">Credit & Debit Cards</small>
                                                         </div>
                                                     </div>
                                                 </button>
@@ -363,21 +363,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                                                     <label class="form-label">Select Network Provider <span class="text-danger">*</span></label>
                                     <div class="row">
                                                         <div class="col-6 mb-2">
-                                                            <button type="button" class="butn w-100 network-card bg-yellow1" id="mtn-card" onclick="selectNetwork('mtn')">
+                                                            <button type="button" class="butn w-100 network-card border" id="mtn-card" onclick="selectNetwork('mtn')">
                                                                 <div class="d-flex align-items-center justify-content-center py-3">
                                                                     <div class="text-center">
-                                                                        <div class="fw-bold text-white" style="font-size: 1.2rem;">MTN</div>
-                                                                        <small class="text-white-50">Mobile Money</small>
+                                                                        <div class="fw-bold text-gray-800" style="font-size: 1.2rem;">MTN</div>
+                                                                        <small class="text-gray-600">Mobile Money</small>
                                         </div>
                                         </div>
                                                             </button>
                                                         </div>
                                                         <div class="col-6 mb-2">
-                                                            <button type="button" class="butn w-100 network-card bg-green1" id="airtel-card" onclick="selectNetwork('airtel')">
+                                                            <button type="button" class="butn w-100 network-card border" id="airtel-card" onclick="selectNetwork('airtel')">
                                                                 <div class="d-flex align-items-center justify-content-center py-3">
                                                                     <div class="text-center">
-                                                                        <div class="fw-bold text-white" style="font-size: 1.2rem;">Airtel</div>
-                                                                        <small class="text-white-50">Mobile Money</small>
+                                                                        <div class="fw-bold text-gray-800" style="font-size: 1.2rem;">Airtel</div>
+                                                                        <small class="text-gray-600">Mobile Money</small>
                                                                     </div>
                                                                 </div>
                                                             </button>
@@ -757,13 +757,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
             document.querySelectorAll('.payment-card').forEach(card => {
                 card.classList.remove('selected');
                 card.classList.remove('bg-orange1');
-                card.classList.add('bg-blue1'); // Reset to default color
+                // Keep border style for light background
             });
             
             // Add selected class to clicked card
             const selectedCard = document.getElementById(method + '-card');
             selectedCard.classList.add('selected');
-            selectedCard.classList.remove('bg-blue1');
             selectedCard.classList.add('bg-orange1'); // Orange for selected state
             
             // Show/hide mobile money details
@@ -798,19 +797,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
             // Remove selected class from all network cards
             document.querySelectorAll('.network-card').forEach(card => {
                 card.classList.remove('selected');
-                card.classList.remove('bg-orange1');
-                // Reset to original colors
-                if (card.id === 'mtn-card') {
-                    card.classList.add('bg-yellow1');
-                } else if (card.id === 'airtel-card') {
-                    card.classList.add('bg-green1');
-                }
+                // Reset to border style (no background colors)
+                card.classList.remove('bg-orange1', 'bg-yellow1', 'bg-green1');
             });
             
             // Add selected class to clicked network card
             const selectedCard = document.getElementById(network + '-card');
             selectedCard.classList.add('selected');
-            selectedCard.classList.remove('bg-yellow1', 'bg-green1');
             selectedCard.classList.add('bg-orange1'); // Orange for selected state
             
             // Enable pay button if phone number is also filled
