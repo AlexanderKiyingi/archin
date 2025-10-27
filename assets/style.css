@@ -2073,6 +2073,12 @@ html[lang=ar] .home-style1 .loader-wrap {
     .wow.zoomIn {
       animation-name: fadeIn !important;
     }
+    
+    /* Ensure elements are visible on mobile */
+    .js-splittext-lines {
+      opacity: 1 !important;
+      transform: none !important;
+    }
   }
   
   /* Animation performance for low-end devices */
