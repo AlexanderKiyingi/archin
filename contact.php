@@ -227,7 +227,7 @@ if ($settings_result) {
                                             <i class="la la-check-circle fsz-30 color-orange1"></i>
                                         </div>
                                         <div>
-                                            <h6 class="fw-600 mb-2">Free Consultation</h6>
+                                            <h6 class="fw-600 mb-2">Book Site Visit & Consultation</h6>
                                             <p class="fsz-14 color-666">Initial discussion and site visit at no cost</p>
                                         </div>
                                     </div>
@@ -236,7 +236,7 @@ if ($settings_result) {
                                             <i class="la la-check-circle fsz-30 color-orange1"></i>
                                         </div>
                                         <div>
-                                            <h6 class="fw-600 mb-2">Quick Response</h6>
+                                            <h6 class="fw-600 mb-2">Get 3D Impressions</h6>
                                             <p class="fsz-14 color-666">We respond to all inquiries within 24 hours</p>
                                         </div>
                                     </div>
@@ -245,7 +245,7 @@ if ($settings_result) {
                                             <i class="la la-check-circle fsz-30 color-orange1"></i>
                                         </div>
                                         <div>
-                                            <h6 class="fw-600 mb-2">Professional Team</h6>
+                                            <h6 class="fw-600 mb-2">Get Professional Execution</h6>
                                             <p class="fsz-14 color-666">15+ years of experience in architecture</p>
                                         </div>
                                     </div>
@@ -427,8 +427,8 @@ if ($settings_result) {
                             <div class="branch-card">
                                 <h5 class="mb-20 mt-5 fw-600"> Legal </h5>
                                 <ul class="footer-links">
-                                    <li> <a href="#"> Term & Conditions </a> </li>
-                                    <li> <a href="#"> Privacy Policy </a> </li>
+                                    <li> <a href="terms-conditions.php"> Term & Conditions </a> </li>
+                                    <li> <a href="privacy-policy.php"> Privacy Policy </a> </li>
                                 </ul>
                             </div>
                         </div>

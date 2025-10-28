@@ -196,9 +196,9 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                             </div>
                             <div class="info section-padding-x pb-70">
                                 <div class="row align-items-end gx-5">
-                                    <div class="col-lg-6 offset-lg-2">
-                                        <h1 data-swiper-parallax="-2000" class="js-title"> Flip Avenue Limited </h1>
-                                        <h5 class="fsz-30 mt-30 fw-400"> Architecture Design <br> Studio </h5>
+                                    <div class="col-lg-7 offset-lg-2">
+                                        <h1 data-swiper-parallax="-2000" class="js-title"> Flip Avenue <t>Limited</t> </h1>
+                                        <h5 class="fsz-30 mt-30 fw-400"> Interior Design <br> Studio </h5>
                                     </div>
                                     <div class="col-lg-3">
                                         <div class="cont pb-30">
@@ -222,7 +222,7 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                             <div class="info section-padding-x pb-70">
                                 <div class="row align-items-end gx-5">
                                     <div class="col-lg-6 offset-lg-2">
-                                        <h1 data-swiper-parallax="-2000" class="js-title"> time </h1>
+                                        <h1 data-swiper-parallax="-2000" class="js-title"> Time </h1>
                                         <h5 class="fsz-30 mt-30 fw-400"> Sustainable Material <br> Resource </h5>
                                     </div>
                                     <div class="col-lg-3">
@@ -247,7 +247,7 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                             <div class="info section-padding-x pb-70">
                                 <div class="row align-items-end gx-5">
                                     <div class="col-lg-6 offset-lg-2">
-                                        <h1 data-swiper-parallax="-2000" class="js-title"> shape </h1>
+                                        <h1 data-swiper-parallax="-2000" class="js-title"> Shape </h1>
                                         <h5 class="fsz-30 mt-30 fw-400"> Architecture Language <br> Signature </h5>
                                     </div>
                                     <div class="col-lg-3">
@@ -294,9 +294,9 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                                 <img src="assets/img/home1/exp.png" alt="" class="img-cover">
                             </div>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-4">
                             <div class="info wow fadeInUp" data-wow-delay="0.3s">   
-                                <h3 class="fsz-45 fw-600 mb-30"> 126+. Projects Completed </h3>
+                                <h3 class="fsz-45 fw-600 mb-30"> 126+ Projects Completed </h3>
                                 <div class="text fsz-15 color-666">
                                     Flip Avenue Limited is an architectural practice based in Uganda. We cut our teeth on designing and creating buildings that are both beautiful and sustainable.
                                 </div>
@@ -954,8 +954,8 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                             <div class="branch-card">
                                 <h5 class="mb-20 mt-5 fw-600"> Legal </h5>
                                 <ul class="footer-links">
-                                    <li> <a href="#"> Term & Conditions </a> </li>
-                                    <li> <a href="#"> Privacy Policy </a> </li>
+                                    <li> <a href="terms-conditions.php"> Term & Conditions </a> </li>
+                                    <li> <a href="privacy-policy.php"> Privacy Policy </a> </li>
                                 </ul>
                             </div>
                         </div>

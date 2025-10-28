@@ -517,8 +517,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
                             <div class="branch-card">
                                 <h5 class="mb-20 mt-5 mt-lg-0 fw-600"> Legal </h5>
                                 <ul class="footer-links">
-                                    <li> <a href="#"> Term & Conditions </a> </li>
-                                    <li> <a href="#"> Privacy Policy </a> </li>
+                                    <li> <a href="terms-conditions.php"> Term & Conditions </a> </li>
+                                    <li> <a href="privacy-policy.php"> Privacy Policy </a> </li>
                                 </ul>
                             </div>
                         </div>
