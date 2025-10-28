@@ -44,6 +44,11 @@ if ($settings_result) {
 
 // Set current year for copyright
 $current_year = date('Y');
+
+// Set SEO meta data
+$page_title = 'Home | FlipAvenue Limited - Premium Architecture & Design Studio';
+$page_keywords = 'FlipAvenue, Architecture, Design, Construction, Interior Design, Uganda, Kampala, Architectural Services';
+$page_description = 'FlipAvenue Limited is an architectural practice based in Uganda. We cut our teeth on designing and creating buildings that are both beautiful and sustainable.';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -293,7 +298,7 @@ $current_year = date('Y');
                             <div class="info wow fadeInUp" data-wow-delay="0.3s">
                                 <h3 class="fsz-45 fw-600 mb-30"> Est. 1986 </h3>
                                 <div class="text fsz-15 color-666">
-                                    FlipAvenue Limited is an archiectural practice based in Boston. We cut ourteeth on designing and creating buildings that are both beautiful and sustainable.
+                                    FlipAvenue Limited is an archiectural practice based in Uganda. We cut ourteeth on designing and creating buildings that are both beautiful and sustainable.
                                 </div>
                                 <a href="#" class="butn rounded-pill mt-50 hover-bg-black bg-white">
                                     <span> Our Studio <i class="small ms-1 ti-arrow-top-right"></i> </span>
