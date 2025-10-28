@@ -295,8 +295,8 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                             </div>
                         </div>
                         <div class="col-lg-3">
-                            <div class="info wow fadeInUp" data-wow-delay="0.3s">
-                                <h3 class="fsz-45 fw-600 mb-30"> Est. 1986 </h3>
+                            <div class="info wow fadeInUp" data-wow-delay="0.3s">   
+                                <h3 class="fsz-45 fw-600 mb-30"> 126+. Projects Completed </h3>
                                 <div class="text fsz-15 color-666">
                                     Flip Avenue Limited is an architectural practice based in Uganda. We cut our teeth on designing and creating buildings that are both beautiful and sustainable.
                                 </div>
@@ -779,7 +779,7 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                                 <h2 class="fsz-45"> Latest Posts </h2>
                             </div>
                             <div class="col-lg-3 text-lg-end mt-4 mt-lg-0">
-                                <a href="#" class="butn border rounded-pill color-orange1 border-orange1 hover-bg-orange1">
+                                <a href="blog.php" class="butn border rounded-pill color-orange1 border-orange1 hover-bg-orange1">
                                     <span> All Articles <i class="small ms-1 ti-arrow-top-right"></i> </span>
                                 </a>
                             </div>
@@ -797,12 +797,23 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                                     $year = $publish_date->format('Y');
                                     
                                     // Get featured image or use fallback
-                                    $featured_image = !empty($blog['featured_image']) ? 'cms/' . $blog['featured_image'] : 'assets/img/home1/blog/blog1.jpg';
+                                    // Check if the image path already includes cms/ or assets/
+                                    if (!empty($blog['featured_image'])) {
+                                        $img_path = $blog['featured_image'];
+                                        // If it's a relative path starting with 'blog/', prepend 'cms/assets/uploads/'
+                                        if (strpos($img_path, 'cms/') === false && strpos($img_path, 'http') === false && strpos($img_path, 'assets/') === false) {
+                                            $featured_image = 'cms/assets/uploads/' . $img_path;
+                                        } else {
+                                            $featured_image = $img_path;
+                                        }
+                                    } else {
+                                        $featured_image = 'assets/img/home1/blog/blog1.jpg';
+                                    }
                                     
                                     // Create excerpt from content
                                     $excerpt = !empty($blog['excerpt']) ? $blog['excerpt'] : strip_tags(substr($blog['content'], 0, 150)) . '...';
                             ?>
-                            <div class="swiper-slide">
+                            <a href="single.php?id=<?php echo $blog['id']; ?>" class="swiper-slide" style="display: block; cursor: pointer; text-decoration: none; color: inherit;">
                                 <div class="blog-card">
                                     <div class="img">
                                         <img src="<?php echo htmlspecialchars($featured_image); ?>" 
@@ -816,10 +827,9 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                                             <small class="fsz-12 text-uppercase color-666"><?php echo $month; ?> <br> <?php echo $year; ?></small>
                                         </div>
                                         <div class="cont">
-                                            <a href="single.php?id=<?php echo $blog['id']; ?>" 
-                                               class="title d-block fsz-24 hover-orange1 mb-15 fw-600">
+                                            <div class="title d-block fsz-24 hover-orange1 mb-15 fw-600">
                                                 <?php echo htmlspecialchars($blog['title']); ?>
-                                            </a>
+                                            </div>
                                             <small class="fsz-12 color-orange1">
                                                 <?php echo htmlspecialchars($blog['category']); ?>
                                                 <?php if (!empty($blog['author_name'])): ?>
@@ -829,7 +839,7 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                             <?php 
                                 endwhile;
                             else:
