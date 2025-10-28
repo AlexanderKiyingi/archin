@@ -264,6 +264,14 @@ development/
 local/
 .local/
 
+# Admin diagnostic and test scripts (security sensitive)
+cms/fix-admin-password.php
+cms/check-admin-status.php
+cms/test-password.php
+cms/*-test.php
+cms/*-debug.php
+cms/*diagnostic*.php
+
 # Debug files
 debug/
 *.debug
