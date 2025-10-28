@@ -61,6 +61,40 @@
             }
         });
         
+        // User dropdown functionality for desktop
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+        
+        // User dropdown functionality for mobile
+        function toggleMobileUserDropdown() {
+            const dropdown = document.getElementById('mobileUserDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+        
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            const desktopContainer = document.getElementById('userDropdownContainer');
+            const desktopDropdown = document.getElementById('userDropdown');
+            const mobileContainer = document.getElementById('mobileUserDropdownContainer');
+            const mobileDropdown = document.getElementById('mobileUserDropdown');
+            
+            // Close desktop dropdown
+            if (desktopContainer && desktopDropdown) {
+                if (!desktopContainer.contains(event.target) && !desktopDropdown.classList.contains('hidden')) {
+                    desktopDropdown.classList.add('hidden');
+                }
+            }
+            
+            // Close mobile dropdown
+            if (mobileContainer && mobileDropdown) {
+                if (!mobileContainer.contains(event.target) && !mobileDropdown.classList.contains('hidden')) {
+                    mobileDropdown.classList.add('hidden');
+                }
+            }
+        });
+        
         // Touch-friendly table scrolling
         document.addEventListener('DOMContentLoaded', function() {
             const tables = document.querySelectorAll('.table-responsive');

@@ -151,6 +151,21 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                 display: none;
             }
         }
+        
+        /* User dropdown fixes */
+        #userDropdownContainer, #mobileUserDropdownContainer {
+            position: relative;
+        }
+        
+        #userDropdown, #mobileUserDropdown {
+            min-width: 192px;
+        }
+        
+        /* Ensure dropdown button is clickable */
+        #userDropdownBtn, [id*="UserDropdownBtn"] {
+            pointer-events: all;
+            touch-action: manipulation;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -283,6 +298,11 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                     <i class="fas fa-key w-5"></i>
                     <span>Change Password</span>
                 </a>
+                
+                <a href="reset-password.php" class="sidebar-link <?php echo $current_page === 'reset-password' ? 'active' : ''; ?> flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+                    <i class="fas fa-shield-alt w-5"></i>
+                    <span>Reset User Password</span>
+                </a>
                 <?php endif; ?>
             </nav>
         </aside>
@@ -309,8 +329,8 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                             <i class="fas fa-external-link-alt"></i>
                         </a>
                         
-                        <div class="relative group">
-                            <button class="flex items-center space-x-2 bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-lg transition-all duration-200 border border-gray-200">
+                        <div class="relative" id="mobileUserDropdownContainer">
+                            <button onclick="toggleMobileUserDropdown()" class="flex items-center space-x-2 bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-lg transition-all duration-200 border border-gray-200 cursor-pointer">
                                 <i class="fas fa-user-circle text-lg text-gray-600"></i>
                                 <div class="text-left hidden sm:block">
                                     <p class="text-xs font-semibold text-gray-800 leading-tight"><?php echo $_SESSION['admin_name']; ?></p>
@@ -319,7 +339,7 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                                 <i class="fas fa-chevron-down text-xs text-gray-400"></i>
                             </button>
                             
-                            <div class="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg border border-gray-200 hidden group-hover:block z-50">
+                            <div id="mobileUserDropdown" class="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg border border-gray-200 hidden z-50">
                                 <a href="profile.php" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg transition-colors">
                                     <i class="fas fa-user mr-2"></i>Profile
                                 </a>
@@ -335,30 +355,30 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
             <!-- Desktop Header -->
             <header class="desktop-header bg-white shadow-sm z-10 border-b border-gray-200">
                 <div class="flex items-center justify-between px-6 py-4">
-                    <div class="flex-1">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-1"><?php echo $page_title ?? 'Dashboard'; ?></h2>
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-1 truncate"><?php echo $page_title ?? 'Dashboard'; ?></h2>
                         <?php if (isset($page_description)): ?>
-                            <p class="text-sm text-gray-600"><?php echo $page_description; ?></p>
+                            <p class="text-sm text-gray-600 truncate"><?php echo $page_description; ?></p>
                         <?php endif; ?>
                     </div>
                     
-                    <div class="flex items-center space-x-6">
-                        <a href="<?php echo SITE_URL; ?>" target="_blank" class="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors duration-200">
+                    <div class="flex items-center space-x-4 flex-shrink-0 ml-4">
+                        <a href="<?php echo SITE_URL; ?>" target="_blank" class="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors duration-200 whitespace-nowrap">
                             <i class="fas fa-external-link-alt"></i>
-                            <span class="text-sm font-medium">View Site</span>
+                            <span class="text-sm font-medium hidden sm:inline">View Site</span>
                         </a>
                         
-                        <div class="relative group">
-                            <button class="flex items-center space-x-3 bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-xl transition-all duration-200 border border-gray-200 hover:border-gray-300">
+                        <div class="relative" id="userDropdownContainer">
+                            <button onclick="toggleUserDropdown()" class="flex items-center space-x-3 bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-xl transition-all duration-200 border border-gray-200 hover:border-gray-300 cursor-pointer">
                                 <i class="fas fa-user-circle text-xl text-gray-600"></i>
                                 <div class="text-left">
-                                    <p class="text-sm font-semibold text-gray-800 leading-tight"><?php echo $_SESSION['admin_name']; ?></p>
-                                    <p class="text-xs text-gray-500 leading-tight"><?php echo ucfirst($_SESSION['admin_role']); ?></p>
+                                    <p class="text-sm font-semibold text-gray-800 leading-tight whitespace-nowrap"><?php echo $_SESSION['admin_name']; ?></p>
+                                    <p class="text-xs text-gray-500 leading-tight whitespace-nowrap"><?php echo ucfirst($_SESSION['admin_role']); ?></p>
                                 </div>
                                 <i class="fas fa-chevron-down text-xs text-gray-400"></i>
                             </button>
                             
-                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 hidden group-hover:block z-50">
+                            <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 hidden z-50">
                                 <a href="profile.php" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-t-xl transition-colors">
                                     <i class="fas fa-user mr-3"></i>Profile
                                 </a>
