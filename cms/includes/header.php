@@ -303,6 +303,11 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                     <i class="fas fa-shield-alt w-5"></i>
                     <span>Reset User Password</span>
                 </a>
+                
+                <a href="manage-users.php" class="sidebar-link <?php echo $current_page === 'manage-users' ? 'active' : ''; ?> flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+                    <i class="fas fa-users-cog w-5"></i>
+                    <span>Manage Users</span>
+                </a>
                 <?php endif; ?>
             </nav>
         </aside>

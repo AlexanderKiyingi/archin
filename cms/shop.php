@@ -14,23 +14,32 @@ if ($_POST) {
                 $description = cleanInput($_POST['description']);
                 $price = floatval($_POST['price']);
                 $category = cleanInput($_POST['category']);
-                $tags = cleanInput($_POST['tags']);
+                // Handle tags as array or string
+                $tags = is_array($_POST['tags']) ? cleanInput(implode(', ', $_POST['tags'])) : cleanInput($_POST['tags']);
                 $featured_image = '';
                 
-                // Handle file upload
+                // Handle file upload (standardized with shared helper)
                 if (isset($_FILES['featured_image']) && $_FILES['featured_image']['error'] === UPLOAD_ERR_OK) {
-                    $featured_image = uploadFile($_FILES['featured_image'], '../assets/uploads/shop/');
+                    $upload = uploadFile($_FILES['featured_image'], 'shop');
+                    if ($upload['success']) {
+                        $featured_image = $upload['path'];
+                    } else {
+                        $error_message = $upload['message'] ?? 'Image upload failed';
+                    }
                 }
                 
-                $stmt = $conn->prepare("INSERT INTO shop_products (name, description, price, category, tags, featured_image, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
-                $stmt->bind_param("ssdsss", $name, $description, $price, $category, $tags, $featured_image);
-                
-                if ($stmt->execute()) {
-                    $success_message = "Product added successfully!";
-                } else {
-                    $error_message = "Error adding product: " . $stmt->error;
+                // Only proceed if no upload error
+                if (!isset($error_message)) {
+                    $stmt = $conn->prepare("INSERT INTO shop_products (name, description, price, category, tags, featured_image, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+                    $stmt->bind_param("ssdsss", $name, $description, $price, $category, $tags, $featured_image);
+                    
+                    if ($stmt->execute()) {
+                        $success_message = "Product added successfully!";
+                    } else {
+                        $error_message = "Error adding product: " . $stmt->error;
+                    }
+                    $stmt->close();
                 }
-                $stmt->close();
                 break;
                 
             case 'update_product':
@@ -39,23 +48,32 @@ if ($_POST) {
                 $description = cleanInput($_POST['description']);
                 $price = floatval($_POST['price']);
                 $category = cleanInput($_POST['category']);
-                $tags = cleanInput($_POST['tags']);
+                // Handle tags as array or string
+                $tags = is_array($_POST['tags']) ? cleanInput(implode(', ', $_POST['tags'])) : cleanInput($_POST['tags']);
                 $featured_image = $_POST['current_image'];
                 
-                // Handle file upload
+                // Handle file upload (standardized with shared helper)
                 if (isset($_FILES['featured_image']) && $_FILES['featured_image']['error'] === UPLOAD_ERR_OK) {
-                    $featured_image = uploadFile($_FILES['featured_image'], '../assets/uploads/shop/');
+                    $upload = uploadFile($_FILES['featured_image'], 'shop');
+                    if ($upload['success']) {
+                        $featured_image = $upload['path'];
+                    } else {
+                        $error_message = $upload['message'] ?? 'Image upload failed';
+                    }
                 }
                 
-                $stmt = $conn->prepare("UPDATE shop_products SET name=?, description=?, price=?, category=?, tags=?, featured_image=?, updated_at=NOW() WHERE id=?");
-                $stmt->bind_param("ssdsssi", $name, $description, $price, $category, $tags, $featured_image, $id);
-                
-                if ($stmt->execute()) {
-                    $success_message = "Product updated successfully!";
-                } else {
-                    $error_message = "Error updating product: " . $stmt->error;
+                // Only proceed if no upload error
+                if (!isset($error_message)) {
+                    $stmt = $conn->prepare("UPDATE shop_products SET name=?, description=?, price=?, category=?, tags=?, featured_image=?, updated_at=NOW() WHERE id=?");
+                    $stmt->bind_param("ssdsssi", $name, $description, $price, $category, $tags, $featured_image, $id);
+                    
+                    if ($stmt->execute()) {
+                        $success_message = "Product updated successfully!";
+                    } else {
+                        $error_message = "Error updating product: " . $stmt->error;
+                    }
+                    $stmt->close();
                 }
-                $stmt->close();
                 break;
                 
             case 'delete_product':
