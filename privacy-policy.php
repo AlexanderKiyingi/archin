@@ -5,7 +5,7 @@ require_once 'cms/db_connect.php';
 // Fetch site settings
 $settings = [];
 $settings_query = "SELECT setting_key, setting_value FROM site_settings";
-$settings_result = $conn->query短语($settings_query);
+$settings_result = $conn->query($settings_query);
 if ($settings_result) {
     while ($row = $settings_result->fetch_assoc()) {
         $settings[$row['setting_key']] = $row['setting_value'];
@@ -104,69 +104,151 @@ $current_year = date('Y');
 <body class="home-style1">
 
     <!-- ====== Start Loading ====== -->
-    <div id="loading-wrapper">
-        <div class="loading-text">Loading</div>
-        <div class="loading-circle"></div>
+    <div class="loader-wrap">
+        <svg viewBox="0 0 1000 1000" preserveAspectRatio="none">
+            <path id="svg" d="M0,1005S175,995,500,995s500,5,500,5V0H0Z"></path>
+        </svg>
+
+        <div class="loader-wrap-heading">
+            <div class="load-text">
+                <span>L</span>
+                <span>o</span>
+                <span>a</span>
+                <span>d</span>
+                <span>i</span>
+                <span>n</span>
+                <span>g</span>
+            </div>
+        </div>
     </div>
     <!-- ====== End Loading ====== -->
 
-    <!-- ====== Start header ====== -->
-    <?php include 'common/header.php'; ?>
-    <!-- ====== End header ====== -->
+    <!--  start side_menu  -->
+    <div class="side_menu4_overlay"></div>
+    <div class="side_menu4_overlay2"></div>
+    <div class="side_menu_style4">
+        <div class="content">
+            <div class="main_links">
+                <ul>
+                    <li> <a href="index.php" class="main_link"> home </a> </li>
+                    <li><a href="about.html" class="main_link"> about us </a></li>
+                    <li> <a href="portfolio.php" class="main_link"> projects </a> </li>
+                    <li> <a href="blog.php" class="main_link"> news </a> </li>
+                    <li> <a href="shop.php" class="main_link"> shop </a> </li>
+                    <li> <a href="contact.php" class="main_link"> contact </a> </li>
+                </ul>
+            </div>
+        </div>
+        <img src="assets/img/home1/chat_pat2.png" alt="" class="side_shape">
+        <img src="assets/img/home1/chat_pat2.png" alt="" class="side_shape2">
+        <span class="clss"> <i class="la  la-times"></i> </span>
+    </div>
+    <!--  End side_menu  -->
 
-    <!--Contents-->
-    <main>
+    <div class="smooth-scroll-content" id="scrollsmoother-container">
 
-        <!-- ====== Start header-section ====== -->
-        <section class="header-section style-2">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 text-center">
-                        <h1 class="main-title wow fadeInUp" data-wow-delay="0.1s">
-                            Privacy Policy
-                        </h1>
-                        <div class="breadcrumb-nav mt-20 wow fadeInUp" data-wow-delay="0.2s">
-                            <a href="index.php">Home</a> 
-                            <span class="mx-2"> / </span>
-                            <span>Privacy Policy</span>
+        <!--  Start navbar  -->
+        <nav class="navbar navbar-expand-lg navbar-dark tc-navbar-style1 section-padding-x">
+            <div class="container-fluid content">
+                <a class="navbar-brand" href="index.php">
+                    <img src="assets/img/home1/logo.png" alt="" class="logo">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.php">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="about.html">About Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="portfolio.php">Projects</a>
+                        </li>
+                       
+                        <li class="nav-item">
+                            <a class="nav-link" href="shop.php">Shop</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact.php">Contact</a>
+                        </li>
+                    </ul>
+                    <a href="cart.php" class="icon ms-5 fsz-21 position-relative">
+                        <span> <i class="la la-shopping-cart"></i> </span>
+                        <span class="cart-badge badge bg-orange1 rounded-pill position-absolute" id="cartCount">0</span>
+                    </a>
+                    <a href="cms/login.php" class="butn border rounded-pill ms-3 hover-bg-orange1" target="_blank">
+                        <span> <i class="la la-user me-2"></i> Login </span>
+                    </a>
+                    <a href="#" class="icon ms-3 side_menu_btn fsz-21">
+                        <span> <i class="la la-grip-lines"></i> </span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        <!--  End navbar  -->
+
+        
+        <!--Contents-->
+        <main>
+
+            <!--  Start page header  -->
+            <header class="tc-header-style1 portfolio-header" style="min-height: 12vh;">
+                <div class="img">
+                    <img src="assets/img/home1/head_slide1.jpg" alt="" class="img-cover">
+                </div>
+            </header>
+            <!--  End page header  -->
+
+            <!--  Start page title  -->
+            <section class="tc-shop-style1 section-padding">
+                <div class="container">
+                    <div class="mb-50">
+                        <div class="row align-items-center">
+                            <div class="col-lg-12 text-center">
+                                <h2 class="fsz-45 mb-3 wow fadeInUp">Privacy Policy</h2>
+                                <p class="color-666 wow fadeInUp" data-wow-delay="0.2s">Learn how we collect, use, and protect your personal information</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-        <!-- ====== End header-section ====== -->
+            </section>
+            <!--  End page title  -->
 
-        <!-- ====== Start Legal Content ====== -->
-        <section class="legal-content">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-10">
-                        <div class="last-updated">Last Updated: August 22, 2023</div>
+            <!-- ====== Start Legal Content ====== -->
+            <section class="legal-content">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <div class="last-updated">Last Updated: August 22, 2023</div>
 
-                        <h2>1. Introduction</h2>
-                        <p>
-                            Welcome to Flip Avenue. This Privacy Policy outlines how we collect, use, disclose, and protect the personal information of our clients, customers, and website visitors. By accessing our website and using our services, you agree to the practices described in this policy.
-                        </p>
+                            <h2>1. Introduction</h2>
+                            <p>
+                                Welcome to Flip Avenue. This Privacy Policy outlines how we collect, use, disclose, and protect the personal information of our clients, customers, and website visitors. By accessing our website and using our services, you agree to the practices described in this policy.
+                            </p>
 
-                        <h2>2. Information We Collect</h2>
-                        <p>We may collect the following categories of personal information:</p>
-                        <ul>
-                            <li><strong>Personal Identifiers:</strong> Name, contact information (email address, phone number, physical address).</li>
-                            <li><strong>Financial Information:</strong> Billing details, payment information.</li>
-                            <li><strong>Commercial Information:</strong> Records of products or services purchased, obtained, or considered.</li>
-                            <li><strong>Usage Data:</strong> Information on how you use our website and services.</li>
-                            <li><strong>Correspondence:</strong> Correspondence and communications exchanged with us.</li>
-                        </ul>
+                            <h2>2. Information We Collect</h2>
+                            <p>We may collect the following categories of personal information:</p>
+                            <ul>
+                                <li><strong>Personal Identifiers:</strong> Name, contact information (email address, phone number, physical address).</li>
+                                <li><strong>Financial Information:</strong> Billing details, payment information.</li>
+                                <li><strong>Commercial Information:</strong> Records of products or services purchased, obtained, or considered.</li>
+                                <li><strong>Usage Data:</strong> Information on how you use our website and services.</li>
+                                <li><strong>Correspondence:</strong> Correspondence and communications exchanged with us.</li>
+                            </ul>
 
-                        <h2>3. How We Use Your Information</h2>
-                        <p>We use the collected information for various purposes, including:</p>
-                        <ul>
-                            <li>Providing and managing services you've requested.</li>
-                            <li>Responding to inquiries and providing customer support.</li>
-                            <li>Analyzing and improving our website, services, and user experience.</li>
-                            <li>Sending promotional materials and offers with your consent.</li>
-                            <li>Detecting and preventing fraud and unauthorized access.</li>
-                        </ul>
+                            <h2>3. How We Use Your Information</h2>
+                            <p>We use the collected information for various purposes, including:</p>
+                            <ul>
+                                <li>Providing and managing services you've requested.</li>
+                                <li>Responding to inquiries and providing customer support.</li>
+                                <li>Analyzing and improving our website, services, and user experience.</li>
+                                <li>Sending promotional materials and offers with your consent.</li>
+                                <li>Detecting and preventing fraud and unauthorized access.</li>
+                            </ul>
 
                         <h2>4. Disclosure of Information</h2>
                         <p>We may share your information with:</p>
@@ -206,22 +288,96 @@ $current_year = date('Y');
                             We may update this Privacy Policy from time to time to reflect changes in our practices or legal requirements. The updated policy will be posted on our website.
                         </p>
 
-                        <h2>10. Contact Us</h2>
+                        <h2>10. Contact Us                        </h2>
                         <p>
                             If you have questions about this Privacy Policy or your personal information, please contact us at info@flipavenue.com.
                         </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- ====== End Legal Content ====== -->
+
+        </main>
+
+        <!--  Start footer  -->
+        <footer class="tc-footer-style1">
+            <div class="container">
+                <div class="top-content section-padding">
+                    <div class="row gx-0">
+                        <div class="col-lg-4">
+                            <div class="info-side">
+                                <div class="text fsz-24 color-333 lh-3 fw-600">
+                                    We believe that architecture has the power to shape lives and uplift communities. Flip Avenue's philosophy is passion for innovation, sustainability and timeless aesthetics
+                                </div>
+                                <div class="foot-social mt-50">
+                                    <a href="https://twitter.com/flipavenueug" target="_blank" rel="noopener noreferrer"> <i class="fab fa-x-twitter"></i> </a>
+                                    <a href="https://www.facebook.com/profile.php?id=61550707256066&mibextid=9R9pXO" target="_blank" rel="noopener noreferrer"> <i class="fab fa-facebook-f"></i> </a>
+                                    <a href="https://www.instagram.com/flipavenueug?igsh=MWd1YTVwYjdkM3JnOQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer"> <i class="fab fa-instagram"></i> </a>
+                                    <a href="https://www.linkedin.com/company/flip-avenue" target="_blank" rel="noopener noreferrer"> <i class="fab fa-linkedin-in"></i> </a>
+                                    <a href="#" target="_blank" rel="noopener noreferrer"> <i class="fab fa-youtube"></i> </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 offset-lg-2">
+                            <div class="branch-card">
+                                <h5 class="mb-20 mt-5 mt-lg-0 fw-600"> Kampala, Uganda </h5>
+                                <ul class="footer-links">
+                                    <li> <a href="#"> Kataza Close, Bugolobi, Maria House, behind Airtel Building, Kampala, Uganda </a> </li>
+                                    <li> <a href="#"> info@flipavenueltd.com </a> </li>
+                                    <li> <a href="#"> +256 701380251 / 783370967 </a> </li>
+                                </ul>
+                            </div>
+                            <div class="branch-card">
+                                <h5 class="mb-20 mt-5 mt-lg-0 fw-600"> Other links </h5>
+                                <ul class="footer-links">
+                                    <li> <a href="shop.php"> Shop </a> </li>
+                                    <li> <a href="portfolio.php"> Portfolio </a> </li>
+                                    <li> <a href="blog.php"> Blog </a> </li>
+                                    <li> <a href="#"> Videos </a> </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="branch-card">
+                                <h5 class="mb-20 mt-5 mt-lg-0 fw-600"> Important links </h5>
+                                <ul class="footer-links">
+                                    <li> <a href="careers.html"> Careers </a> </li>
+                                    <li> <a href="contact.php"> Contact Us </a> </li>
+                                    <li> <a href="#"> Help </a> </li>
+                                </ul>
+                            </div>
+                            <div class="branch-card">
+                                <h5 class="mb-20 mt-5 mt-lg-0 fw-600"> Legal </h5>
+                                <ul class="footer-links">
+                                    <li> <a href="terms-conditions.php"> Term & Conditions </a> </li>
+                                    <li> <a href="privacy-policy.php"> Privacy Policy </a> </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="foot">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <p class="fsz-13"> © <?php echo $current_year; ?> Flip Avenue Limited. All Right Reserved </p>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="foot-links mt-4 mt-lg-0">
+                                <a href="index.php"> Home </a>
+                                <a href="about.html"> About Us </a>
+                                <a href="portfolio.php"> Projects </a>
+                                <a href="shop.php"> Shop </a>
+                                <a href="contact.php"> Contact </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
-        <!-- ====== End Legal Content ====== -->
+        </footer>
+        <!--  End footer  -->
 
-    </main>
-    <!--End-Contents-->
-
-    <!-- ====== start footer ====== -->
-    <?php include 'common/footer.php'; ?>
-    <!-- ====== End footer ====== -->
+    </div>
 
     <!--  Start to top button  -->
     <a href="#" class="to_top" id="to_top">
@@ -229,20 +385,26 @@ $current_year = date('Y');
     </a>
     <!--  End to top button  -->
 
-    <!--  request  -->
+    <!-- scripts -->
     <script src="common/assets/js/lib/jquery-3.0.0.min.js"></script>
     <script src="common/assets/js/lib/jquery-migrate-3.0.0.min.js"></script>
     <script src="common/assets/js/lib/bootstrap.bundle.min.js"></script>
     <script src="common/assets/js/lib/wow.min.js"></script>
+    <script src="common/assets/js/lib/swiper8-bundle.min.js"></script>
     <script src="common/assets/js/lib/jquery.fancybox.js"></script>
     <script src="common/assets/js/lib/lity.js"></script>
-    <script src="common/assets/js/lib/swiper8-bundle.min.js"></script>
     <script src="common/assets/js/lib/jquery.counterup.js"></script>
     <script src="common/assets/js/lib/jquery.waypoints.min.js"></script>
-    <script src="common/assets/js/lib/lity.js"></script>
     <script src="common/assets/js/lib/parallaxie.js"></script>
-
+    
+    <!-- GSAP -->
+    <script src="common/assets/js/gsap_lib/gsap.min.js"></script>
+    <script src="common/assets/js/gsap_lib/ScrollTrigger.min.js"></script>
+    <script src="common/assets/js/gsap_lib/ScrollSmoother.min.js"></script>
+    <script src="common/assets/js/gsap_lib/SplitText.min.js"></script>
+    
     <script src="common/assets/js/common_js.js"></script>
+    <script src="assets/main.js"></script>
 
 </body>
 

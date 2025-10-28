@@ -284,7 +284,7 @@ $categories_result = $conn->query($categories_query);
                                                     $featured_image = $img_path;
                                                 }
                                             } else {
-                                                $featured_image ؟'assets/img/home1/projects/proj1.jpg';
+                                                $featured_image = 'assets/img/home1/projects/proj1.jpg';
                                             }
                                     ?>
                                     <div class="col-lg-4 col-md-6">
@@ -381,7 +381,7 @@ $categories_result = $conn->query($categories_query);
                             <div class="tab-pane fade" id="pills-proj4" role="tabpanel">
                                 <div class="row gx-4 gy-4">
                                     <?php 
-                                    $landscape_projects = array_filter($all_projects vessel's lower($p['category']) == 'landscape'; });
+                                    $landscape_projects = array_filter($all_projects, function($p) { return strtolower($p['category']) == 'landscape'; });
                                     if (!empty($landscape_projects)): 
                                         $delay = 0.1;
                                         foreach ($landscape_projects as $project): 
@@ -400,7 +400,7 @@ $categories_result = $conn->query($categories_query);
                                     <div class="col-lg-4 col-md-6">
                                         <div class="project-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
                                             <a href="<?php echo htmlspecialchars($featured_image); ?>" class="img" data-fancybox="projects">
-                                                <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" onerror="this.src='assets/img/home1chains/proj1.jpg'">
+                                                <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
                                             </a>
                                             <div class="info mt-3">
                                                 <div class="tags mb-2">
@@ -466,7 +466,7 @@ $categories_result = $conn->query($categories_query);
                                                 </div>
                                                 <h3 class="title fsz-20 mb-2"><a href="#" class="hover-orange1"><?php echo htmlspecialchars($project['title']); ?></a></h3>
                                                 <div class="text color-666 fsz-14">
-                                                    <?php echo htmlspecialchars($project['holort_description']); ?>
+                                                    <?php echo htmlspecialchars($project['short_description']); ?>
                                                 </div>
                                                 <?php if (!empty($project['client_name'])): ?>
                                                     <div class="text color-999 fsz-12 mt-2">
@@ -484,188 +484,6 @@ $categories_result = $conn->query($categories_query);
                                         <p class="text-center text-gray-500 py-5">No furniture projects found</p>
                                     </div>
                                     <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="project-card wow fadeInUp" data-wow-delay="0.2s">
-                                        <a href="assets/img/home1/projects/proj1.jpg" class="img" data-fancybox="proj">
-                                            <img src="assets/img/home1/projects/proj1.jpg" alt="" class="img-cover">
-                                        </a>
-                                        <div class="info mt-3">
-                                            <div class="tags mb-2">
-                                                <a href="#" class="fsz-12"> Architecture </a>
-                                                <a href="#" class="fsz-12"> Residential </a>
-                                            </div>
-                                            <h3 class="title fsz-20 mb-2"> <a href="#" class="hover-orange1"> Townhouse in San Joe </a> </h3>
-                                            <div class="facts color-666 fsz-14"> Modern residential complex featuring sustainable design and contemporary aesthetics. </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="project-card wow fadeInUp" data-wow-delay="0.3s">
-                                            <a href="assets/img/home1/projects/proj2.jpg" class="img" data-fancybox="proj">
-                                                <img src="assets/img/home1/projects/proj2.jpg" alt="" class="img-cover">
-                                            </a>
-                                            <div class="info mt-3">
-                                                <div class="tags mb-2">
-                                                    <a href="#" class="fsz-12"> Interior </a>
-                                                    <a href="#" class="fsz-12"> Hospitality </a>
-                                                </div>
-                                                <h3 class="title fsz-20 mb-2"> <a href="#" class="hover-orange1"> Homestay Renovation & Interior </a> </h3>
-                                                <div class="text color-666 fsz-14"> Complete transformation of boutique homestay with bespoke furniture and lighting. </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="project-card wow fadeInUp" data-wow-delay="0.4s">
-                                            <a href="assets/img/home1/projects/proj3.jpg" class="img" data-fancybox="proj">
-                                                <img src="assets/img/home1/projects/proj3.jpg" alt="" class="img-cover">
-                                            </a>
-                                            <div class="info mt-3">
-                                                <div class="tags mb-2">
-                                                    <a href="#" class="fsz-12"> Architecture </a>
-                                                    <a href="#" class="fsz-12"> Luxury </a>
-                                                </div>
-                                                <h3 class="title fsz-20 mb-2"> <a href="#" class="hover-orange1"> B63 Private Villa </a> </h3>
-                                                <div class="text color-666 fsz-14"> Exclusive private villa with panoramic views and cutting-edge smart home technology. </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="project-card wow fadeInUp" data-wow-delay="0.5s">
-                                            <a href="assets/img/home1/projects/proj1.jpg" class="img" data-fancybox="proj">
-                                                <img src="assets/img/home1/projects/proj1.jpg" alt="" class="img-cover">
-                                            </a>
-                                            <div class="info mt-3">
-                                                <div class="tags mb-2">
-                                                    <a href="#" class="fsz-12"> Commercial </a>
-                                                    <a href="#" class="fsz-12"> Office </a>
-                                                </div>
-                                                <h3 class="title fsz-20 mb-2"> <a href="#" class="hover-orange1"> Corporate Headquarters </a> </h3>
-                                                <div class="text color-666 fsz-14"> Modern office space designed for collaboration and productivity. </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="project-card wow fadeInUp" data-wow-delay="0.6s">
-                                            <a href="assets/img/home1/projects/proj2.jpg" class="img" data-fancybox="proj">
-                                                <img src="assets/img/home1/projects/proj2.jpg" alt="" class="img-cover">
-                                            </a>
-                                            <div class="info mt-3">
-                                                <div class="tags mb-2">
-                                                    <a href="#" class="fsz-12"> Landscape </a>
-                                                    <a href="#" class="fsz-12"> Public </a>
-                                                </div>
-                                                <h3 class="title fsz-20 mb-2"> <a href="#" class="hover-orange1"> Urban Garden Plaza </a> </h3>
-                                                <div class="text color-666 fsz-14"> Community green space integrating nature with urban living. </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="project-card wow fadeInUp" data-wow-delay="0.7s">
-                                            <a href="assets/img/home1/projects/proj3.jpg" class="img" data-fancybox="proj">
-                                                <img src="assets/img/home1/projects/proj3.jpg" alt="" class="img-cover">
-                                            </a>
-                                            <div class="info mt-3">
-                                                <div class="tags mb-2">
-                                                    <a href="#" class="fsz-12"> Furniture </a>
-                                                    <a href="#" class="fsz-12"> Custom </a>
-                                                </div>
-                                                <h3 class="title fsz-20 mb-2"> <a href="#" class="hover-orange1"> Bespoke Office Collection </a> </h3>
-                                                <div class="text color-666 fsz-14"> Handcrafted furniture pieces designed for executive spaces. </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="pills-proj2" role="tabpanel">
-                                <div class="row gx-4 gy-4">
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="project-card">
-                                            <a href="assets/img/home1/projects/proj3.jpg" class="img" data-fancybox="proj">
-                                                <img src="assets/img/home1/projects/proj3.jpg" alt="" class="img-cover">
-                                            </a>
-                                            <div class="info mt-3">
-                                                <div class="tags mb-2">
-                                                    <a href="#" class="fsz-12"> Architecture </a>
-                                                </div>
-                                                <h3 class="title fsz-20 mb-2"> <a href="#"> B63 Private Villa </a> </h3>
-                                                <div class="text color-666 fsz-14"> Luxury residential architecture. </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="project-card">
-                                            <a href="assets/img/home1/projects/proj1.jpg" class="img" data-fancybox="proj">
-                                                <img src="assets/img/home1/projects/proj1.jpg" alt="" class="img-cover">
-                                            </a>
-                                            <div class="info mt-3">
-                                                <div class="tags mb-2">
-                                                    <a href="#" class="fsz-12"> Architecture </a>
-                                                </div>
-                                                <h3 class="title fsz-20 mb-2"> <a href="#"> Townhouse Complex </a> </h3>
-                                                <div class="text color-666 fsz-14"> Modern residential development. </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="pills-proj3" role="tabpanel">
-                                <div class="row gx-4 gy-4">
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="project-card">
-                                            <a href="assets/img/home1/projects/proj2.jpg" class="img" data-fancybox="proj">
-                                                <img src="assets/img/home1/projects/proj2.jpg" alt="" class="img-cover">
-                                            </a>
-                                            <div class="info mt-3">
-                                                <div class="tags mb-2">
-                                                    <a href="#" class="fsz-12"> Interior </a>
-                                                </div>
-                                                <h3 class="title fsz-20 mb-2"> <a href="#"> Homestay Interior Design </a> </h3>
-                                                <div class="text color-666 fsz-14"> Complete interior transformation. </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="pills-proj4" role="tabpanel">
-                                <div class="row gx-4 gy-4">
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="project-card">
-                                            <a href="assets/img/home1/projects/proj2.jpg" class="img" data-fancybox="proj">
-                                                <img src="assets/img/home1/projects/proj2.jpg" alt="" class="img-cover">
-                                            </a>
-                                            <div class="info mt-3">
-                                                <div class="tags mb-2">
-                                                    <a href="#" class="fsz-12"> Landscape </a>
-                                                </div>
-                                                <h3 class="title fsz-20 mb-2"> <a href="#"> Urban Garden Plaza </a> </h3>
-                                                <div class="text color-666 fsz-14"> Community green space design. </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="pills-proj5" role="tabpanel">
-                                <div class="row gx-4 gy-4">
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="project-card">
-                                            <a href="assets/img/home1/projects/proj3.jpg" class="img" data-fancybox="proj">
-                                                <img src="assets/img/home1/projects/proj3.jpg" alt="" class="img-cover">
-                                            </a>
-                                            <div class="info mt-3">
-                                                <div class="tags mb-2">
-                                                    <a href="#" class="fsz-12"> Furniture </a>
-                                                </div>
-                                                <h3 class="title fsz-20 mb-2"> <a href="#"> Bespoke Collection </a> </h3>
-                                                <div class="text color-666 fsz-14"> Custom furniture designs. </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
