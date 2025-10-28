@@ -254,11 +254,11 @@ if ($settings_result) {
                                 <div class="social-links mt-50">
                                     <h6 class="fw-600 mb-3">Follow Us</h6>
                                     <div class="links">
-                                        <a href="#" class="icon me-3"><i class="fab fa-facebook-f"></i></a>
-                                        <a href="#" class="icon me-3"><i class="fab fa-twitter"></i></a>
-                                        <a href="#" class="icon me-3"><i class="fab fa-instagram"></i></a>
-                                        <a href="#" class="icon me-3"><i class="fab fa-linkedin-in"></i></a>
-                                        <a href="#" class="icon me-3"><i class="fab fa-youtube"></i></a>
+                                        <a href="https://www.facebook.com/profile.php?id=61550707256066&mibextid=9R9pXO" class="icon me-3" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+                                        <a href="https://twitter.com/flipavenueug" class="icon me-3" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+                                        <a href="https://www.instagram.com/flipavenueug?igsh=MWd1YTVwYjdkM3JnOQ%3D%3D&utm_source=qr" class="icon me-3" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                                        <a href="https://www.linkedin.com/company/flip-avenue" class="icon me-3" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in"></i></a>
+                                        <a href="#" class="icon me-3" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -388,11 +388,11 @@ if ($settings_result) {
                                     We believe that architecture has the power to shape lives and uplift communities. Flip Avenue's philosophy is passion for innovation, sustainablity and timeless aesthetics
                                 </div>
                                 <div class="foot-social mt-50">
-                                    <a href="#"> <i class="fab fa-x-twitter"></i> </a>
-                                    <a href="#"> <i class="fab fa-facebook-f"></i> </a>
-                                    <a href="#"> <i class="fab fa-instagram"></i> </a>
-                                    <a href="#"> <i class="fab fa-linkedin-in"></i> </a>
-                                    <a href="#"> <i class="fab fa-youtube"></i> </a>
+                                    <a href="https://twitter.com/flipavenueug" target="_blank" rel="noopener noreferrer"> <i class="fab fa-x-twitter"></i> </a>
+                                    <a href="https://www.facebook.com/profile.php?id=61550707256066&mibextid=9R9pXO" target="_blank" rel="noopener noreferrer"> <i class="fab fa-facebook-f"></i> </a>
+                                    <a href="https://www.instagram.com/flipavenueug?igsh=MWd1YTVwYjdkM3JnOQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer"> <i class="fab fa-instagram"></i> </a>
+                                    <a href="https://www.linkedin.com/company/flip-avenue" target="_ hostage rel="noopener noreferrer"> <i class="fab fa-linkedin-in"></i> </a>
+                                    <a href="#" target="_blank" rel="noopener noreferrer"> <i class="fab fa-youtube"></i> </a>
                                 </div>
                             </div>
                         </div>

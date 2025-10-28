@@ -201,7 +201,7 @@ $categories_result = $conn->query($categories_query);
                     <div class="mb-50">
                         <div class="row align-items-center">
                             <div class="col-lg-6">
-                                <h2 class="fsz-45 mb-3 wow fadeInUp"> Shop Products </h2>
+                                <h2 class="fsz-45 mb-3 wow fadeInUp"> Flip Kids </h2>
                                 <p class="color-666 wow fadeInUp" data-wow-delay="0.2s">Discover our collection of architectural products, design tools, and professional resources</p>
                             </div>
                             <div class="col-lg-6 mt-4 mt-lg-0">
@@ -346,11 +346,11 @@ $categories_result = $conn->query($categories_query);
                                     We believe that architecture has the power to shape lives and uplift communities. Flip Avenue's philosophy is passion for innovation, sustainablity and timeless aesthetics
                                 </div>
                                 <div class="foot-social mt-50">
-                                    <a href="#"> <i class="fab fa-x-twitter"></i> </a>
-                                    <a href="#"> <i class="fab fa-facebook-f"></i> </a>
-                                    <a href="#"> <i class="fab fa-instagram"></i> </a>
-                                    <a href="#"> <i class="fab fa-linkedin-in"></i> </a>
-                                    <a href="#"> <i class="fab fa-youtube"></i> </a>
+                                    <a href="https://twitter.com/flipavenueug" target="_blank" rel="noopener noreferrer"> <i class="fab fa-x-twitter"></i> </a>
+                                    <a href="https://www.facebook.com/profile.php?id=61550707256066&mibextid=9R9pXO" target="_blank" rel="noopener noreferrer"> <i class="fab fa-facebook-f"></i> </a>
+                                    <a href="https://www.instagram.com/flipavenueug?igsh=MWd1YTVwYjdkM3JnOQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer"> <i class="fab fa-instagram"></i> </a>
+                                    <a href="https://www.linkedin.com/company/flip-avenue" target="_blank" rel="noopener noreferrer"> <i class="fab fa-linkedin-in"></i> </a>
+                                    <a href="#" target="_blank" rel="noopener noreferrer"> <i class="fab fa-youtube"></i> </a>
                                 </div>
                             </div>
                         </div>

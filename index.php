@@ -300,7 +300,7 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                                 <div class="text fsz-15 color-666">
                                     Flip Avenue Limited is an architectural practice based in Uganda. We cut our teeth on designing and creating buildings that are both beautiful and sustainable.
                                 </div>
-                                <a href="#" class="butn rounded-pill mt-50 hover-bg-black bg-white">
+                                <a href="about.html" class="butn rounded-pill mt-50 hover-bg-black bg-white">
                                     <span> Our Studio <i class="small ms-1 ti-arrow-top-right"></i> </span>
                                 </a>
                             </div>
@@ -915,11 +915,11 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                                     We believe that architecture has the power to shape lives and uplift communities. Flip Avenue's philosophy is passion for innovation, sustainablity and timeless aesthetics
                                 </div>
                                 <div class="foot-social mt-50">
-                                    <a href="#"> <i class="fab fa-x-twitter"></i> </a>
-                                    <a href="#"> <i class="fab fa-facebook-f"></i> </a>
-                                    <a href="#"> <i class="fab fa-instagram"></i> </a>
-                                    <a href="#"> <i class="fab fa-linkedin-in"></i> </a>
-                                    <a href="#"> <i class="fab fa-youtube"></i> </a>
+                                    <a href="https://twitter.com/flipavenueug" target="_blank" rel="noopener noreferrer"> <i class="fab fa-x-twitter"></i> </a>
+                                    <a href="https://www.facebook.com/profile.php?id=61550707256066&mibextid=9R9pXO" target="_blank" rel="noopener noreferrer"> <i class="fab fa-facebook-f"></i> </a>
+                                    <a href="https://www.instagram.com/flipavenueug?igsh=MWd1YTVwYjdkM3JnOQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer"> <i class="fab fa-instagram"></i> </a>
+                                    <a href="https://www.linkedin.com/company/flip-avenue" target="_blank" rel="noopener noreferrer"> <i class="fab fa-linkedin-in"></i> </a>
+                                    <a href="#" target="_blank" rel="noopener noreferrer"> <i class="fab fa-youtube"></i> </a>
                                 </div>
                             </div>
                         </div>
