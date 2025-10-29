@@ -401,7 +401,7 @@ $categories_result = $conn->query($categories_query);
                         <div class="col-lg-4">
                             <div class="info-side">
                                 <div class="text fsz-24 color-333 lh-3 fw-600">
-                                    We believe that architecture has the power to shape lives and uplift communities. Flip Avenue's philosophy is passion for innovation, sustainablity and timeless aesthetics
+                                    We believe that interior design has the power to shape lives and uplift communities. Flip Avenue's philosophy is passion for innovation, sustainability and timeless aesthetics
                                 </div>
                                 <div class="foot-social mt-50">
                                     <a href="https://twitter.com/flipavenueug" target="_blank" rel="noopener noreferrer"> <i class="fab fa-x-twitter"></i> </a>

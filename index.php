@@ -298,7 +298,9 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                             <div class="info wow fadeInUp" data-wow-delay="0.3s">   
                                 <h3 class="fsz-45 fw-600 mb-30"> 126+ Projects Completed </h3>
                                 <div class="text fsz-15 color-666">
-                                    Flip Avenue Limited is an architectural practice based in Uganda. We cut our teeth on designing and creating buildings that are both beautiful and sustainable.
+                                    Flip Avenue Interiors is not merely an interior design company; it's an embodiment of artistry, functionality, and innovation in 
+                                    transforming spaces. Our journey is defined by a commitment to excellence, blending aesthetics with practicality, and crafting unique 
+                                    living environments that reflect our clients' distinct lifestyles.
                                 </div>
                                 <a href="about.html" class="butn rounded-pill mt-50 hover-bg-black bg-white">
                                     <span> Our Studio <i class="small ms-1 ti-arrow-top-right"></i> </span>
@@ -456,7 +458,7 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                                           </div>
                                         </div>
                                     </div>
-                                    <a href="#" class="butn border rounded-pill mt-80 color-orange1 border-orange1 hover-bg-orange1">
+                                    <a href="portfolio.php" class="butn border rounded-pill mt-80 color-orange1 border-orange1 hover-bg-orange1">
                                         <span> Our Projects <i class="small ms-1 ti-arrow-top-right"></i> </span>
                                     </a>
                                 </div>
@@ -488,11 +490,11 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                                       <button class="nav-link active" id="pills-proj1-tab" data-bs-toggle="pill" data-bs-target="#pills-proj1" type="button">Featured</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                      <button class="nav-link" id="pills-proj2-tab" data-bs-toggle="pill" data-bs-target="#pills-proj2" type="button">Architecture</button>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
                                       <button class="nav-link" id="pills-proj3-tab" data-bs-toggle="pill" data-bs-target="#pills-proj1" type="button">Interior</button>
                                     </li>
+                                    <li class="nav-item" role="presentation">
+                                      <button class="nav-link" id="pills-proj2-tab" data-bs-toggle="pill" data-bs-target="#pills-proj2" type="button">Architecture</button>
+                                    </li>                                   
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link" id="pills-proj4-tab" data-bs-toggle="pill" data-bs-target="#pills-proj2" type="button">Landscape</button>
                                     </li>
@@ -502,7 +504,7 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                                 </ul>
                             </div>
                             <div class="col-lg-3 mt-4 mt-lg-0 text-lg-end">
-                                <a href="#" class="butn border rounded-pill color-orange1 border-orange1 hover-bg-orange1">
+                                <a href="portfolio.php" class="butn border rounded-pill color-orange1 border-orange1 hover-bg-orange1">
                                     <span> See All Projects <i class="small ms-1 ti-arrow-top-right"></i> </span>
                                 </a>
                             </div>
@@ -912,7 +914,7 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                         <div class="col-lg-4">
                             <div class="info-side">
                                 <div class="text fsz-24 color-333 lh-3 fw-600">
-                                    We believe that architecture has the power to shape lives and uplift communities. Flip Avenue's philosophy is passion for innovation, sustainablity and timeless aesthetics
+                                    We believe that interior design has the power to shape lives and uplift communities. Flip Avenue's philosophy is passion for innovation, sustainability and timeless aesthetics
                                 </div>
                                 <div class="foot-social mt-50">
                                     <a href="https://twitter.com/flipavenueug" target="_blank" rel="noopener noreferrer"> <i class="fab fa-x-twitter"></i> </a>

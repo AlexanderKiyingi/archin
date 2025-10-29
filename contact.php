@@ -222,7 +222,7 @@ if ($settings_result) {
                                 </p>
 
                                 <div class="why-choose mb-4">
-                                    <div class="item d-flex align-items-start mb-4">
+                                    <div class="item d-flex align-items-start mb-4 service-option" data-subject="Book Site Visit & Consultation" style="cursor: pointer;">
                                         <div class="icon me-3">
                                             <i class="la la-check-circle fsz-30 color-orange1"></i>
                                         </div>
@@ -231,7 +231,7 @@ if ($settings_result) {
                                             <p class="fsz-14 color-666">Initial discussion and site visit at no cost</p>
                                         </div>
                                     </div>
-                                    <div class="item d-flex align-items-start mb-4">
+                                    <div class="item d-flex align-items-start mb-4 service-option" data-subject="Get 3D Impressions" style="cursor: pointer;">
                                         <div class="icon me-3">
                                             <i class="la la-check-circle fsz-30 color-orange1"></i>
                                         </div>
@@ -240,7 +240,7 @@ if ($settings_result) {
                                             <p class="fsz-14 color-666">We respond to all inquiries within 24 hours</p>
                                         </div>
                                     </div>
-                                    <div class="item d-flex align-items-start">
+                                    <div class="item d-flex align-items-start service-option" data-subject="Get Professional Execution" style="cursor: pointer;">
                                         <div class="icon me-3">
                                             <i class="la la-check-circle fsz-30 color-orange1"></i>
                                         </div>
@@ -302,6 +302,7 @@ if ($settings_result) {
                                             <label class="form-label fsz-14 color-666 mb-2">Subject</label>
                                             <input 
                                                 type="text" 
+                                                id="subjectInput"
                                                 name="subject" 
                                                 class="form-control" 
                                                 placeholder="Project Inquiry"
@@ -358,7 +359,7 @@ if ($settings_result) {
             <section class="tc-chat-style1">
                 <div class="container">
                     <div class="content">
-                        <h5 class="mb-30 lh-5"> Office Hours </h5>
+                        <h5 class="mb-30 lh-3"> Office Hours </h5>
                         <div class="row justify-content-center">
                             <div class="col-lg-6">
                                 <div class="office-hours text-center">
@@ -385,7 +386,7 @@ if ($settings_result) {
                         <div class="col-lg-4">
                             <div class="info-side">
                                 <div class="text fsz-24 color-333 lh-3 fw-600">
-                                    We believe that architecture has the power to shape lives and uplift communities. Flip Avenue's philosophy is passion for innovation, sustainablity and timeless aesthetics
+                                    We believe that interior design has the power to shape lives and uplift communities. Flip Avenue's philosophy is passion for innovation, sustainability and timeless aesthetics
                                 </div>
                                 <div class="foot-social mt-50">
                                     <a href="https://twitter.com/flipavenueug" target="_blank" rel="noopener noreferrer"> <i class="fab fa-x-twitter"></i> </a>
@@ -585,6 +586,34 @@ if ($settings_result) {
                 animatedElements.forEach(function(element) {
                     element.style.visibility = 'visible';
                     element.style.opacity = '1';
+                });
+            });
+
+            // Auto-fill subject field when service option is clicked
+            document.querySelectorAll('.service-option').forEach(function(option) {
+                option.addEventListener('click', function() {
+                    const subject = this.getAttribute('data-subject');
+                    const subjectInput = document.getElementById('subjectInput');
+                    if (subjectInput && subject) {
+                        subjectInput.value = subject;
+                        
+                        // Add visual feedback
+                        this.style.backgroundColor = '#fff7ed';
+                        this.style.transition = 'background-color 0.3s ease';
+                        
+                        // Scroll to the contact form
+                        subjectInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        
+                        // Focus on the subject input
+                        setTimeout(function() {
+                            subjectInput.focus();
+                        }, 600);
+                        
+                        // Reset background color after 2 seconds
+                        setTimeout(function() {
+                            option.style.backgroundColor = '';
+                        }, 2000);
+                    }
                 });
             });
         });
