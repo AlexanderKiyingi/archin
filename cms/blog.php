@@ -52,8 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_post'])) {
         $stmt = $conn->prepare($sql);
         
         if (!empty($featured_image)) {
-            $stmt->bind_param("ssssssssii", $title, $slug, $content, $excerpt, $category, $tags, $publish_date, $is_published, $featured_image, $id);
+            // Format: sssssssiss (7 strings, 1 int, 1 string, 1 int)
+            $stmt->bind_param("ssssssissi", $title, $slug, $content, $excerpt, $category, $tags, $publish_date, $is_published, $featured_image, $id);
         } else {
+            // Format: sssssssii (7 strings, 2 ints)
             $stmt->bind_param("sssssssii", $title, $slug, $content, $excerpt, $category, $tags, $publish_date, $is_published, $id);
         }
         

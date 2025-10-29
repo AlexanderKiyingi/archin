@@ -34,10 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             if ($action === 'add') {
+                // Format: sssssssssiii (9 strings, 3 integers)
                 $sql = "INSERT INTO projects (title, slug, category, description, short_description, featured_image, location, client_name, completion_date, is_featured, display_order, is_active) 
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param("sssssssssiis", $title, $slug, $category, $description, $short_description, $featured_image, $location, $client_name, $completion_date, $is_featured, $display_order, $is_active);
+                $stmt->bind_param("sssssssssiii", $title, $slug, $category, $description, $short_description, $featured_image, $location, $client_name, $completion_date, $is_featured, $display_order, $is_active);
                 
                 if ($stmt->execute()) {
                     $message = 'Project added successfully!';
@@ -49,13 +50,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $id = (int)$_POST['id'];
                 if ($featured_image) {
+                    // Format: sssssssssiiii (9 strings, 4 integers)
                     $sql = "UPDATE projects SET title = ?, slug = ?, category = ?, description = ?, short_description = ?, featured_image = ?, location = ?, client_name = ?, completion_date = ?, is_featured = ?, display_order = ?, is_active = ? WHERE id = ?";
                     $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("sssssssssiii", $title, $slug, $category, $description, $short_description, $featured_image, $location, $client_name, $completion_date, $is_featured, $display_order, $is_active, $id);
+                    $stmt->bind_param("sssssssssiiii", $title, $slug, $category, $description, $short_description, $featured_image, $location, $client_name, $completion_date, $is_featured, $display_order, $is_active, $id);
                 } else {
+                    // Format: ssssssssiiii (8 strings, 4 integers)
                     $sql = "UPDATE projects SET title = ?, slug = ?, category = ?, description = ?, short_description = ?, location = ?, client_name = ?, completion_date = ?, is_featured = ?, display_order = ?, is_active = ? WHERE id = ?";
                     $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("ssssssssiii", $title, $slug, $category, $description, $short_description, $location, $client_name, $completion_date, $is_featured, $display_order, $is_active, $id);
+                    $stmt->bind_param("ssssssssiiii", $title, $slug, $category, $description, $short_description, $location, $client_name, $completion_date, $is_featured, $display_order, $is_active, $id);
                 }
                 
                 if ($stmt->execute()) {
