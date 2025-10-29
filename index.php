@@ -74,6 +74,27 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="assets/img/home1/fav.png" title="Favicon" sizes="16x16">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/home1/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/home1/logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/home1/logo.png">
+    
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<?php echo isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http'; ?>://<?php echo $_SERVER['HTTP_HOST']; ?><?php echo $_SERVER['REQUEST_URI']; ?>">
+    <meta property="og:title" content="<?php echo $page_title; ?>">
+    <meta property="og:description" content="<?php echo $page_description; ?>">
+    <meta property="og:image" content="<?php echo isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http'; ?>://<?php echo $_SERVER['HTTP_HOST']; ?>/assets/img/home1/logo.png">
+    <meta property="og:site_name" content="Flip Avenue Limited">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="<?php echo isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http'; ?>://<?php echo $_SERVER['HTTP_HOST']; ?><?php echo $_SERVER['REQUEST_URI']; ?>">
+    <meta name="twitter:title" content="<?php echo $page_title; ?>">
+    <meta name="twitter:description" content="<?php echo $page_description; ?>">
+    <meta name="twitter:image" content="<?php echo isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http'; ?>://<?php echo $_SERVER['HTTP_HOST']; ?>/assets/img/home1/logo.png">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#ff9900">
 
     <!-- bootstrap 5 -->
     <link rel="stylesheet" href="common/assets/css/lib/bootstrap.min.css">
