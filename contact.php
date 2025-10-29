@@ -340,14 +340,13 @@ if ($settings_result) {
             <section class="tc-map section-padding-x">
                 <div class="container-fluid">
                     <div class="map-container radius-5 overflow-hidden wow fadeInUp">
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127643.04244506914!2d32.52192744863281!3d0.3475964!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x177dbc0f7c90690b%3A0x7e1f8b7e7b7e7b7e!2sKampala%2C%20Uganda!5e0!3m2!1sen!2sug!4v1234567890123!5m2!1sen!2sug" 
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.7547915911978!2d32.618303299999994!3d0.3233306!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xadbaadc1b9231cf%3A0x411282bed94ed588!2sFLIP%20AVENUE%20LTD!5e0!3m2!1sen!2sug!4v1761719074478!5m2!1sen!2sug"
                             width="100%" 
                             height="450" 
                             style="border:0;" 
                             allowfullscreen="" 
                             loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade">
+                             referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
                     </div>
                 </div>

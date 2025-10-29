@@ -226,7 +226,7 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                             <div class="info section-padding-x pb-70">
                                 <div class="row align-items-end gx-5">
                                     <div class="col-lg-7 offset-lg-2">
-                                        <h1 data-swiper-parallax="-2000" class="js-title"> Flip Avenue <t>Limited</t> </h1>
+                                        <h1 data-swiper-parallax="-2000" class="js-title"> Flip Avenue <br>Limited</br> </h1>
                                         <h5 class="fsz-30 mt-30 fw-400"> Interior Design <br> Studio </h5>
                                     </div>
                                     <div class="col-lg-3">
