@@ -11,6 +11,14 @@ $services_result = $conn->query($services_query);
 $projects_query = "SELECT * FROM projects WHERE is_active = 1 AND is_featured = 1 ORDER BY display_order ASC LIMIT 6";
 $projects_result = $conn->query($projects_query);
 
+// Fetch all active projects for dynamic filtering
+$all_projects_query = "SELECT * FROM projects WHERE is_active = 1 ORDER BY display_order ASC";
+$all_projects_result = $conn->query($all_projects_query);
+
+// Fetch project categories
+$project_categories_query = "SELECT * FROM project_categories WHERE is_active = 1 ORDER BY display_order ASC";
+$project_categories_result = $conn->query($project_categories_query);
+
 // Fetch team members
 $team_query = "SELECT * FROM team_members WHERE is_active = 1 ORDER BY display_order ASC LIMIT 6";
 $team_result = $conn->query($team_query);
@@ -486,21 +494,28 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                         <div class="row align-items-center">
                             <div class="col-lg-9">
                                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                      <button class="nav-link active" id="pills-proj1-tab" data-bs-toggle="pill" data-bs-target="#pills-proj1" type="button">Featured</button>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                      <button class="nav-link" id="pills-proj3-tab" data-bs-toggle="pill" data-bs-target="#pills-proj1" type="button">Interior</button>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                      <button class="nav-link" id="pills-proj2-tab" data-bs-toggle="pill" data-bs-target="#pills-proj2" type="button">Architecture</button>
-                                    </li>                                   
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="pills-proj4-tab" data-bs-toggle="pill" data-bs-target="#pills-proj2" type="button">Landscape</button>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="pills-proj5-tab" data-bs-toggle="pill" data-bs-target="#pills-proj1" type="button">Furniture</button>
-                                    </li>
+                                    <?php if ($project_categories_result && $project_categories_result->num_rows > 0): ?>
+                                        <?php 
+                                        $is_first = true;
+                                        while ($category = $project_categories_result->fetch_assoc()): 
+                                            $category_slug = strtolower(str_replace(' ', '-', $category['slug']));
+                                            $tab_id = 'pills-proj' . $category_slug;
+                                        ?>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link <?php echo $is_first ? 'active' : ''; ?>" 
+                                                        id="<?php echo $tab_id; ?>-tab" 
+                                                        data-bs-toggle="pill" 
+                                                        data-bs-target="#<?php echo $tab_id; ?>" 
+                                                        type="button">
+                                                    <?php echo htmlspecialchars($category['name']); ?>
+                                                </button>
+                                            </li>
+                                        <?php 
+                                            $is_first = false;
+                                        endwhile; 
+                                        $project_categories_result->data_seek(0); // Reset pointer
+                                        ?>
+                                    <?php endif; ?>
                                 </ul>
                             </div>
                             <div class="col-lg-3 mt-4 mt-lg-0 text-lg-end">
@@ -512,150 +527,109 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                     </div>
                     <div class="projects">
                         <div class="tab-content" id="pills-tabContent">
-                            <div class="tab-pane fade show active" id="pills-proj1" role="tabpanel" aria-labelledby="pills-proj1-tab">
-                                <div class="projects-content float_box_container">
-                                    <div class="projects-slider">
-                                        <div class="swiper-wrapper">
-                                            <div class="swiper-slide">
-                                                <div class="project-card">
-                                                    <a href="assets/img/home1/projects/proj1.jpg" class="img" data-fancybox="proj">
-                                                        <img src="assets/img/home1/projects/proj1.jpg" alt="" class="img-cover">
-                                                    </a>
-                                                    <div class="info">
-                                                        <div class="tags">
-                                                            <a href="#"> Architecture </a>
-                                                            <a href="#"> Furniture </a>
+                            <?php if ($project_categories_result && $project_categories_result->num_rows > 0): ?>
+                                <?php 
+                                $is_first_tab = true;
+                                while ($category = $project_categories_result->fetch_assoc()): 
+                                    $category_slug = strtolower(str_replace(' ', '-', $category['slug']));
+                                    $tab_id = 'pills-proj' . $category_slug;
+                                    
+                                    // Get projects for this category
+                                    $category_projects = [];
+                                    if ($all_projects_result) {
+                                        $all_projects_result->data_seek(0);
+                                        while ($project = $all_projects_result->fetch_assoc()) {
+                                            if (strtolower($project['category']) === strtolower($category['name'])) {
+                                                $category_projects[] = $project;
+                                            }
+                                        }
+                                    }
+                                ?>
+                                    <div class="tab-pane fade <?php echo $is_first_tab ? 'show active' : ''; ?>" 
+                                         id="<?php echo $tab_id; ?>" 
+                                         role="tabpanel" 
+                                         aria-labelledby="<?php echo $tab_id; ?>-tab">
+                                        <div class="projects-content float_box_container">
+                                            <div class="projects-slider">
+                                                <div class="swiper-wrapper">
+                                                    <?php if (count($category_projects) > 0): ?>
+                                                        <?php foreach ($category_projects as $project): 
+                                                            // Handle image path
+                                                            if (!empty($project['featured_image'])) {
+                                                                $img_path = $project['featured_image'];
+                                                                if (strpos($img_path, 'cms/') === false && strpos($img_path, 'http') === false && strpos($img_path, 'assets/') === false) {
+                                                                    $featured_image = 'cms/assets/uploads/' . $img_path;
+                                                                } else {
+                                                                    $featured_image = $img_path;
+                                                                }
+                                                            } else {
+                                                                $featured_image = 'assets/img/home1/projects/proj1.jpg';
+                                                            }
+                                                            
+                                                            // Handle gallery images for fancybox
+                                                            $gallery_images = [];
+                                                            if (!empty($project['gallery_images'])) {
+                                                                $gallery_array = json_decode($project['gallery_images'], true);
+                                                                if (is_array($gallery_array)) {
+                                                                    foreach ($gallery_array as $gallery_img) {
+                                                                        if (strpos($gallery_img, 'cms/') === false && strpos($gallery_img, 'http') === false) {
+                                                                            $gallery_images[] = 'cms/assets/uploads/' . $gallery_img;
+                                                                        } else {
+                                                                            $gallery_images[] = $gallery_img;
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            
+                                                            // Use featured image as first gallery image if no gallery
+                                                            if (empty($gallery_images)) {
+                                                                $gallery_images[] = $featured_image;
+                                                            }
+                                                        ?>
+                                                            <div class="swiper-slide">
+                                                                <div class="project-card">
+                                                                    <?php if (count($gallery_images) > 0): ?>
+                                                                        <a href="<?php echo htmlspecialchars($gallery_images[0]); ?>" class="img" data-fancybox="proj-<?php echo $category_slug; ?>">
+                                                                            <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover">
+                                                                        </a>
+                                                                    <?php endif; ?>
+                                                                    <div class="info">
+                                                                        <?php if (!empty($project['category'])): ?>
+                                                                            <div class="tags">
+                                                                                <a href="#"><?php echo htmlspecialchars($project['category']); ?></a>
+                                                                            </div>
+                                                                        <?php endif; ?>
+                                                                        <h3 class="title">
+                                                                            <a href="portfolio.php#project-<?php echo $project['id']; ?>">
+                                                                                <?php echo htmlspecialchars($project['title']); ?>
+                                                                            </a>
+                                                                        </h3>
+                                                                        <?php if (!empty($project['short_description'])): ?>
+                                                                            <div class="text"><?php echo nl2br(htmlspecialchars($project['short_description'])); ?></div>
+                                                                        <?php endif; ?>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        <?php endforeach; ?>
+                                                    <?php else: ?>
+                                                        <div class="swiper-slide">
+                                                            <div class="project-card">
+                                                                <div class="info">
+                                                                    <p class="text">No projects found in this category.</p>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <h3 class="title"> <a href="#">Ssi Resort in Katosi </a> </h3>
-                                                        <div class="text"> This area will is short description of project, you can select to show or hide it, <br> this a sample short paragraph for this. </div>
-                                                    </div>
+                                                    <?php endif; ?>
                                                 </div>
                                             </div>
-                                            <div class="swiper-slide">
-                                                <div class="project-card">
-                                                    <a href="assets/img/home1/projects/proj2.jpg" class="img" data-fancybox="proj">
-                                                        <img src="assets/img/home1/projects/proj2.jpg" alt="" class="img-cover">
-                                                    </a>
-                                                    <div class="info">
-                                                        <div class="tags">
-                                                            <a href="#"> Furniture </a>
-                                                            <a href="#"> Furniture </a>
-                                                        </div>
-                                                        <h3 class="title"> <a href="#"> Eve's bold chic modern home </a> </h3>
-                                                        <div class="text"> This area will is short description of project, you can select to show or hide it, <br> this a sample short paragraph for this. </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <div class="project-card">
-                                                    <a href="assets/img/home1/projects/proj3.jpg" class="img" data-fancybox="proj">
-                                                        <img src="assets/img/home1/projects/proj3.jpg" alt="" class="img-cover">
-                                                    </a>
-                                                    <div class="info">
-                                                        <div class="tags">
-                                                            <a href="#"> Architecture </a>
-                                                            <a href="#"> Furniture </a>
-                                                        </div>
-                                                        <h3 class="title"> <a href="#"> B63 Private Villa </a> </h3>
-                                                        <div class="text"> This area will is short description of project, you can select to show or hide it, <br> this a sample short paragraph for this. </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <div class="project-card">
-                                                    <a href="assets/img/home1/projects/proj1.jpg" class="img" data-fancybox="proj">
-                                                        <img src="assets/img/home1/projects/proj1.jpg" alt="" class="img-cover">
-                                                    </a>
-                                                    <div class="info">
-                                                        <div class="tags">
-                                                            <a href="#"> Architecture </a>
-                                                            <a href="#"> Furniture </a>
-                                                        </div>
-                                                        <h3 class="title"> <a href="#"> Townhouse in San Joe </a> </h3>
-                                                        <div class="text"> This area will is short description of project, you can select to show or hide it, <br> this a sample short paragraph for this. </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <div class="float-cursor float_box"> Hold <br> and Drag </div>
                                         </div>
                                     </div>
-                                    <div class="float-cursor float_box"> Hold <br> and Drag </div>
-                                    <!-- <div class="float_box_container">
-                                        <div class="float-cursor float_box"> Hold <br> and Drag </div>
-                                    </div> -->
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="pills-proj2" role="tabpanel" aria-labelledby="pills-proj2-tab">
-                                <div class="projects-content float_box_container">
-                                    <div class="projects-slider">
-                                        <div class="swiper-wrapper">
-                                            <div class="swiper-slide">
-                                                <div class="project-card">
-                                                    <a href="assets/img/home1/projects/proj3.jpg" class="img" data-fancybox="proj">
-                                                        <img src="assets/img/home1/projects/proj3.jpg" alt="" class="img-cover">
-                                                    </a>
-                                                    <div class="info">
-                                                        <div class="tags">
-                                                            <a href="#"> Architecture </a>
-                                                            <a href="#"> Furniture </a>
-                                                        </div>
-                                                        <h3 class="title"> <a href="#"> B63 Private Villa </a> </h3>
-                                                        <div class="text"> This area will is short description of project, you can select to show or hide it, <br> this a sample short paragraph for this. </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <div class="project-card">
-                                                    <a href="assets/img/home1/projects/proj1.jpg" class="img" data-fancybox="proj">
-                                                        <img src="assets/img/home1/projects/proj1.jpg" alt="" class="img-cover">
-                                                    </a>
-                                                    <div class="info">
-                                                        <div class="tags">
-                                                            <a href="#"> Architecture </a>
-                                                            <a href="#"> Furniture </a>
-                                                        </div>
-                                                        <h3 class="title"> <a href="#"> Townhouse in San Joe </a> </h3>
-                                                        <div class="text"> This area will is short description of project, you can select to show or hide it, <br> this a sample short paragraph for this. </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <div class="project-card">
-                                                    <a href="assets/img/home1/projects/proj1.jpg" class="img" data-fancybox="proj">
-                                                        <img src="assets/img/home1/projects/proj1.jpg" alt="" class="img-cover">
-                                                    </a>
-                                                    <div class="info">
-                                                        <div class="tags">
-                                                            <a href="#"> Architecture </a>
-                                                            <a href="#"> Furniture </a>
-                                                        </div>
-                                                        <h3 class="title"> <a href="#"> Townhouse in San Joe </a> </h3>
-                                                        <div class="text"> This area will is short description of project, you can select to show or hide it, <br> this a sample short paragraph for this. </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <div class="project-card">
-                                                    <a href="assets/img/home1/projects/proj2.jpg" class="img" data-fancybox="proj">
-                                                        <img src="assets/img/home1/projects/proj2.jpg" alt="" class="img-cover">
-                                                    </a>
-                                                    <div class="info">
-                                                        <div class="tags">
-                                                            <a href="#"> Furniture </a>
-                                                            <a href="#"> Furniture </a>
-                                                        </div>
-                                                        <h3 class="title"> <a href="#"> Homestay Rennovation and Interior Design </a> </h3>
-                                                        <div class="text"> This area will is short description of project, you can select to show or hide it, <br> this a sample short paragraph for this. </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="float-cursor float_box"> Hold <br> and Drag </div>
-                                    <!-- <div class="float_box_container">
-                                        <div class="float-cursor float_box"> Hold <br> and Drag </div>
-                                    </div> -->
-                                </div>
-                            </div>
+                                <?php 
+                                    $is_first_tab = false;
+                                endwhile; 
+                                ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
