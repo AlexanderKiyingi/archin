@@ -23,7 +23,30 @@ if (!$product) {
 }
 
 // Fix image path
-$product_image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $product['featured_image']) : 'assets/img/home1/projects/proj1.jpg';
+$product_image = $product['featured_image'] ? str_replace('../', '', $product['featured_image']) : 'assets/img/home1/projects/proj1.jpg';
+if ($product_image && strpos($product_image, '../') === 0) {
+    $product_image = str_replace('../', '', $product_image);
+}
+
+// Format price
+$formatted_price = 'UGX ' . number_format($product['price'], 0);
+
+// Generate SKU from product ID
+$product_sku = 'PROD-' . str_pad($product['id'], 6, '0', STR_PAD_LEFT);
+
+// Fetch related products (same category, exclude current product)
+$related_products = [];
+if ($product['category']) {
+    $related_query = "SELECT * FROM shop_products WHERE category = ? AND id != ? AND is_active = 1 ORDER BY RAND() LIMIT 4";
+    $related_stmt = $conn->prepare($related_query);
+    $related_stmt->bind_param("si", $product['category'], $product_id);
+    $related_stmt->execute();
+    $related_result = $related_stmt->get_result();
+    while ($row = $related_result->fetch_assoc()) {
+        $related_products[] = $row;
+    }
+    $related_stmt->close();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,9 +54,21 @@ $product_image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $p
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Details - FlipAvenue</title>
-    <meta name="description" content="View detailed information about our architectural products and design tools.">
-    <meta name="keywords" content="architecture, design, products, tools, resources">
+    <title><?php echo htmlspecialchars($product['name']); ?> - FlipAvenue</title>
+    <meta name="description" content="<?php echo htmlspecialchars(substr(strip_tags($product['description']), 0, 160)); ?>">
+    <meta name="keywords" content="<?php echo htmlspecialchars($product['tags'] ?? 'interior design, products'); ?>">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="<?php echo htmlspecialchars($product['name']); ?> - FlipAvenue">
+    <meta property="og:description" content="<?php echo htmlspecialchars(substr(strip_tags($product['description']), 0, 160)); ?>">
+    <meta property="og:image" content="<?php echo htmlspecialchars($product_image); ?>">
+    <meta property="og:type" content="product">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?php echo htmlspecialchars($product['name']); ?>">
+    <meta name="twitter:description" content="<?php echo htmlspecialchars(substr(strip_tags($product['description']), 0, 160)); ?>">
+    <meta name="twitter:image" content="<?php echo htmlspecialchars($product_image); ?>">
     <meta name="author" content="FlipAvenue">
 
     <!-- favicon -->
@@ -91,9 +126,9 @@ $product_image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $p
                 <ul>
                     <li> <a href="index.php" class="main_link"> home </a> </li>
                     <li><a href="about.html" class="main_link"> about us </a></li>
-                    <li> <a href="portfolio.html" class="main_link"> projects </a> </li>
+                    <li> <a href="portfolio.php" class="main_link"> projects </a> </li>
                     <li> <a href="shop.php" class="main_link"> shop </a> </li>
-                    <li> <a href="contact.html" class="main_link"> contact </a> </li>
+                    <li> <a href="contact.php" class="main_link"> contact </a> </li>
                 </ul>
             </div>
         </div>
@@ -124,13 +159,13 @@ $product_image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $p
                             <a class="nav-link" href="about.html">About Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="portfolio.html">Projects</a>
+                            <a class="nav-link" href="portfolio.php">Projects</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active" href="shop.php">Shop</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact</a>
+                            <a class="nav-link" href="contact.php">Contact</a>
                         </li>
                     </ul>
                     <div class="nav-side">
@@ -170,12 +205,10 @@ $product_image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $p
                         <div class="col-lg-6 mb-4 mb-lg-0">
                             <div class="product-images">
                                 <div class="main-image mb-3">
-                                    <img src="assets/img/home1/projects/proj1.jpg" alt="Product" class="img-fluid rounded-3" id="mainProductImage">
+                                    <img src="<?php echo htmlspecialchars($product_image); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="img-fluid rounded-3" id="mainProductImage" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
                                 </div>
                                 <div class="thumbnail-images d-flex gap-2">
-                                    <img src="assets/img/home1/projects/proj1.jpg" alt="Thumbnail 1" class="img-thumbnail product-thumb active" style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
-                                    <img src="assets/img/home1/projects/proj2.jpg" alt="Thumbnail 2" class="img-thumbnail product-thumb" style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
-                                    <img src="assets/img/home1/projects/proj3.jpg" alt="Thumbnail 3" class="img-thumbnail product-thumb" style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
+                                    <img src="<?php echo htmlspecialchars($product_image); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="img-thumbnail product-thumb active" style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
                                 </div>
                             </div>
                         </div>
@@ -183,41 +216,50 @@ $product_image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $p
                         <!-- Product Information -->
                         <div class="col-lg-6">
                             <div class="product-info">
+                                <?php if ($product['category']): ?>
                                 <div class="category mb-3">
-                                    <span class="badge bg-light text-dark" id="productCategory">Design Tools</span>
+                                    <span class="badge bg-light text-dark" id="productCategory"><?php echo htmlspecialchars($product['category']); ?></span>
                                 </div>
+                                <?php endif; ?>
                                 
-                                <h1 class="product-title mb-3 fw-bold" id="productTitle">Architectural Design Toolkit</h1>
-                                
-                                <div class="rating mb-3">
-                                    <i class="la la-star text-warning"></i>
-                                    <i class="la la-star text-warning"></i>
-                                    <i class="la la-star text-warning"></i>
-                                    <i class="la la-star text-warning"></i>
-                                    <i class="la la-star text-warning"></i>
-                                    <span class="ms-2 text-muted">(4.9) - 127 reviews</span>
-                                </div>
+                                <h1 class="product-title mb-3 fw-bold" id="productTitle"><?php echo htmlspecialchars($product['name']); ?></h1>
 
                                 <div class="price mb-4">
-                                    <h2 class="text-orange1 fw-bold mb-0" id="productPrice">UGX 89,000</h2>
+                                    <h2 class="text-orange1 fw-bold mb-0" id="productPrice"><?php echo $formatted_price; ?></h2>
+                                    <?php if ($product['stock_quantity'] !== null): ?>
+                                        <?php if ($product['stock_quantity'] > 0): ?>
+                                            <span class="text-success small">In Stock (<?php echo $product['stock_quantity']; ?> available)</span>
+                                        <?php else: ?>
+                                            <span class="text-danger small">Out of Stock</span>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
                                 </div>
 
                                 <div class="product-description mb-4">
                                     <h5 class="fw-600 mb-3">Description</h5>
-                                    <p class="text-muted" id="productDescription">
-                                        Complete set of professional architectural design tools, templates, and digital resources for modern architects. This comprehensive toolkit includes everything you need to create stunning architectural designs.
-                                    </p>
+                                    <div class="text-muted" id="productDescription">
+                                        <?php echo nl2br(htmlspecialchars($product['description'])); ?>
+                                    </div>
                                 </div>
 
-                                <div class="product-features mb-4">
-                                    <h5 class="fw-600 mb-3">Key Features</h5>
-                                    <ul class="list-unstyled" id="productFeatures">
-                                        <li class="mb-2"><i class="la la-check text-success me-2"></i> Professional design templates</li>
-                                        <li class="mb-2"><i class="la la-check text-success me-2"></i> Digital resources and assets</li>
-                                        <li class="mb-2"><i class="la la-check text-success me-2"></i> Compatible with major CAD software</li>
-                                        <li class="mb-2"><i class="la la-check text-success me-2"></i> Lifetime updates and support</li>
-                                    </ul>
+                                <?php if ($product['tags']): ?>
+                                <div class="product-tags mb-4">
+                                    <h5 class="fw-600 mb-3">Tags</h5>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <?php 
+                                        $tags = explode(',', $product['tags']);
+                                        foreach ($tags as $tag): 
+                                            $tag = trim($tag);
+                                            if (!empty($tag)):
+                                        ?>
+                                            <span class="badge bg-secondary"><?php echo htmlspecialchars($tag); ?></span>
+                                        <?php 
+                                            endif;
+                                        endforeach; 
+                                        ?>
+                                    </div>
                                 </div>
+                                <?php endif; ?>
 
                                 <div class="product-actions">
                                     <div class="quantity-selector mb-3 d-flex align-items-center gap-3">
@@ -240,9 +282,13 @@ $product_image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $p
                                 </div>
 
                                 <div class="product-meta mt-4 pt-4 border-top">
-                                    <p class="mb-2"><strong>SKU:</strong> <span id="productSku">ARC-TOOLKIT-001</span></p>
-                                    <p class="mb-2"><strong>Category:</strong> <span id="productCategoryText">Design Tools</span></p>
-                                    <p class="mb-0"><strong>Tags:</strong> <span id="productTags">architectural, design, toolkit, professional</span></p>
+                                    <p class="mb-2"><strong>SKU:</strong> <span id="productSku"><?php echo $product_sku; ?></span></p>
+                                    <?php if ($product['category']): ?>
+                                    <p class="mb-2"><strong>Category:</strong> <span id="productCategoryText"><?php echo htmlspecialchars($product['category']); ?></span></p>
+                                    <?php endif; ?>
+                                    <?php if ($product['tags']): ?>
+                                    <p class="mb-0"><strong>Tags:</strong> <span id="productTags"><?php echo htmlspecialchars($product['tags']); ?></span></p>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -352,63 +398,33 @@ $product_image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $p
                     </div>
 
                     <!-- Related Products -->
+                    <?php if (!empty($related_products)): ?>
                     <div class="row mt-5 pt-5">
                         <div class="col-12">
                             <h3 class="mb-4">Related Products</h3>
                         </div>
+                        <?php foreach ($related_products as $related): 
+                            $related_image = $related['featured_image'] ? str_replace('../', '', $related['featured_image']) : 'assets/img/home1/projects/proj1.jpg';
+                            $related_price = 'UGX ' . number_format($related['price'], 0);
+                        ?>
                         <div class="col-lg-3 col-md-6 mb-4">
                             <div class="product-card">
-                                <div class="img">
-                                    <img src="assets/img/home1/blog/blog1.jpg" alt="Related Product" class="img-cover">
-                                </div>
-                                <div class="info p-3">
-                                    <h6 class="title mb-2">Modern Architecture Guide</h6>
-                                    <div class="price">
-                                        <span class="fw-bold text-orange1">UGX 45,000</span>
+                                <a href="product-details.php?id=<?php echo $related['id']; ?>" class="text-decoration-none">
+                                    <div class="img">
+                                        <img src="<?php echo htmlspecialchars($related_image); ?>" alt="<?php echo htmlspecialchars($related['name']); ?>" class="img-cover" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 mb-4">
-                            <div class="product-card">
-                                <div class="img">
-                                    <img src="assets/img/home1/projects/proj2.jpg" alt="Related Product" class="img-cover">
-                                </div>
-                                <div class="info p-3">
-                                    <h6 class="title mb-2">Professional CAD Software</h6>
-                                    <div class="price">
-                                        <span class="fw-bold text-orange1">UGX 299,000</span>
+                                    <div class="info p-3">
+                                        <h6 class="title mb-2 text-dark"><?php echo htmlspecialchars($related['name']); ?></h6>
+                                        <div class="price">
+                                            <span class="fw-bold text-orange1"><?php echo $related_price; ?></span>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-6 mb-4">
-                            <div class="product-card">
-                                <div class="img">
-                                    <img src="assets/img/home1/blog/blog2.jpg" alt="Related Product" class="img-cover">
-                                </div>
-                                <div class="info p-3">
-                                    <h6 class="title mb-2">Architecture Templates Pack</h6>
-                                    <div class="price">
-                                        <span class="fw-bold text-orange1">UGX 35,000</span>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 mb-4">
-                            <div class="product-card">
-                                <div class="img">
-                                    <img src="assets/img/home1/projects/proj3.jpg" alt="Related Product" class="img-cover">
-                                </div>
-                                <div class="info p-3">
-                                    <h6 class="title mb-2">Modern Building 3D Models</h6>
-                                    <div class="price">
-                                        <span class="fw-bold text-orange1">UGX 25,000</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
+                    <?php endif; ?>
 
                 </div>
             </section>
@@ -449,7 +465,7 @@ $product_image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $p
                                 <h5 class="mb-20 mt-5 mt-lg-0 fw-600"> Other links </h5>
                                 <ul class="footer-links">
                                     <li> <a href="shop.php"> Shop </a> </li>
-                                    <li> <a href="portfolio.html"> Portfolio </a> </li>
+                                    <li> <a href="portfolio.php"> Portfolio </a> </li>
                                     <li> <a href="blog.php"> Blog </a> </li>
                                     <li> <a href="#"> Videos </a> </li>
                                 </ul>
@@ -460,7 +476,7 @@ $product_image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $p
                                 <h5 class="mb-20 mt-5 mt-lg-0 fw-600"> Important links </h5>
                                 <ul class="footer-links">
                                     <li> <a href="careers.html"> Careers </a> </li>
-                                    <li> <a href="contact.html"> Contact Us </a> </li>
+                                    <li> <a href="contact.php"> Contact Us </a> </li>
                                     <li> <a href="#"> Help </a> </li>
                                 </ul>
                             </div>
@@ -483,9 +499,9 @@ $product_image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $p
                             <div class="foot-links mt-4 mt-lg-0">
                                 <a href="index.php"> Home </a>
                                 <a href="about.html"> About Us </a>
-                                <a href="portfolio.html"> Projects </a>
+                                <a href="portfolio.php"> Projects </a>
                                 <a href="shop.php"> Shop </a>
-                                <a href="contact.html"> Contact </a>
+                                <a href="contact.php"> Contact </a>
                             </div>
                         </div>
                     </div>
@@ -595,23 +611,8 @@ $product_image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $p
             };
             */
 
-            // Load product data
-            if (productId && products[productId]) {
-                const product = products[productId];
-                
-                document.getElementById('productTitle').textContent = product.name;
-                document.getElementById('breadcrumbTitle').textContent = product.name;
-                document.getElementById('productDescription').textContent = product.description;
-                document.getElementById('productPrice').textContent = 'UGX ' + product.price.toLocaleString();
-                document.getElementById('productCategory').textContent = product.category;
-                document.getElementById('productCategoryText').textContent = product.category;
-                document.getElementById('productSku').textContent = product.sku;
-                document.getElementById('productTags').textContent = product.tags;
-                document.getElementById('mainProductImage').src = product.image;
-                
-                // Update page title
-                document.title = product.name + ' - FlipAvenue';
-            }
+            // Product data is already loaded via PHP above
+            // This JavaScript is just for cart functionality
 
             // Update cart count
             function updateCartCount() {

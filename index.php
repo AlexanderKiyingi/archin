@@ -275,8 +275,8 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                             <div class="info section-padding-x pb-70">
                                 <div class="row align-items-end gx-5">
                                     <div class="col-lg-6 offset-lg-2">
-                                        <h1 data-swiper-parallax="-2000" class="js-title"> Shape </h1>
-                                        <h5 class="fsz-30 mt-30 fw-400"> Architecture Language <br> Signature </h5>
+                                        <h1 data-swiper-parallax="-2000" class="js-title"> Design </h1>
+                                        <h5 class="fsz-30 mt-30 fw-400"> Biophilic design <br> integration </h5>
                                     </div>
                                     <div class="col-lg-3">
                                         <div class="cont pb-30">
