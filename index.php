@@ -1,4 +1,3 @@
-
 <?php
 // Include centralized database connection
 require_once 'cms/db_connect.php';
@@ -232,7 +231,7 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                                     <div class="col-lg-3">
                                         <div class="cont pb-30">
                                             <div class="text fsz-17 fw-300 lh-4">
-                                                We collaborate with clients to create buildings and environments in dialogue with culture and place. And become one of the country's leading architectural practices
+                                                We collaborate with clients to create buildings and environments in dialogue with culture and place. And become one of the country's leading Interior design studio
                                             </div>
                                             <a href="#" class="butn border rounded-pill mt-60 hover-bg-white">
                                                 <span> Our Services <i class="small ms-1 ti-arrow-top-right"></i> </span>
@@ -251,13 +250,13 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                             <div class="info section-padding-x pb-70">
                                 <div class="row align-items-end gx-5">
                                     <div class="col-lg-6 offset-lg-2">
-                                        <h1 data-swiper-parallax="-2000" class="js-title"> Time </h1>
-                                        <h5 class="fsz-30 mt-30 fw-400"> Sustainable Material <br> Resource </h5>
+                                        <h1 data-swiper-parallax="-2000" class="js-title"> Material </h1>
+                                        <h5 class="fsz-30 mt-30 fw-400"> Sustainable <br> Resource </h5>
                                     </div>
                                     <div class="col-lg-3">
                                         <div class="cont pb-30">
                                             <div class="text fsz-17 fw-300 lh-4">
-                                                We collaborate with clients to create buildings and environments in dialogue with culture and place. And become one of the country's leading architectural practices
+                                                We collaborate with clients to create buildings and environments in dialogue with culture and place. And become one of the country's leading Interior design studio
                                             </div>
                                             <a href="#" class="butn border rounded-pill mt-60 hover-bg-white">
                                                 <span> Our Services <i class="small ms-1 ti-arrow-top-right"></i> </span>
@@ -282,7 +281,7 @@ $page_description = 'Flip Avenue Limited is an interior architectural studio bas
                                     <div class="col-lg-3">
                                         <div class="cont pb-30">
                                             <div class="text fsz-17 fw-300 lh-4">
-                                                We collaborate with clients to create buildings and environments in dialogue with culture and place. And become one of the country's leading architectural practices
+                                                We collaborate with clients to create buildings and environments in dialogue with culture and place. And become one of the country's leading Interior design studio
                                             </div>
                                             <a href="#" class="butn border rounded-pill mt-60 hover-bg-white">
                                                 <span> Our Services <i class="small ms-1 ti-arrow-top-right"></i> </span>
