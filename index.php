@@ -1,6 +1,8 @@
 <?php
 // Include centralized database connection
 require_once 'cms/db_connect.php';
+// Include common helper functions
+require_once 'common/functions.php';
 
 // Fetch services (active only, ordered by display_order)
 $services_query = "SELECT * FROM services WHERE is_active = 1 ORDER BY display_order ASC, created_at DESC LIMIT 8";
@@ -575,16 +577,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                     <?php if (count($category_projects) > 0): ?>
                                                         <?php foreach ($category_projects as $project): 
                                                             // Handle image path
-                                                            if (!empty($project['featured_image'])) {
-                                                                $img_path = $project['featured_image'];
-                                                                if (strpos($img_path, 'cms/') === false && strpos($img_path, 'http') === false && strpos($img_path, 'assets/') === false) {
-                                                                    $featured_image = 'cms/assets/uploads/' . $img_path;
-                                                                } else {
-                                                                    $featured_image = $img_path;
-                                                                }
-                                                            } else {
-                                                                $featured_image = 'assets/img/home1/projects/proj1.jpg';
-                                                            }
+                                                            $featured_image = getImageUrlWithFallback($project['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
                                                             
                                                             // Handle gallery images for fancybox
                                                             $gallery_images = [];
@@ -592,11 +585,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                                 $gallery_array = json_decode($project['gallery_images'], true);
                                                                 if (is_array($gallery_array)) {
                                                                     foreach ($gallery_array as $gallery_img) {
-                                                                        if (strpos($gallery_img, 'cms/') === false && strpos($gallery_img, 'http') === false) {
-                                                                            $gallery_images[] = 'cms/assets/uploads/' . $gallery_img;
-                                                                        } else {
-                                                                            $gallery_images[] = $gallery_img;
-                                                                        }
+                                                                        $gallery_images[] = getImageUrl($gallery_img);
                                                                     }
                                                                 }
                                                             }
@@ -677,6 +666,11 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                             "<?php echo htmlspecialchars($testimonial['testimonial_text']); ?>"
                                                         </div>
                                                         <div class="author">
+                                                            <?php if (!empty($testimonial['client_photo'])): ?>
+                                                                <div class="au-img">
+                                                                    <img src="<?php echo htmlspecialchars(getImageUrl($testimonial['client_photo'])); ?>" alt="<?php echo htmlspecialchars($testimonial['client_name']); ?>">
+                                                                </div>
+                                                            <?php endif; ?>
                                                             <div class="au-inf">
                                                                 <h6 class="text-capitalize mb-2 fsz-16 fw-bold"><?php echo htmlspecialchars($testimonial['client_name']); ?></h6>
                                                                 <p class="text-capitalize fsz-14 color-666">
@@ -794,17 +788,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                     
                                     // Get featured image or use fallback
                                     // Check if the image path already includes cms/ or assets/
-                                    if (!empty($blog['featured_image'])) {
-                                        $img_path = $blog['featured_image'];
-                                        // If it's a relative path starting with 'blog/', prepend 'cms/assets/uploads/'
-                                        if (strpos($img_path, 'cms/') === false && strpos($img_path, 'http') === false && strpos($img_path, 'assets/') === false) {
-                                            $featured_image = 'cms/assets/uploads/' . $img_path;
-                                        } else {
-                                            $featured_image = $img_path;
-                                        }
-                                    } else {
-                                        $featured_image = 'assets/img/home1/blog/blog1.jpg';
-                                    }
+                                    $featured_image = getImageUrlWithFallback($blog['featured_image'] ?? '', 'assets/img/home1/blog/blog1.jpg');
                                     
                                     // Create excerpt from content
                                     $excerpt = !empty($blog['excerpt']) ? $blog['excerpt'] : strip_tags(substr($blog['content'], 0, 150)) . '...';

@@ -28,10 +28,55 @@ if ($_POST) {
                     }
                 }
                 
+                // Handle gallery images upload
+                $gallery_images = [];
+                if (!empty($_FILES['gallery_images']['name'][0])) {
+                    foreach ($_FILES['gallery_images']['tmp_name'] as $key => $tmp_name) {
+                        $file = [
+                            'name' => $_FILES['gallery_images']['name'][$key],
+                            'tmp_name' => $tmp_name,
+                            'size' => $_FILES['gallery_images']['size'][$key],
+                            'error' => $_FILES['gallery_images']['error'][$key]
+                        ];
+                        if ($file['error'] === 0) {
+                            $upload = uploadFile($file, 'shop');
+                            if ($upload['success']) {
+                                $gallery_images[] = $upload['path'];
+                            }
+                        }
+                    }
+                }
+                $gallery_images_json = !empty($gallery_images) ? json_encode($gallery_images) : null;
+                
+                // Handle additional_details JSON
+                $additional_details = null;
+                if (!empty($_POST['additional_details_intro']) || !empty($_POST['additional_details_items'])) {
+                    $items = !empty($_POST['additional_details_items']) ? explode("\n", trim($_POST['additional_details_items'])) : [];
+                    $additional_details = json_encode([
+                        'intro' => cleanInput($_POST['additional_details_intro'] ?? ''),
+                        'items' => $items
+                    ]);
+                }
+                
+                // Handle specifications JSON
+                $specifications = null;
+                if (!empty($_POST['specs'])) {
+                    $specs = [];
+                    foreach ($_POST['specs'] as $spec) {
+                        if (!empty($spec['label']) && !empty($spec['value'])) {
+                            $specs[cleanInput($spec['label'])] = cleanInput($spec['value']);
+                        }
+                    }
+                    $specifications = !empty($specs) ? json_encode($specs) : null;
+                }
+                
+                // Handle show_reviews_tab
+                $show_reviews_tab = isset($_POST['show_reviews_tab']) ? 1 : 0;
+                
                 // Only proceed if no upload error
                 if (!isset($error_message)) {
-                    $stmt = $conn->prepare("INSERT INTO shop_products (name, description, price, category, tags, featured_image, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
-                    $stmt->bind_param("ssdsss", $name, $description, $price, $category, $tags, $featured_image);
+                    $stmt = $conn->prepare("INSERT INTO shop_products (name, description, price, category, tags, featured_image, gallery_images, additional_details, specifications, show_reviews_tab, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");
+                    $stmt->bind_param("ssdssssssi", $name, $description, $price, $category, $tags, $featured_image, $gallery_images_json, $additional_details, $specifications, $show_reviews_tab);
                     
                     if ($stmt->execute()) {
                         $success_message = "Product added successfully!";
@@ -62,10 +107,59 @@ if ($_POST) {
                     }
                 }
                 
+                // Handle gallery images upload
+                $gallery_images_json = $_POST['current_gallery_images'] ?? null;
+                if (!empty($_FILES['gallery_images']['name'][0])) {
+                    $gallery_images = [];
+                    foreach ($_FILES['gallery_images']['tmp_name'] as $key => $tmp_name) {
+                        $file = [
+                            'name' => $_FILES['gallery_images']['name'][$key],
+                            'tmp_name' => $tmp_name,
+                            'size' => $_FILES['gallery_images']['size'][$key],
+                            'error' => $_FILES['gallery_images']['error'][$key]
+                        ];
+                        if ($file['error'] === 0) {
+                            $upload = uploadFile($file, 'shop');
+                            if ($upload['success']) {
+                                $gallery_images[] = $upload['path'];
+                            }
+                        }
+                    }
+                    if (!empty($gallery_images)) {
+                        $existing = json_decode($gallery_images_json ?? '[]', true);
+                        $gallery_images_json = json_encode(array_merge($existing, $gallery_images));
+                    }
+                }
+                
+                // Handle additional_details JSON
+                $additional_details = null;
+                if (!empty($_POST['additional_details_intro']) || !empty($_POST['additional_details_items'])) {
+                    $items = !empty($_POST['additional_details_items']) ? explode("\n", trim($_POST['additional_details_items'])) : [];
+                    $additional_details = json_encode([
+                        'intro' => cleanInput($_POST['additional_details_intro'] ?? ''),
+                        'items' => $items
+                    ]);
+                }
+                
+                // Handle specifications JSON
+                $specifications = null;
+                if (!empty($_POST['specs'])) {
+                    $specs = [];
+                    foreach ($_POST['specs'] as $spec) {
+                        if (!empty($spec['label']) && !empty($spec['value'])) {
+                            $specs[cleanInput($spec['label'])] = cleanInput($spec['value']);
+                        }
+                    }
+                    $specifications = !empty($specs) ? json_encode($specs) : null;
+                }
+                
+                // Handle show_reviews_tab
+                $show_reviews_tab = isset($_POST['show_reviews_tab']) ? 1 : 0;
+                
                 // Only proceed if no upload error
                 if (!isset($error_message)) {
-                    $stmt = $conn->prepare("UPDATE shop_products SET name=?, description=?, price=?, category=?, tags=?, featured_image=?, updated_at=NOW() WHERE id=?");
-                    $stmt->bind_param("ssdsssi", $name, $description, $price, $category, $tags, $featured_image, $id);
+                    $stmt = $conn->prepare("UPDATE shop_products SET name=?, description=?, price=?, category=?, tags=?, featured_image=?, gallery_images=?, additional_details=?, specifications=?, show_reviews_tab=?, updated_at=NOW() WHERE id=?");
+                    $stmt->bind_param("ssdssssssii", $name, $description, $price, $category, $tags, $featured_image, $gallery_images_json, $additional_details, $specifications, $show_reviews_tab, $id);
                     
                     if ($stmt->execute()) {
                         $success_message = "Product updated successfully!";

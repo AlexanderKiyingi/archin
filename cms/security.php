@@ -265,14 +265,10 @@ function validateSessionSecurity() {
         return false;
     }
     
-    // Check IP address consistency
-    if (isset($_SESSION['ip_address']) && $_SESSION['ip_address'] !== $_SERVER['REMOTE_ADDR']) {
-        session_unset();
-        session_destroy();
-        return false;
-    }
+    // Note: IP address validation removed for better cross-tab compatibility
+    // IP can change with mobile networks, VPNs, etc. and causes unnecessary logouts
     
-    // Update last activity
+    // Update last activity to keep session alive
     $_SESSION['last_activity'] = time();
     
     return true;

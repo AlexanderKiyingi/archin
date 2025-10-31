@@ -6,6 +6,16 @@
 
 // Start session if not already started
 if (session_status() === PHP_SESSION_NONE) {
+    // Configure session settings for better security and cross-tab compatibility
+    ini_set('session.use_strict_mode', 1);
+    ini_set('session.use_only_cookies', 1);
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_samesite', 'Lax');
+    
+    // Set session cookie lifetime to match session timeout
+    ini_set('session.cookie_lifetime', 0); // Expire when browser closes
+    ini_set('session.gc_maxlifetime', SESSION_TIMEOUT);
+    
     session_start();
 }
 
@@ -53,13 +63,23 @@ function requireLogin() {
         exit();
     }
     
-    // Check session timeout
+    // Check session timeout - with grace period for cross-tab activity
     if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > SESSION_TIMEOUT)) {
         session_unset();
         session_destroy();
+        
+        // Check if this is an AJAX request
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'timeout' => true, 'message' => 'Session expired']);
+            exit();
+        }
+        
         header('Location: ' . CMS_URL . '/login.php?timeout=1');
         exit();
     }
+    
+    // Update last activity on each request (this works across all tabs sharing the session)
     $_SESSION['last_activity'] = time();
 }
 

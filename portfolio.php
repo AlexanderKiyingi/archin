@@ -1,6 +1,8 @@
 <?php
 // Include centralized database connection
 require_once 'cms/db_connect.php';
+// Include common helper functions
+require_once 'common/functions.php';
 
 // Get category filter
 $category_filter = isset($_GET['category']) ? $conn->real_escape_string($_GET['category']) : '';
@@ -221,16 +223,7 @@ $categories_result = $conn->query($categories_query);
                                         $delay = 0.1;
                                         foreach ($all_projects as $project): 
                                     // Get featured image or use fallback
-                                    if (!empty($project['featured_image'])) {
-                                        $img_path = $project['featured_image'];
-                                        if (strpos($img_path, 'cms/') === false && strpos($img_path, 'http') === false && strpos($img_path, 'assets/') === false) {
-                                            $featured_image = 'cms/assets/uploads/' . $img_path;
-                                        } else {
-                                            $featured_image = $img_path;
-                                        }
-                                    } else {
-                                        $featured_image = 'assets/img/home1/projects/proj1.jpg';
-                                    }
+                                    $featured_image = getImageUrlWithFallback($project['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
                                 ?>
                                 <div class="col-lg-4 col-md-6">
                                     <div class="project-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
@@ -276,16 +269,7 @@ $categories_result = $conn->query($categories_query);
                                         $delay = 0.1;
                                         foreach ($arch_projects as $project): 
                                             // Get featured image
-                                            if (!empty($project['featured_image'])) {
-                                                $img_path = $project['featured_image'];
-                                                if (strpos($img_path, 'cms/') === false && strpos($img_path, 'http') === false && strpos($img_path, 'assets/') === false) {
-                                                    $featured_image = 'cms/assets/uploads/' . $img_path;
-                                                } else {
-                                                    $featured_image = $img_path;
-                                                }
-                                            } else {
-                                                $featured_image = 'assets/img/home1/projects/proj1.jpg';
-                                            }
+                                            $featured_image = getImageUrlWithFallback($project['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
                                     ?>
                                     <div class="col-lg-4 col-md-6">
                                         <div class="project-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
@@ -331,16 +315,7 @@ $categories_result = $conn->query($categories_query);
                                         $delay = 0.1;
                                         foreach ($interior_projects as $project): 
                                             // Get featured image
-                                            if (!empty($project['featured_image'])) {
-                                                $img_path = $project['featured_image'];
-                                                if (strpos($img_path, 'cms/') === false && strpos($img_path, 'http') === false && strpos($img_path, 'assets/') === false) {
-                                                    $featured_image = 'cms/assets/uploads/' . $img_path;
-                                                } else {
-                                                    $featured_image = $img_path;
-                                                }
-                                            } else {
-                                                $featured_image = 'assets/img/home1/projects/proj1.jpg';
-                                            }
+                                            $featured_image = getImageUrlWithFallback($project['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
                                     ?>
                                     <div class="col-lg-4 col-md-6">
                                         <div class="project-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
@@ -386,16 +361,7 @@ $categories_result = $conn->query($categories_query);
                                         $delay = 0.1;
                                         foreach ($landscape_projects as $project): 
                                             // Get featured image
-                                            if (!empty($project['featured_image'])) {
-                                                $img_path = $project['featured_image'];
-                                                if (strpos($img_path, 'cms/') === false && strpos($img_path, 'http') === false && strpos($img_path, 'assets/') === false) {
-                                                    $featured_image = 'cms/assets/uploads/' . $img_path;
-                                                } else {
-                                                    $featured_image = $img_path;
-                                                }
-                                            } else {
-                                                $featured_image = 'assets/img/home1/projects/proj1.jpg';
-                                            }
+                                            $featured_image = getImageUrlWithFallback($project['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
                                     ?>
                                     <div class="col-lg-4 col-md-6">
                                         <div class="project-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
@@ -441,16 +407,7 @@ $categories_result = $conn->query($categories_query);
                                         $delay = 0.1;
                                         foreach ($furniture_projects as $project): 
                                             // Get featured image
-                                            if (!empty($project['featured_image'])) {
-                                                $img_path = $project['featured_image'];
-                                                if (strpos($img_path, 'cms/') === false && strpos($img_path, 'http') === false && strpos($img_path, 'assets/') === false) {
-                                                    $featured_image = 'cms/assets/uploads/' . $img_path;
-                                                } else {
-                                                    $featured_image = $img_path;
-                                                }
-                                            } else {
-                                                $featured_image = 'assets/img/home1/projects/proj1.jpg';
-                                            }
+                                            $featured_image = getImageUrlWithFallback($project['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
                                     ?>
                                     <div class="col-lg-4 col-md-6">
                                         <div class="project-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">

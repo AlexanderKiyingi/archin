@@ -1,6 +1,8 @@
 <?php
 // Include centralized database connection
 require_once 'cms/db_connect.php';
+// Include common helper functions
+require_once 'common/functions.php';
 
 // Get post by slug or ID
 $slug = isset($_GET['slug']) ? $conn->real_escape_string($_GET['slug']) : '';
@@ -291,7 +293,7 @@ $read_time = ceil($word_count / 200);
         <header class="tc-header-style1">
             <div class="img">
                 <?php if ($post['featured_image']): ?>
-                    <img src="<?php echo 'cms/' . str_replace('../', '', $post['featured_image']); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" class="img-cover">
+                    <img src="<?php echo htmlspecialchars(getImageUrl($post['featured_image'])); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" class="img-cover">
                 <?php else: ?>
                     <img src="assets/img/home1/blog/blog1.jpg" alt="<?php echo htmlspecialchars($post['title']); ?>" class="img-cover">
                 <?php endif; ?>
@@ -402,7 +404,7 @@ $read_time = ceil($word_count / 200);
                                                 <div class="col-4">
                                                     <a href="single.php?slug=<?php echo $related['slug']; ?>">
                                                         <?php if ($related['featured_image']): ?>
-                                                            <img src="<?php echo 'cms/' . str_replace('../', '', $related['featured_image']); ?>" alt="" class="img-cover radius-4">
+                                                            <img src="<?php echo htmlspecialchars(getImageUrl($related['featured_image'])); ?>" alt="" class="img-cover radius-4">
                                                         <?php else: ?>
                                                             <img src="assets/img/home1/blog/blog2.jpg" alt="" class="img-cover radius-4">
                                                         <?php endif; ?>

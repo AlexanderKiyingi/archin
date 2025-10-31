@@ -1,14 +1,9 @@
 <?php
 requireLogin();
 
-// Validate session security
-if (!validateSessionSecurity()) {
-    header("Location: login.php?timeout=1");
-    exit();
-}
-
-// Regenerate session ID periodically
-if (!isset($_SESSION['last_regeneration']) || (time() - $_SESSION['last_regeneration'] > SESSION_REGENERATE_INTERVAL)) {
+// Regenerate session ID periodically (only on admin pages, not on every request)
+// Reduced frequency to avoid issues with concurrent tabs
+if (!isset($_SESSION['last_regeneration']) || (time() - $_SESSION['last_regeneration'] > (SESSION_REGENERATE_INTERVAL * 2))) {
     session_regenerate_id(true);
     $_SESSION['last_regeneration'] = time();
 }
@@ -23,6 +18,10 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
     <title><?php echo $page_title ?? 'Dashboard'; ?> - FlipAvenue CMS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Session Keep-Alive Script -->
+    <script src="assets/js/session-keepalive.js"></script>
+    
     <style>
         .sidebar-link.active {
             background: linear-gradient(to right, #2563eb, #1d4ed8);

@@ -1,5 +1,7 @@
 <?php
 require_once 'cms/db_connect.php';
+// Include common helper functions
+require_once 'common/functions.php';
 
 // Get product ID from URL
 $product_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -22,11 +24,8 @@ if (!$product) {
     exit;
 }
 
-// Fix image path
-$product_image = $product['featured_image'] ? str_replace('../', '', $product['featured_image']) : 'assets/img/home1/projects/proj1.jpg';
-if ($product_image && strpos($product_image, '../') === 0) {
-    $product_image = str_replace('../', '', $product_image);
-}
+// Get image path using helper function
+$product_image = getImageUrlWithFallback($product['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
 
 // Format price
 $formatted_price = 'UGX ' . number_format($product['price'], 0);
@@ -404,7 +403,7 @@ if ($product['category']) {
                             <h3 class="mb-4">Related Products</h3>
                         </div>
                         <?php foreach ($related_products as $related): 
-                            $related_image = $related['featured_image'] ? str_replace('../', '', $related['featured_image']) : 'assets/img/home1/projects/proj1.jpg';
+                            $related_image = getImageUrlWithFallback($related['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
                             $related_price = 'UGX ' . number_format($related['price'], 0);
                         ?>
                         <div class="col-lg-3 col-md-6 mb-4">

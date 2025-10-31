@@ -1,0 +1,17 @@
+# robots.txt for Flip Avenue Limited
+# https://flipavenueltd.com/robots.txt
+
+User-agent: *
+Allow: /
+Disallow: /cms/
+Disallow: /*.php$
+Allow: /index.php
+Allow: /about.html
+Allow: /shop.php
+Allow: /blog.php
+Allow: /portfolio.php
+Allow: /contact.php
+
+# Sitemap location
+Sitemap: https://flipavenueltd.com/sitemap.xml
+

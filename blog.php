@@ -1,6 +1,8 @@
 <?php
 // Include centralized database connection
 require_once 'cms/db_connect.php';
+// Include common helper functions
+require_once 'common/functions.php';
 
 // Pagination
 $posts_per_page = 6;
@@ -231,7 +233,7 @@ $categories_result = $conn->query($categories_query);
                                     <div class="col-lg-6">
                                         <div class="img">
                                             <?php if ($featured_post['featured_image']): ?>
-                                                <img src="<?php echo 'cms/' . str_replace('../', '', $featured_post['featured_image']); ?>" alt="" class="img-cover radius-4">
+                                                <img src="<?php echo htmlspecialchars(getImageUrl($featured_post['featured_image'])); ?>" alt="" class="img-cover radius-4">
                                             <?php else: ?>
                                                 <img src="assets/img/home1/blog/blog1.jpg" alt="" class="img-cover radius-4">
                                             <?php endif; ?>
@@ -283,7 +285,7 @@ $categories_result = $conn->query($categories_query);
                                 <div class="img mb-3">
                                     <a href="single.php?slug=<?php echo $post['slug']; ?>">
                                         <?php if ($post['featured_image']): ?>
-                                            <img src="<?php echo 'cms/' . str_replace('../', '', $post['featured_image']); ?>" alt="" class="img-cover radius-4">
+                                            <img src="<?php echo htmlspecialchars(getImageUrl($post['featured_image'])); ?>" alt="" class="img-cover radius-4">
                                         <?php else: ?>
                                             <img src="assets/img/home1/blog/blog1.jpg" alt="" class="img-cover radius-4">
                                         <?php endif; ?>

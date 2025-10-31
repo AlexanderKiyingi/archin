@@ -1,6 +1,8 @@
 <?php
 // Include centralized database connection
 require_once 'cms/db_connect.php';
+// Include common helper functions
+require_once 'common/functions.php';
 
 // Get filters
 $category = isset($_GET['category']) ? $conn->real_escape_string($_GET['category']) : '';
@@ -272,7 +274,7 @@ $categories_result = $conn->query($categories_query);
                             <?php 
                             $delay = 0;
                             while ($product = $products_result->fetch_assoc()): 
-                                $image = $product['featured_image'] ? 'cms/' . str_replace('../', '', $product['featured_image']) : 'assets/img/home1/projects/proj1.jpg';
+                                $image = getImageUrlWithFallback($product['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
                                 $product_json = json_encode([
                                     'id' => $product['id'],
                                     'name' => $product['name'],
