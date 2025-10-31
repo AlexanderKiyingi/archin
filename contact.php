@@ -362,8 +362,8 @@ if ($settings_result) {
                         <div class="row justify-content-center">
                             <div class="col-lg-6">
                                 <div class="office-hours text-center">
-                                    <p class="mb-2"><strong>Monday - Friday:</strong> 8:00 AM - 6:00 PM</p>
-                                    <p class="mb-2"><strong>Saturday:</strong> 9:00 AM - 2:00 PM</p>
+                                    <p class="mb-2"><strong>Monday - Friday:</strong> 8:00 AM - 5:00 PM</p>
+                                    <p class="mb-2"><strong>Saturday:</strong> Closed</p>
                                     <p><strong>Sunday:</strong> Closed</p>
                                 </div>
                             </div>
