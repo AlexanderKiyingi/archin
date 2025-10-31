@@ -53,9 +53,9 @@ if ($settings_result) {
 $current_year = date('Y');
 
 // Set SEO meta data
-$page_title = 'Home | Flip Avenue Limited - Premium Architecture & Design Studio';
-$page_keywords = 'Flip Avenue, Interior Design, Architecture, Design, Construction, Uganda, Kampala, Architectural Services';
-$page_description = 'Flip Avenue Limited is an interior architectural studio based in Uganda. We cut our teeth on designing and creating buildings that are both beautiful and sustainable.';
+$page_title = 'Home | Flip Avenue Limited - Interior Architecture & Design Studio';
+$page_keywords = 'Flip Avenue Limted, Interior Design, Architecture, Design, Construction, Uganda, Kampala, Architectural Services';
+$page_description = 'Flip Avenue Limited is an interior design studio based in Uganda. We cut our teeth on designing and creating buildings that are both beautiful and sustainable.';
 ?>
 <!DOCTYPE html>
 <html lang="en">
