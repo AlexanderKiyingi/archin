@@ -326,7 +326,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                             <div class="info wow fadeInUp" data-wow-delay="0.3s">   
                                 <h3 class="fsz-45 fw-600 mb-30"> 126+ Projects Completed </h3>
                                 <div class="text fsz-15 color-666">
-                                    Flip Avenue Interiors is not merely an interior design company; it's an embodiment of artistry, functionality, and innovation in 
+                                    Flip Avenue Limited is not merely an interior design company; it's an embodiment of artistry, functionality, and innovation in 
                                     transforming spaces. Our journey is defined by a commitment to excellence, blending aesthetics with practicality, and crafting unique 
                                     living environments that reflect our clients' distinct lifestyles.
                                 </div>
