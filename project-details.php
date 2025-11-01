@@ -245,10 +245,41 @@ if ($project['category']) {
             <!--  Start project details  -->
             <section class="tc-project-details section-padding">
                 <div class="container">
-                    <!-- Project Header Info -->
-                    <div class="row mb-5">
-                        <div class="col-lg-12">
-                            <div class="project-header-info text-center mb-4">
+                    <div class="row">
+                        <!-- Project Images -->
+                        <div class="col-lg-6 mb-4 mb-lg-0">
+                            <div class="project-images">
+                                <div class="main-image mb-3">
+                                    <img src="<?php echo htmlspecialchars($project_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-fluid rounded-3" id="mainProjectImage" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
+                                </div>
+                                <?php 
+                                // Combine featured image with gallery images for thumbnails
+                                $all_images = [$project_image];
+                                if (!empty($gallery_images_data)) {
+                                    foreach ($gallery_images_data as $gallery_img) {
+                                        $all_images[] = getImageUrl($gallery_img);
+                                    }
+                                }
+                                
+                                // Display thumbnails if we have more than one image
+                                if (count($all_images) > 1):
+                                ?>
+                                <div class="thumbnail-images d-flex gap-2 flex-wrap">
+                                    <?php foreach ($all_images as $index => $img): ?>
+                                        <img src="<?php echo htmlspecialchars($img); ?>" 
+                                             alt="<?php echo htmlspecialchars($project['title']); ?>" 
+                                             class="img-thumbnail project-thumb <?php echo $index === 0 ? 'active' : ''; ?>" 
+                                             style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;" 
+                                             onerror="this.src='assets/img/home1/projects/proj1.jpg'">
+                                    <?php endforeach; ?>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- Project Information -->
+                        <div class="col-lg-6">
+                            <div class="project-info">
                                 <?php if ($project['category']): ?>
                                 <div class="category mb-3">
                                     <span class="badge bg-light text-dark"><?php echo htmlspecialchars($project['category']); ?></span>
@@ -262,83 +293,29 @@ if ($project['category']) {
                                     <p class="lead text-muted"><?php echo nl2br(htmlspecialchars($project['short_description'])); ?></p>
                                 </div>
                                 <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Project Images Gallery -->
-                    <div class="row mb-5">
-                        <div class="col-lg-12 mb-4 mb-lg-0">
-                            <div class="project-images">
-                                <?php 
-                                // Combine featured image with gallery images
-                                $all_images = [$project_image];
-                                if (!empty($gallery_images_data)) {
-                                    foreach ($gallery_images_data as $gallery_img) {
-                                        $all_images[] = getImageUrl($gallery_img);
-                                    }
-                                }
-                                
-                                // Display images in a grid layout
-                                if (count($all_images) > 0):
-                                ?>
-                                <div class="project-gallery-grid row">
-                                    <?php foreach ($all_images as $index => $img): ?>
-                                        <?php 
-                                        // First image takes full width, others in grid
-                                        $is_first = $index === 0;
-                                        $col_class = $is_first ? 'col-12' : 'col-12 col-md-6';
-                                        
-                                        // Create a fancybox gallery for all images
-                                        $data_attr = 'data-fancybox="project-gallery"';
-                                        ?>
-                                        <div class="<?php echo $col_class; ?> mb-3">
-                                            <a href="<?php echo htmlspecialchars($img); ?>" <?php echo $data_attr; ?> data-caption="<?php echo htmlspecialchars($project['title']); ?>">
-                                                <img src="<?php echo htmlspecialchars($img); ?>" 
-                                                     alt="<?php echo htmlspecialchars($project['title']); ?>" 
-                                                     class="img-fluid rounded-3 w-100 project-gallery-img" 
-                                                     style="height: <?php echo $is_first ? '500px' : '300px'; ?>; object-fit: cover; transition: transform 0.3s ease;"
-                                                     onerror="this.src='assets/img/home1/projects/proj1.jpg'"
-                                                     onmouseover="this.style.transform='scale(1.02)'"
-                                                     onmouseout="this.style.transform='scale(1)'">
-                                            </a>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Project Details and Meta -->
-                    <div class="row">
-                        <div class="col-lg-8">
-                            <div class="project-info">
                                 <div class="project-description mb-4">
                                     <h5 class="fw-600 mb-3">About This Project</h5>
                                     <div class="text-muted">
                                         <?php echo formatProjectDescription($project['description']); ?>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="col-lg-4">
-                            <!-- Project Meta Information -->
-                            <div class="project-meta mb-4 p-4 bg-light rounded sticky-top" style="top: 20px;">
-                                <h6 class="fw-bold mb-3">Project Details</h6>
-                                <?php if ($project['client_name']): ?>
-                                <p class="mb-2"><strong><i class="la la-user me-2"></i>Client:</strong> <?php echo htmlspecialchars($project['client_name']); ?></p>
-                                <?php endif; ?>
-                                <?php if ($project['location']): ?>
-                                <p class="mb-2"><strong><i class="la la-map-marker me-2"></i>Location:</strong> <?php echo htmlspecialchars($project['location']); ?></p>
-                                <?php endif; ?>
-                                <?php if ($project['completion_date']): ?>
-                                <p class="mb-3"><strong><i class="la la-calendar me-2"></i>Completion Date:</strong> <?php echo date('F Y', strtotime($project['completion_date'])); ?></p>
-                                <?php endif; ?>
-                                
-                                <div class="project-actions">
-                                    <a href="portfolio.php" class="btn btn-outline-dark rounded-pill w-100">
+                                <!-- Project Meta Information -->
+                                <div class="project-meta mb-4 p-3 bg-light rounded">
+                                    <?php if ($project['client_name']): ?>
+                                    <p class="mb-2"><strong><i class="la la-user me-2"></i>Client:</strong> <?php echo htmlspecialchars($project['client_name']); ?></p>
+                                    <?php endif; ?>
+                                    <?php if ($project['location']): ?>
+                                    <p class="mb-2"><strong><i class="la la-map-marker me-2"></i>Location:</strong> <?php echo htmlspecialchars($project['location']); ?></p>
+                                    <?php endif; ?>
+                                    <?php if ($project['completion_date']): ?>
+                                    <p class="mb-0"><strong><i class="la la-calendar me-2"></i>Completion Date:</strong> <?php echo date('F Y', strtotime($project['completion_date'])); ?></p>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="project-actions mt-4">
+                                    <a href="portfolio.php" class="btn btn-outline-dark rounded-pill me-2">
                                         <i class="la la-arrow-left me-2"></i>
                                         Back to Portfolio
                                     </a>

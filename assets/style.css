@@ -15443,28 +15443,18 @@ home 9 style
     }
 }
 
-/* Project Gallery Grid Styling */
-.project-gallery-grid .project-gallery-img {
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* Project Thumbnail Styling */
+.project-thumb {
+    border: 3px solid transparent !important;
+    transition: all 0.3s ease;
 }
 
-.project-gallery-grid .project-gallery-img:hover {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+.project-thumb:hover {
+    border-color: #333 !important;
+    transform: scale(1.05);
 }
 
-.project-header-info {
-    border-bottom: 1px solid #e5e7eb;
-    padding-bottom: 2rem;
-}
-
-.project-meta.sticky-top {
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e5e7eb;
-}
-
-@media screen and (max-width: 991px) {
-    .project-meta.sticky-top {
-        position: relative !important;
-    }
+.project-thumb.active {
+    border-color: #333 !important;
+    opacity: 1;
 }
