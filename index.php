@@ -565,7 +565,10 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                             <?php if ($projects_result && $projects_result->num_rows > 0): ?>
                                                 <?php while ($project = $projects_result->fetch_assoc()): 
                                                     // Handle image path
-                                                    $featured_image = getImageUrlWithFallback($project['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
+                                                    $featured_image = !empty($project['featured_image']) ? getImageUrl($project['featured_image']) : '';
+                                                    
+                                                    // Skip if no featured image
+                                                    if (empty($featured_image)) continue;
                                                     
                                                     // Handle gallery images for fancybox
                                                     $gallery_images = [];
@@ -651,7 +654,10 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                     <?php if (count($category_projects) > 0): ?>
                                                         <?php foreach ($category_projects as $project): 
                                                             // Handle image path
-                                                            $featured_image = getImageUrlWithFallback($project['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
+                                                            $featured_image = !empty($project['featured_image']) ? getImageUrl($project['featured_image']) : '';
+                                                            
+                                                            // Skip if no featured image
+                                                            if (empty($featured_image)) continue;
                                                             
                                                             // Handle gallery images for fancybox
                                                             $gallery_images = [];

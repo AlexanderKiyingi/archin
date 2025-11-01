@@ -25,7 +25,7 @@ if (!$project) {
 }
 
 // Get image path using helper function
-$project_image = getImageUrlWithFallback($project['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
+$project_image = !empty($project['featured_image']) ? getImageUrl($project['featured_image']) : '';
 
 // Parse gallery images JSON
 $gallery_images_data = [];
@@ -248,13 +248,19 @@ if ($project['category']) {
                     <div class="row">
                         <!-- Project Images -->
                         <div class="col-lg-6 mb-4 mb-lg-0">
+                            <?php if (!empty($project_image) || !empty($gallery_images_data)): ?>
                             <div class="project-images">
+                                <?php if (!empty($project_image)): ?>
                                 <div class="main-image mb-3">
-                                    <img src="<?php echo htmlspecialchars($project_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-fluid rounded-3" id="mainProjectImage" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
+                                    <img src="<?php echo htmlspecialchars($project_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-fluid rounded-3" id="mainProjectImage">
                                 </div>
+                                <?php endif; ?>
                                 <?php 
                                 // Combine featured image with gallery images for thumbnails
-                                $all_images = [$project_image];
+                                $all_images = [];
+                                if (!empty($project_image)) {
+                                    $all_images[] = $project_image;
+                                }
                                 if (!empty($gallery_images_data)) {
                                     foreach ($gallery_images_data as $gallery_img) {
                                         $all_images[] = getImageUrl($gallery_img);
@@ -269,16 +275,16 @@ if ($project['category']) {
                                         <img src="<?php echo htmlspecialchars($img); ?>" 
                                              alt="<?php echo htmlspecialchars($project['title']); ?>" 
                                              class="img-thumbnail project-thumb <?php echo $index === 0 ? 'active' : ''; ?>" 
-                                             style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;" 
-                                             onerror="this.src='assets/img/home1/projects/proj1.jpg'">
+                                             style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
                                     <?php endforeach; ?>
                                 </div>
                                 <?php endif; ?>
                             </div>
+                            <?php endif; ?>
                         </div>
 
                         <!-- Project Information -->
-                        <div class="col-lg-6">
+                        <div class="<?php echo (!empty($project_image) || !empty($gallery_images_data)) ? 'col-lg-6' : 'col-lg-12'; ?>">
                             <div class="project-info">
                                 <?php if ($project['category']): ?>
                                 <div class="category mb-3">
@@ -332,12 +338,14 @@ if ($project['category']) {
                             <div class="row">
                                 <?php foreach ($related_projects as $related): ?>
                                     <?php 
-                                        $related_image = getImageUrlWithFallback($related['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg'); 
+                                        $related_image = !empty($related['featured_image']) ? getImageUrl($related['featured_image']) : ''; 
+                                        // Only display if image exists
+                                        if (!empty($related_image)):
                                     ?>
                                     <div class="col-md-6 col-lg-3 mb-4">
                                         <div class="project-card h-100 border rounded overflow-hidden">
                                             <a href="project-details.php?id=<?php echo $related['id']; ?>" class="text-decoration-none">
-                                                <img src="<?php echo htmlspecialchars($related_image); ?>" alt="<?php echo htmlspecialchars($related['title']); ?>" class="img-fluid w-100" style="height: 200px; object-fit: cover;" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
+                                                <img src="<?php echo htmlspecialchars($related_image); ?>" alt="<?php echo htmlspecialchars($related['title']); ?>" class="img-fluid w-100" style="height: 200px; object-fit: cover; loading: lazy;">
                                                 <div class="p-3">
                                                     <h6 class="mb-1 fw-bold"><?php echo htmlspecialchars($related['title']); ?></h6>
                                                     <?php if ($related['category']): ?>
@@ -347,6 +355,7 @@ if ($project['category']) {
                                             </a>
                                         </div>
                                     </div>
+                                    <?php endif; ?>
                                 <?php endforeach; ?>
                             </div>
                         </div>

@@ -222,13 +222,14 @@ $categories_result = $conn->query($categories_query);
                                     if (!empty($all_projects)): 
                                         $delay = 0.1;
                                         foreach ($all_projects as $project): 
-                                    // Get featured image or use fallback
-                                    $featured_image = getImageUrlWithFallback($project['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
+                                    // Get featured image or skip if none
+                                    $featured_image = !empty($project['featured_image']) ? getImageUrl($project['featured_image']) : '';
+                                    if (empty($featured_image)) continue;
                                 ?>
                                 <div class="col-lg-4 col-md-6">
                                     <div class="project-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
                                         <a href="project-details.php?id=<?php echo $project['id']; ?>" class="img">
-                                            <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
+                                            <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" loading="lazy">
                                         </a>
                                         <div class="info mt-3">
                                             <div class="tags mb-2">
@@ -268,13 +269,14 @@ $categories_result = $conn->query($categories_query);
                                     if (!empty($arch_projects)): 
                                         $delay = 0.1;
                                         foreach ($arch_projects as $project): 
-                                            // Get featured image
-                                            $featured_image = getImageUrlWithFallback($project['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
+                                            // Get featured image or skip if none
+                                            $featured_image = !empty($project['featured_image']) ? getImageUrl($project['featured_image']) : '';
+                                            if (empty($featured_image)) continue;
                                     ?>
                                     <div class="col-lg-4 col-md-6">
                                         <div class="project-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
                                             <a href="project-details.php?id=<?php echo $project['id']; ?>" class="img">
-                                                <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
+                                                <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" loading="lazy">
                                             </a>
                                             <div class="info mt-3">
                                                 <div class="tags mb-2">
@@ -314,13 +316,14 @@ $categories_result = $conn->query($categories_query);
                                     if (!empty($interior_projects)): 
                                         $delay = 0.1;
                                         foreach ($interior_projects as $project): 
-                                            // Get featured image
-                                            $featured_image = getImageUrlWithFallback($project['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
+                                            // Get featured image or skip if none
+                                            $featured_image = !empty($project['featured_image']) ? getImageUrl($project['featured_image']) : '';
+                                            if (empty($featured_image)) continue;
                                     ?>
                                     <div class="col-lg-4 col-md-6">
                                         <div class="project-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
                                             <a href="project-details.php?id=<?php echo $project['id']; ?>" class="img">
-                                                <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
+                                                <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" loading="lazy">
                                             </a>
                                             <div class="info mt-3">
                                                 <div class="tags mb-2">
@@ -360,13 +363,14 @@ $categories_result = $conn->query($categories_query);
                                     if (!empty($landscape_projects)): 
                                         $delay = 0.1;
                                         foreach ($landscape_projects as $project): 
-                                            // Get featured image
-                                            $featured_image = getImageUrlWithFallback($project['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
+                                            // Get featured image or skip if none
+                                            $featured_image = !empty($project['featured_image']) ? getImageUrl($project['featured_image']) : '';
+                                            if (empty($featured_image)) continue;
                                     ?>
                                     <div class="col-lg-4 col-md-6">
                                         <div class="project-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
                                             <a href="project-details.php?id=<?php echo $project['id']; ?>" class="img">
-                                                <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
+                                                <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" loading="lazy">
                                             </a>
                                             <div class="info mt-3">
                                                 <div class="tags mb-2">
@@ -406,13 +410,14 @@ $categories_result = $conn->query($categories_query);
                                     if (!empty($furniture_projects)): 
                                         $delay = 0.1;
                                         foreach ($furniture_projects as $project): 
-                                            // Get featured image
-                                            $featured_image = getImageUrlWithFallback($project['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
+                                            // Get featured image or skip if none
+                                            $featured_image = !empty($project['featured_image']) ? getImageUrl($project['featured_image']) : '';
+                                            if (empty($featured_image)) continue;
                                     ?>
                                     <div class="col-lg-4 col-md-6">
                                         <div class="project-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
                                             <a href="<?php echo htmlspecialchars($featured_image); ?>" class="img" data-fancybox="projects">
-                                                <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" onvolved="this.src='assets/img/home1/projects/proj1.jpg'">
+                                                <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" loading="lazy">
                                             </a>
                                             <div class="info mt-3">
                                                 <div class="tags mb-2">
