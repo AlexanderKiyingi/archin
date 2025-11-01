@@ -239,14 +239,20 @@ CREATE TABLE IF NOT EXISTS shop_products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
+    additional_details TEXT NULL COMMENT 'Structured content for Additional Details tab - JSON format with lists, paragraphs, etc.',
+    specifications TEXT NULL COMMENT 'Product specifications in JSON format (key-value pairs) for Specifications tab',
     price DECIMAL(10,2) NOT NULL,
     category VARCHAR(100),
     tags TEXT,
     featured_image VARCHAR(255),
+    gallery_images TEXT NULL COMMENT 'JSON array of additional product images for gallery',
     stock_quantity INT DEFAULT 0,
+    show_reviews_tab BOOLEAN DEFAULT TRUE COMMENT 'Whether to show the reviews tab on product details page',
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_category (category),
+    INDEX idx_is_active (is_active)
 );
 
 -- Create shop_orders table with Flutterwave payment integration

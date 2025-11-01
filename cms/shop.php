@@ -352,9 +352,49 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                         </div>
                     </div>
                     
-                    <div class="mb-6">
+                    <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Featured Image</label>
                         <input type="file" name="featured_image" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Gallery Images</label>
+                        <input type="file" name="gallery_images[]" accept="image/*" multiple class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <p class="text-sm text-gray-500 mt-1">You can select multiple images for the gallery</p>
+                    </div>
+                    
+                    <div class="mb-4 border-t pt-4">
+                        <h4 class="text-sm font-semibold text-gray-700 mb-3">Additional Details Tab</h4>
+                        <div class="mb-3">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Intro Text</label>
+                            <textarea name="additional_details_intro" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Brief introduction text..."></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Items List (one per line)</label>
+                            <textarea name="additional_details_items" rows="6" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Item 1&#10;Item 2&#10;Item 3"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4 border-t pt-4">
+                        <h4 class="text-sm font-semibold text-gray-700 mb-3">Specifications Tab</h4>
+                        <div id="specsContainer">
+                            <div class="grid grid-cols-2 gap-3 mb-3">
+                                <input type="text" name="specs[0][label]" placeholder="Spec label" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <input type="text" name="specs[0][value]" placeholder="Spec value" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <button type="button" onclick="addSpecRow()" class="text-sm text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-plus mr-1"></i> Add Another Specification
+                        </button>
+                    </div>
+                    
+                    <div class="mb-6 border-t pt-4">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="show_reviews_tab" id="add_show_reviews_tab" value="1" checked class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="add_show_reviews_tab" class="ml-2 block text-sm text-gray-700">
+                                Show Reviews Tab on product page
+                            </label>
+                        </div>
                     </div>
                     
                     <div class="flex justify-end space-x-3">
@@ -421,10 +461,51 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                         </div>
                     </div>
                     
-                    <div class="mb-6">
+                    <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Featured Image</label>
                         <input type="file" name="featured_image" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <p class="text-sm text-gray-500 mt-1">Leave empty to keep current image</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Gallery Images</label>
+                        <input type="file" name="gallery_images[]" accept="image/*" multiple class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <p class="text-sm text-gray-500 mt-1">Add more images to existing gallery</p>
+                        <input type="hidden" name="current_gallery_images" id="editCurrentGalleryImages">
+                    </div>
+                    
+                    <div class="mb-4 border-t pt-4">
+                        <h4 class="text-sm font-semibold text-gray-700 mb-3">Additional Details Tab</h4>
+                        <div class="mb-3">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Intro Text</label>
+                            <textarea name="additional_details_intro" id="editAdditionalDetailsIntro" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Brief introduction text..."></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Items List (one per line)</label>
+                            <textarea name="additional_details_items" id="editAdditionalDetailsItems" rows="6" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Item 1&#10;Item 2&#10;Item 3"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4 border-t pt-4">
+                        <h4 class="text-sm font-semibold text-gray-700 mb-3">Specifications Tab</h4>
+                        <div id="editSpecsContainer">
+                            <div class="grid grid-cols-2 gap-3 mb-3">
+                                <input type="text" name="specs[0][label]" placeholder="Spec label" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <input type="text" name="specs[0][value]" placeholder="Spec value" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <button type="button" onclick="addEditSpecRow()" class="text-sm text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-plus mr-1"></i> Add Another Specification
+                        </button>
+                    </div>
+                    
+                    <div class="mb-6 border-t pt-4">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="show_reviews_tab" id="edit_show_reviews_tab" value="1" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="edit_show_reviews_tab" class="ml-2 block text-sm text-gray-700">
+                                Show Reviews Tab on product page
+                            </label>
+                        </div>
                     </div>
                     
                     <div class="flex justify-end space-x-3">
@@ -476,6 +557,33 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
             document.getElementById(modalId).classList.add('hidden');
         }
 
+        let specRowCount = 0;
+        let editSpecRowCount = 0;
+
+        function addSpecRow() {
+            specRowCount++;
+            const container = document.getElementById('specsContainer');
+            const row = document.createElement('div');
+            row.className = 'grid grid-cols-2 gap-3 mb-3';
+            row.innerHTML = `
+                <input type="text" name="specs[${specRowCount}][label]" placeholder="Spec label" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" name="specs[${specRowCount}][value]" placeholder="Spec value" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            `;
+            container.appendChild(row);
+        }
+
+        function addEditSpecRow() {
+            editSpecRowCount++;
+            const container = document.getElementById('editSpecsContainer');
+            const row = document.createElement('div');
+            row.className = 'grid grid-cols-2 gap-3 mb-3';
+            row.innerHTML = `
+                <input type="text" name="specs[${editSpecRowCount}][label]" placeholder="Spec label" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" name="specs[${editSpecRowCount}][value]" placeholder="Spec value" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            `;
+            container.appendChild(row);
+        }
+
         function editProduct(product) {
             document.getElementById('editProductId').value = product.id;
             document.getElementById('editProductName').value = product.name;
@@ -484,6 +592,59 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
             document.getElementById('editProductCategory').value = product.category;
             document.getElementById('editProductTags').value = product.tags;
             document.getElementById('editCurrentImage').value = product.featured_image;
+            
+            // Handle gallery images
+            document.getElementById('editCurrentGalleryImages').value = product.gallery_images || '';
+            
+            // Handle additional details
+            let additionalDetails = {};
+            if (product.additional_details) {
+                try {
+                    additionalDetails = JSON.parse(product.additional_details);
+                } catch(e) {
+                    additionalDetails = {};
+                }
+            }
+            document.getElementById('editAdditionalDetailsIntro').value = additionalDetails.intro || '';
+            document.getElementById('editAdditionalDetailsItems').value = Array.isArray(additionalDetails.items) ? additionalDetails.items.join('\n') : '';
+            
+            // Handle specifications
+            let specifications = {};
+            if (product.specifications) {
+                try {
+                    specifications = JSON.parse(product.specifications);
+                } catch(e) {
+                    specifications = {};
+                }
+            }
+            
+            // Clear existing spec rows except first
+            const container = document.getElementById('editSpecsContainer');
+            while (container.children.length > 1) {
+                container.removeChild(container.lastChild);
+            }
+            editSpecRowCount = 0;
+            
+            // Populate specifications
+            if (Object.keys(specifications).length > 0) {
+                document.querySelector('#editSpecsContainer input[name="specs[0][label]"]').value = '';
+                document.querySelector('#editSpecsContainer input[name="specs[0][value]"]').value = '';
+                
+                Object.entries(specifications).forEach(([label, value], index) => {
+                    if (index === 0) {
+                        document.querySelector('#editSpecsContainer input[name="specs[0][label]"]').value = label;
+                        document.querySelector('#editSpecsContainer input[name="specs[0][value]"]').value = value;
+                    } else {
+                        addEditSpecRow();
+                        document.querySelector(`#editSpecsContainer input[name="specs[${editSpecRowCount - 1}][label]"]`).value = label;
+                        document.querySelector(`#editSpecsContainer input[name="specs[${editSpecRowCount - 1}][value]"]`).value = value;
+                    }
+                });
+            }
+            
+            // Handle show_reviews_tab
+            document.getElementById('edit_show_reviews_tab').checked = product.show_reviews_tab == 1;
+            
             openModal('editProductModal');
         }
 
