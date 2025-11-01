@@ -108,7 +108,7 @@ if ($_POST) {
                 }
                 
                 // Handle gallery images upload
-                $gallery_images_json = $_POST['current_gallery_images'] ?? null;
+                $gallery_images_json = !empty($_POST['current_gallery_images']) ? $_POST['current_gallery_images'] : '[]';
                 if (!empty($_FILES['gallery_images']['name'][0])) {
                     $gallery_images = [];
                     foreach ($_FILES['gallery_images']['tmp_name'] as $key => $tmp_name) {
@@ -126,7 +126,10 @@ if ($_POST) {
                         }
                     }
                     if (!empty($gallery_images)) {
-                        $existing = json_decode($gallery_images_json ?? '[]', true);
+                        $existing = json_decode($gallery_images_json, true);
+                        if (!is_array($existing)) {
+                            $existing = [];
+                        }
                         $gallery_images_json = json_encode(array_merge($existing, $gallery_images));
                     }
                 }
