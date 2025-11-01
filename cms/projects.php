@@ -33,12 +33,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
             
+            // Handle gallery images upload
+            $gallery_images_json = null;
+            if ($action === 'edit' && !empty($_POST['current_gallery_images'])) {
+                $gallery_images_json = $_POST['current_gallery_images'];
+            }
+            
+            if (!empty($_FILES['gallery_images']['name'][0])) {
+                $gallery_images = [];
+                foreach ($_FILES['gallery_images']['tmp_name'] as $key => $tmp_name) {
+                    $file = [
+                        'name' => $_FILES['gallery_images']['name'][$key],
+                        'tmp_name' => $tmp_name,
+                        'size' => $_FILES['gallery_images']['size'][$key],
+                        'error' => $_FILES['gallery_images']['error'][$key]
+                    ];
+                    if ($file['error'] === 0) {
+                        $upload = uploadFile($file, 'projects');
+                        if ($upload['success']) {
+                            $gallery_images[] = $upload['path'];
+                        }
+                    }
+                }
+                if (!empty($gallery_images)) {
+                    if ($action === 'edit' && !empty($gallery_images_json)) {
+                        $existing = json_decode($gallery_images_json, true);
+                        if (!is_array($existing)) {
+                            $existing = [];
+                        }
+                        $gallery_images_json = json_encode(array_merge($existing, $gallery_images));
+                    } else {
+                        $gallery_images_json = json_encode($gallery_images);
+                    }
+                }
+            }
+            
             if ($action === 'add') {
-                // Format: sssssssssiii (9 strings, 3 integers)
-                $sql = "INSERT INTO projects (title, slug, category, description, short_description, featured_image, location, client_name, completion_date, is_featured, display_order, is_active) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                // Format: sssssssssssi (10 strings, 2 integers)
+                $sql = "INSERT INTO projects (title, slug, category, description, short_description, featured_image, gallery_images, location, client_name, completion_date, is_featured, display_order, is_active) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param("sssssssssiii", $title, $slug, $category, $description, $short_description, $featured_image, $location, $client_name, $completion_date, $is_featured, $display_order, $is_active);
+                $stmt->bind_param("ssssssssssiii", $title, $slug, $category, $description, $short_description, $featured_image, $gallery_images_json, $location, $client_name, $completion_date, $is_featured, $display_order, $is_active);
                 
                 if ($stmt->execute()) {
                     $message = 'Project added successfully!';
@@ -49,17 +84,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             } else {
                 $id = (int)$_POST['id'];
+                
+                // Build UPDATE query dynamically based on what changed
+                $updates = [];
+                $params = [];
+                $types = '';
+                
+                $updates[] = "title = ?";
+                $params[] = $title;
+                $types .= 's';
+                
+                $updates[] = "slug = ?";
+                $params[] = $slug;
+                $types .= 's';
+                
+                $updates[] = "category = ?";
+                $params[] = $category;
+                $types .= 's';
+                
+                $updates[] = "description = ?";
+                $params[] = $description;
+                $types .= 's';
+                
+                $updates[] = "short_description = ?";
+                $params[] = $short_description;
+                $types .= 's';
+                
                 if ($featured_image) {
-                    // Format: sssssssssiiii (9 strings, 4 integers)
-                    $sql = "UPDATE projects SET title = ?, slug = ?, category = ?, description = ?, short_description = ?, featured_image = ?, location = ?, client_name = ?, completion_date = ?, is_featured = ?, display_order = ?, is_active = ? WHERE id = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("sssssssssiiii", $title, $slug, $category, $description, $short_description, $featured_image, $location, $client_name, $completion_date, $is_featured, $display_order, $is_active, $id);
-                } else {
-                    // Format: ssssssssiiii (8 strings, 4 integers)
-                    $sql = "UPDATE projects SET title = ?, slug = ?, category = ?, description = ?, short_description = ?, location = ?, client_name = ?, completion_date = ?, is_featured = ?, display_order = ?, is_active = ? WHERE id = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("ssssssssiiii", $title, $slug, $category, $description, $short_description, $location, $client_name, $completion_date, $is_featured, $display_order, $is_active, $id);
+                    $updates[] = "featured_image = ?";
+                    $params[] = $featured_image;
+                    $types .= 's';
                 }
+                
+                if ($gallery_images_json !== null) {
+                    $updates[] = "gallery_images = ?";
+                    $params[] = $gallery_images_json;
+                    $types .= 's';
+                }
+                
+                $updates[] = "location = ?";
+                $params[] = $location;
+                $types .= 's';
+                
+                $updates[] = "client_name = ?";
+                $params[] = $client_name;
+                $types .= 's';
+                
+                $updates[] = "completion_date = ?";
+                $params[] = $completion_date;
+                $types .= 's';
+                
+                $updates[] = "is_featured = ?";
+                $params[] = $is_featured;
+                $types .= 'i';
+                
+                $updates[] = "display_order = ?";
+                $params[] = $display_order;
+                $types .= 'i';
+                
+                $updates[] = "is_active = ?";
+                $params[] = $is_active;
+                $types .= 'i';
+                
+                $params[] = $id;
+                $types .= 'i';
+                
+                $sql = "UPDATE projects SET " . implode(', ', $updates) . " WHERE id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param($types, ...$params);
                 
                 if ($stmt->execute()) {
                     $message = 'Project updated successfully!';
@@ -335,6 +427,33 @@ include 'includes/header.php';
                             <img src="<?php echo UPLOAD_URL . $edit_project['featured_image']; ?>" alt="" class="w-32 h-32 object-cover rounded">
                         </div>
                     <?php endif; ?>
+                </div>
+                
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Gallery Images
+                    </label>
+                    <input 
+                        type="file" 
+                        name="gallery_images[]" 
+                        accept="image/*"
+                        multiple
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                    <p class="text-sm text-gray-500 mt-1">You can select multiple images for the project gallery</p>
+                    <?php if ($edit_project && !empty($edit_project['gallery_images'])): 
+                        $existing_gallery = json_decode($edit_project['gallery_images'], true);
+                        if (is_array($existing_gallery) && !empty($existing_gallery)):
+                    ?>
+                        <input type="hidden" name="current_gallery_images" value="<?php echo htmlspecialchars($edit_project['gallery_images']); ?>">
+                        <div class="mt-3 grid grid-cols-4 gap-2">
+                            <?php foreach ($existing_gallery as $img): ?>
+                                <img src="<?php echo UPLOAD_URL . $img; ?>" alt="" class="w-20 h-20 object-cover rounded border">
+                            <?php endforeach; ?>
+                        </div>
+                    <?php 
+                        endif;
+                    endif; ?>
                 </div>
                 
                 <div class="md:col-span-2 flex items-center space-x-6">
