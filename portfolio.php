@@ -227,7 +227,7 @@ $categories_result = $conn->query($categories_query);
                                 ?>
                                 <div class="col-lg-4 col-md-6">
                                     <div class="project-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
-                                        <a href="<?php echo htmlspecialchars($featured_image); ?>" class="img" data-fancybox="projects">
+                                        <a href="project-details.php?id=<?php echo $project['id']; ?>" class="img">
                                             <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
                                         </a>
                                         <div class="info mt-3">
@@ -237,7 +237,7 @@ $categories_result = $conn->query($categories_query);
                                                     <span class="fsz-12"><?php echo htmlspecialchars($project['location']); ?></span>
                                                 <?php endif; ?>
                                             </div>
-                                            <h3 class="title fsz-20 mb-2"><a href="#" class="hover-orange1"><?php echo htmlspecialchars($project['title']); ?></a></h3>
+                                            <h3 class="title fsz-20 mb-2"><a href="project-details.php?id=<?php echo $project['id']; ?>" class="hover-orange1"><?php echo htmlspecialchars($project['title']); ?></a></h3>
                                             <div class="text color-666 fsz-14">
                                                 <?php echo htmlspecialchars($project['short_description']); ?>
                                             </div>
@@ -273,7 +273,7 @@ $categories_result = $conn->query($categories_query);
                                     ?>
                                     <div class="col-lg-4 col-md-6">
                                         <div class="project-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
-                                            <a href="<?php echo htmlspecialchars($featured_image); ?>" class="img" data-fancybox="projects">
+                                            <a href="project-details.php?id=<?php echo $project['id']; ?>" class="img">
                                                 <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
                                             </a>
                                             <div class="info mt-3">
@@ -283,7 +283,7 @@ $categories_result = $conn->query($categories_query);
                                                         <span class="fsz-12"><?php echo htmlspecialchars($project['location']); ?></span>
                                                     <?php endif; ?>
                                                 </div>
-                                                <h3 class="title fsz-20 mb-2"><a href="#" class="hover-orange1"><?php echo htmlspecialchars($project['title']); ?></a></h3>
+                                                <h3 class="title fsz-20 mb-2"><a href="project-details.php?id=<?php echo $project['id']; ?>" class="hover-orange1"><?php echo htmlspecialchars($project['title']); ?></a></h3>
                                                 <div class="text color-666 fsz-14">
                                                     <?php echo htmlspecialchars($project['short_description']); ?>
                                                 </div>
@@ -319,7 +319,7 @@ $categories_result = $conn->query($categories_query);
                                     ?>
                                     <div class="col-lg-4 col-md-6">
                                         <div class="project-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
-                                            <a href="<?php echo htmlspecialchars($featured_image); ?>" class="img" data-fancybox="projects">
+                                            <a href="project-details.php?id=<?php echo $project['id']; ?>" class="img">
                                                 <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
                                             </a>
                                             <div class="info mt-3">
@@ -329,7 +329,7 @@ $categories_result = $conn->query($categories_query);
                                                         <span class="fsz-12"><?php echo htmlspecialchars($project['location']); ?></span>
                                                     <?php endif; ?>
                                                 </div>
-                                                <h3 class="title fsz-20 mb-2"><a href="#" class="hover-orange1"><?php echo htmlspecialchars($project['title']); ?></a></h3>
+                                                <h3 class="title fsz-20 mb-2"><a href="project-details.php?id=<?php echo $project['id']; ?>" class="hover-orange1"><?php echo htmlspecialchars($project['title']); ?></a></h3>
                                                 <div class="text color-666 fsz-14">
                                                     <?php echo htmlspecialchars($project['short_description']); ?>
                                                 </div>
@@ -365,7 +365,7 @@ $categories_result = $conn->query($categories_query);
                                     ?>
                                     <div class="col-lg-4 col-md-6">
                                         <div class="project-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
-                                            <a href="<?php echo htmlspecialchars($featured_image); ?>" class="img" data-fancybox="projects">
+                                            <a href="project-details.php?id=<?php echo $project['id']; ?>" class="img">
                                                 <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
                                             </a>
                                             <div class="info mt-3">
@@ -375,7 +375,7 @@ $categories_result = $conn->query($categories_query);
                                                         <span class="fsz-12"><?php echo htmlspecialchars($project['location']); ?></span>
                                                     <?php endif; ?>
                                                 </div>
-                                                <h3 class="title fsz-20 mb-2"><a href="#" class="hover-orange1"><?php echo htmlspecialchars($project['title']); ?></a></h3>
+                                                <h3 class="title fsz-20 mb-2"><a href="project-details.php?id=<?php echo $project['id']; ?>" class="hover-orange1"><?php echo htmlspecialchars($project['title']); ?></a></h3>
                                                 <div class="text color-666 fsz-14">
                                                     <?php echo htmlspecialchars($project['short_description']); ?>
                                                 </div>

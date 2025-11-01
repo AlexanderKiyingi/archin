@@ -597,7 +597,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                                     </div>
                                                                 <?php endif; ?>
                                                                 <h3 class="title">
-                                                                    <a href="portfolio.php#project-<?php echo $project['id']; ?>">
+                                                                    <a href="project-details.php?id=<?php echo $project['id']; ?>">
                                                                         <?php echo htmlspecialchars($project['title']); ?>
                                                                     </a>
                                                                 </h3>
