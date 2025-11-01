@@ -3,7 +3,8 @@ require_once 'config.php';
 
 // Redirect if already logged in
 if (isLoggedIn()) {
-    redirect(CMS_URL . '/index.php');
+    header('Location: index.php');
+    exit();
 }
 
 $error = '';
@@ -93,9 +94,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
                         // Check if 2FA is enabled
                         if ($user['two_factor_enabled']) {
                             $_SESSION['pending_2fa'] = true;
-                            redirect(CMS_URL . '/verify-2fa.php');
+                            header('Location: verify-2fa.php');
+                            exit();
                         } else {
-                            redirect(CMS_URL . '/index.php');
+                            header('Location: index.php');
+                            exit();
                         }
                     } else {
                         // Record failed attempt

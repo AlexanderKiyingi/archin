@@ -257,7 +257,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <?php if ($product['featured_image']): ?>
-                                        <img class="h-10 w-10 rounded-lg object-cover" src="<?php echo str_replace('../', '', $product['featured_image']); ?>" alt="">
+                                        <img class="h-10 w-10 rounded-lg object-cover" src="<?php echo UPLOAD_URL . $product['featured_image']; ?>" alt="">
                                     <?php else: ?>
                                         <div class="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center">
                                             <i class="fas fa-image text-gray-400"></i>

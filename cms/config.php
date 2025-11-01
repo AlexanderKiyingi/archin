@@ -59,7 +59,8 @@ function isLoggedIn() {
 
 function requireLogin() {
     if (!isLoggedIn()) {
-        header('Location: ' . CMS_URL . '/login.php');
+        // Use relative path to work with any domain
+        header('Location: login.php');
         exit();
     }
     
@@ -75,7 +76,7 @@ function requireLogin() {
             exit();
         }
         
-        header('Location: ' . CMS_URL . '/login.php?timeout=1');
+        header('Location: login.php?timeout=1');
         exit();
     }
     
