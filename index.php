@@ -400,7 +400,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                             </div>
                                             <h5 class="fsz-24 mb-20"><?php echo htmlspecialchars($service['title']); ?></h5>
                                             <div class="img">
-                                                <img src="<?php echo htmlspecialchars($service_image); ?>" alt="<?php echo htmlspecialchars($service['title']); ?>" class="img-cover" onerror="this.src='assets/img/home1/services/ser1.jpg'">
+                                                <img src="<?php echo htmlspecialchars($service_image); ?>" alt="<?php echo htmlspecialchars($service['title']); ?>" class="img-cover" loading="lazy" onerror="this.src='assets/img/home1/services/ser1.jpg'">
                                             </div>
                                             <div class="text color-666 mt-50">
                                                 <?php echo htmlspecialchars($service['description']); ?>
@@ -587,7 +587,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                         <div class="project-card">
                                                             <?php if (count($gallery_images) > 0): ?>
                                                                 <a href="<?php echo htmlspecialchars($gallery_images[0]); ?>" class="img" data-fancybox="proj-featured">
-                                                                    <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover">
+                                                                    <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" loading="lazy">
                                                                 </a>
                                                             <?php endif; ?>
                                                             <div class="info">
@@ -673,7 +673,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                                 <div class="project-card">
                                                                     <?php if (count($gallery_images) > 0): ?>
                                                                         <a href="<?php echo htmlspecialchars($gallery_images[0]); ?>" class="img" data-fancybox="proj-<?php echo $category_slug; ?>">
-                                                                            <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover">
+                                                                            <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover" loading="lazy">
                                                                         </a>
                                                                     <?php endif; ?>
                                                                     <div class="info">
@@ -741,7 +741,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                         <div class="author">
                                                             <?php if (!empty($testimonial['client_photo'])): ?>
                                                                 <div class="au-img">
-                                                                    <img src="<?php echo htmlspecialchars(getImageUrl($testimonial['client_photo'])); ?>" alt="<?php echo htmlspecialchars($testimonial['client_name']); ?>">
+                                                                    <img src="<?php echo htmlspecialchars(getImageUrl($testimonial['client_photo'])); ?>" alt="<?php echo htmlspecialchars($testimonial['client_name']); ?>" loading="lazy">
                                                                 </div>
                                                             <?php endif; ?>
                                                             <div class="au-inf">
@@ -871,7 +871,8 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                     <div class="img">
                                         <img src="<?php echo htmlspecialchars($featured_image); ?>" 
                                              alt="<?php echo htmlspecialchars($blog['title']); ?>" 
-                                             class="img-cover"
+                                             class="img-cover" 
+                                             loading="lazy"
                                              onerror="this.src='assets/img/home1/blog/blog1.jpg'">
                                     </div>
                                     <div class="info">

@@ -31,6 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($upload['success']) {
                     $featured_image = $upload['path'];
                 }
+            } elseif ($action === 'edit' && empty($_POST['current_featured_image'])) {
+                // If current_featured_image is empty, user wants to remove it
+                $featured_image = null;
             }
             
             // Handle gallery images upload
@@ -110,10 +113,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $params[] = $short_description;
                 $types .= 's';
                 
-                if ($featured_image) {
-                    $updates[] = "featured_image = ?";
-                    $params[] = $featured_image;
-                    $types .= 's';
+                // Handle featured image: either new upload or removal
+                if ($featured_image !== '') {
+                    if ($featured_image === null) {
+                        // User wants to remove featured image
+                        $updates[] = "featured_image = ?";
+                        $params[] = '';
+                        $types .= 's';
+                    } else {
+                        // New image uploaded
+                        $updates[] = "featured_image = ?";
+                        $params[] = $featured_image;
+                        $types .= 's';
+                    }
                 }
                 
                 if ($gallery_images_json !== null) {
@@ -422,9 +434,14 @@ include 'includes/header.php';
                         accept="image/*"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
+                    <p class="text-sm text-gray-500 mt-1">
+                        <?php echo $edit_project ? 'Select a new image to replace current featured image' : 'Main image for the project'; ?>
+                    </p>
                     <?php if ($edit_project && $edit_project['featured_image']): ?>
-                        <div class="mt-2">
-                            <img src="<?php echo UPLOAD_URL . $edit_project['featured_image']; ?>" alt="" class="w-32 h-32 object-cover rounded">
+                        <input type="hidden" name="current_featured_image" value="<?php echo htmlspecialchars($edit_project['featured_image']); ?>">
+                        <div class="mt-3 relative inline-block" id="featured_image_preview">
+                            <img src="<?php echo UPLOAD_URL . $edit_project['featured_image']; ?>" alt="" class="w-32 h-32 object-cover rounded border">
+                            <button type="button" onclick="removeFeaturedImage()" class="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700" style="transform: translate(25%, -25%);">×</button>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -519,6 +536,26 @@ function removeGalleryImage(index) {
         }
     } catch(e) {
         console.error('Error removing gallery image:', e);
+    }
+}
+
+function removeFeaturedImage() {
+    // Hide the preview
+    const preview = document.getElementById('featured_image_preview');
+    if (preview) {
+        preview.style.display = 'none';
+    }
+    
+    // Clear the hidden input value
+    const hiddenInput = document.querySelector('input[name="current_featured_image"]');
+    if (hiddenInput) {
+        hiddenInput.value = '';
+    }
+    
+    // Reset the file input
+    const fileInput = document.querySelector('input[name="featured_image"]');
+    if (fileInput) {
+        fileInput.value = '';
     }
 }
 </script>

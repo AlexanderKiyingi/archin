@@ -105,6 +105,9 @@ if ($_POST) {
                     } else {
                         $error_message = $upload['message'] ?? 'Image upload failed';
                     }
+                } elseif (empty($_POST['current_image']) && empty($_FILES['featured_image']['name'])) {
+                    // User wants to remove featured image completely
+                    $featured_image = '';
                 }
                 
                 // Handle gallery images upload
@@ -467,7 +470,9 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Featured Image</label>
                         <input type="file" name="featured_image" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <p class="text-sm text-gray-500 mt-1">Leave empty to keep current image</p>
+                        <p class="text-sm text-gray-500 mt-1">Select a new image to replace current featured image</p>
+                        <input type="hidden" name="current_image" id="editCurrentImage">
+                        <div id="featuredImagePreview" class="mt-3 relative inline-block"></div>
                     </div>
                     
                     <div class="mb-4">
@@ -599,6 +604,16 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
             document.getElementById('editProductTags').value = product.tags;
             document.getElementById('editCurrentImage').value = product.featured_image;
             
+            // Populate featured image preview
+            const featuredImagePreview = document.getElementById('featuredImagePreview');
+            featuredImagePreview.innerHTML = '';
+            if (product.featured_image) {
+                featuredImagePreview.innerHTML = `
+                    <img src="${UPLOAD_BASE_URL}${product.featured_image}" alt="" class="w-32 h-32 object-cover rounded border">
+                    <button type="button" onclick="removeFeaturedImageProduct()" class="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700" style="transform: translate(25%, -25%);">×</button>
+                `;
+            }
+            
             // Handle gallery images
             document.getElementById('editCurrentGalleryImages').value = product.gallery_images || '';
             
@@ -702,6 +717,26 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                 }
             } catch(e) {
                 console.error('Error removing gallery image:', e);
+            }
+        }
+
+        function removeFeaturedImageProduct() {
+            // Hide the preview
+            const preview = document.getElementById('featuredImagePreview');
+            if (preview) {
+                preview.innerHTML = '';
+            }
+            
+            // Clear the hidden input value
+            const hiddenInput = document.getElementById('editCurrentImage');
+            if (hiddenInput) {
+                hiddenInput.value = '';
+            }
+            
+            // Reset the file input
+            const fileInput = document.querySelector('input[name="featured_image"]');
+            if (fileInput) {
+                fileInput.value = '';
             }
         }
 
