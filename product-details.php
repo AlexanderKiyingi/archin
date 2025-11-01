@@ -33,6 +33,28 @@ $formatted_price = 'UGX ' . number_format($product['price'], 0);
 // Generate SKU from product ID
 $product_sku = 'PROD-' . str_pad($product['id'], 6, '0', STR_PAD_LEFT);
 
+// Parse JSON fields for product tabs
+$additional_details_data = null;
+if (!empty($product['additional_details'])) {
+    $additional_details_data = json_decode($product['additional_details'], true);
+}
+
+$specifications_data = [];
+if (!empty($product['specifications'])) {
+    $specifications_data = json_decode($product['specifications'], true);
+    if (!is_array($specifications_data)) {
+        $specifications_data = [];
+    }
+}
+
+$gallery_images_data = [];
+if (!empty($product['gallery_images'])) {
+    $gallery_images_data = json_decode($product['gallery_images'], true);
+    if (!is_array($gallery_images_data)) {
+        $gallery_images_data = [];
+    }
+}
+
 // Fetch related products (same category, exclude current product)
 $related_products = [];
 if ($product['category']) {
@@ -206,8 +228,13 @@ if ($product['category']) {
                                 <div class="main-image mb-3">
                                     <img src="<?php echo htmlspecialchars($product_image); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="img-fluid rounded-3" id="mainProductImage" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
                                 </div>
-                                <div class="thumbnail-images d-flex gap-2">
+                                <div class="thumbnail-images d-flex gap-2 flex-wrap">
                                     <img src="<?php echo htmlspecialchars($product_image); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="img-thumbnail product-thumb active" style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
+                                    <?php if (!empty($gallery_images_data)): ?>
+                                        <?php foreach ($gallery_images_data as $gallery_img): ?>
+                                            <img src="<?php echo htmlspecialchars(getImageUrl($gallery_img)); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="img-thumbnail product-thumb" style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;" onerror="this.src='assets/img/home1/projects/proj1.jpg'">
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -297,101 +324,65 @@ if ($product['category']) {
                     <div class="row mt-5 pt-5">
                         <div class="col-12">
                             <ul class="nav nav-tabs mb-4" id="productTabs" role="tablist">
+                                <?php if ($additional_details_data): ?>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link active" id="details-tab" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab">Additional Details</button>
                                 </li>
+                                <?php endif; ?>
+                                <?php if (!empty($specifications_data)): ?>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="specs-tab" data-bs-toggle="tab" data-bs-target="#specs" type="button" role="tab">Specifications</button>
+                                    <button class="nav-link <?php echo !$additional_details_data ? 'active' : ''; ?>" id="specs-tab" data-bs-toggle="tab" data-bs-target="#specs" type="button" role="tab">Specifications</button>
                                 </li>
+                                <?php endif; ?>
+                                <?php if ($product['show_reviews_tab']): ?>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab">Reviews (127)</button>
+                                    <button class="nav-link <?php echo (!$additional_details_data && empty($specifications_data)) ? 'active' : ''; ?>" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab">Reviews</button>
                                 </li>
+                                <?php endif; ?>
                             </ul>
                             <div class="tab-content" id="productTabContent">
+                                <?php if ($additional_details_data): ?>
                                 <div class="tab-pane fade show active" id="details" role="tabpanel">
                                     <div class="p-4">
-                                        <h5 class="mb-3">What's Included</h5>
-                                        <p>This comprehensive architectural design toolkit includes a wide range of professional resources designed to enhance your workflow and creativity. Perfect for architects, designers, and creative professionals.</p>
-                                        <ul>
-                                            <li>50+ Professional design templates</li>
-                                            <li>100+ High-quality architectural assets</li>
-                                            <li>Detailed documentation and guides</li>
-                                            <li>Sample projects and case studies</li>
-                                            <li>Access to exclusive community forum</li>
-                                        </ul>
+                                        <?php if (!empty($additional_details_data['intro'])): ?>
+                                            <p><?php echo nl2br(htmlspecialchars($additional_details_data['intro'])); ?></p>
+                                        <?php endif; ?>
+                                        <?php if (!empty($additional_details_data['items'])): ?>
+                                            <ul>
+                                                <?php foreach ($additional_details_data['items'] as $item): ?>
+                                                    <li><?php echo htmlspecialchars($item); ?></li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="specs" role="tabpanel">
+                                <?php endif; ?>
+                                
+                                <?php if (!empty($specifications_data)): ?>
+                                <div class="tab-pane fade <?php echo !$additional_details_data ? 'show active' : ''; ?>" id="specs" role="tabpanel">
                                     <div class="p-4">
                                         <table class="table">
                                             <tbody>
-                                                <tr>
-                                                    <th>Format</th>
-                                                    <td>Digital Download (ZIP)</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>File Size</th>
-                                                    <td>2.5 GB</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Compatibility</th>
-                                                    <td>AutoCAD, Revit, SketchUp, ArchiCAD</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>License</th>
-                                                    <td>Single User Commercial License</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Updates</th>
-                                                    <td>Lifetime free updates</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Support</th>
-                                                    <td>Email support + Community forum</td>
-                                                </tr>
+                                                <?php foreach ($specifications_data as $label => $value): ?>
+                                                    <tr>
+                                                        <th><?php echo htmlspecialchars($label); ?></th>
+                                                        <td><?php echo htmlspecialchars($value); ?></td>
+                                                    </tr>
+                                                <?php endforeach; ?>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="reviews" role="tabpanel">
+                                <?php endif; ?>
+                                
+                                <?php if ($product['show_reviews_tab']): ?>
+                                <div class="tab-pane fade <?php echo (!$additional_details_data && empty($specifications_data)) ? 'show active' : ''; ?>" id="reviews" role="tabpanel">
                                     <div class="p-4">
                                         <h5 class="mb-4">Customer Reviews</h5>
-                                        
-                                        <div class="review-item mb-4 pb-4 border-bottom">
-                                            <div class="d-flex justify-content-between mb-2">
-                                                <div>
-                                                    <strong>Sarah Johnson</strong>
-                                                    <div class="rating">
-                                                        <i class="la la-star text-warning"></i>
-                                                        <i class="la la-star text-warning"></i>
-                                                        <i class="la la-star text-warning"></i>
-                                                        <i class="la la-star text-warning"></i>
-                                                        <i class="la la-star text-warning"></i>
-                                                    </div>
-                                                </div>
-                                                <span class="text-muted">2 weeks ago</span>
-                                            </div>
-                                            <p class="mb-0">Excellent toolkit! Has everything I need for my architectural projects. The templates are professional and save me hours of work.</p>
-                                        </div>
-
-                                        <div class="review-item mb-4 pb-4 border-bottom">
-                                            <div class="d-flex justify-content-between mb-2">
-                                                <div>
-                                                    <strong>Michael Chen</strong>
-                                                    <div class="rating">
-                                                        <i class="la la-star text-warning"></i>
-                                                        <i class="la la-star text-warning"></i>
-                                                        <i class="la la-star text-warning"></i>
-                                                        <i class="la la-star text-warning"></i>
-                                                        <i class="la la-star-o text-warning"></i>
-                                                    </div>
-                                                </div>
-                                                <span class="text-muted">1 month ago</span>
-                                            </div>
-                                            <p class="mb-0">Great value for money. The resources are high quality and well organized. Would recommend to any architect.</p>
-                                        </div>
+                                        <p class="text-muted">No reviews yet. Be the first to review this product!</p>
                                     </div>
                                 </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
