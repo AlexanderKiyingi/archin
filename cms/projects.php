@@ -445,10 +445,13 @@ include 'includes/header.php';
                         $existing_gallery = json_decode($edit_project['gallery_images'], true);
                         if (is_array($existing_gallery) && !empty($existing_gallery)):
                     ?>
-                        <input type="hidden" name="current_gallery_images" value="<?php echo htmlspecialchars($edit_project['gallery_images']); ?>">
-                        <div class="mt-3 grid grid-cols-4 gap-2">
-                            <?php foreach ($existing_gallery as $img): ?>
-                                <img src="<?php echo UPLOAD_URL . $img; ?>" alt="" class="w-20 h-20 object-cover rounded border">
+                        <input type="hidden" name="current_gallery_images" id="current_gallery_images" value="<?php echo htmlspecialchars($edit_project['gallery_images']); ?>">
+                        <div class="mt-3 grid grid-cols-4 gap-2" id="gallery_preview">
+                            <?php foreach ($existing_gallery as $index => $img): ?>
+                                <div class="relative gallery-img-container">
+                                    <img src="<?php echo UPLOAD_URL . $img; ?>" alt="" class="w-20 h-20 object-cover rounded border">
+                                    <button type="button" class="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700" onclick="removeGalleryImage(<?php echo $index; ?>)">×</button>
+                                </div>
                             <?php endforeach; ?>
                         </div>
                     <?php 
@@ -492,6 +495,33 @@ include 'includes/header.php';
         </form>
     </div>
 <?php endif; ?>
+
+<script>
+function removeGalleryImage(index) {
+    const hiddenInput = document.getElementById('current_gallery_images');
+    if (!hiddenInput) return;
+    
+    try {
+        const galleryImages = JSON.parse(hiddenInput.value || '[]');
+        if (Array.isArray(galleryImages) && galleryImages[index] !== undefined) {
+            // Remove the image from the array
+            galleryImages.splice(index, 1);
+            hiddenInput.value = JSON.stringify(galleryImages);
+            
+            // Remove the image from the UI
+            const preview = document.getElementById('gallery_preview');
+            if (preview) {
+                const containers = preview.querySelectorAll('.gallery-img-container');
+                if (containers[index]) {
+                    containers[index].remove();
+                }
+            }
+        }
+    } catch(e) {
+        console.error('Error removing gallery image:', e);
+    }
+}
+</script>
 
 <?php include 'includes/footer.php'; ?>
 

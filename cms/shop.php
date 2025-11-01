@@ -475,6 +475,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                         <input type="file" name="gallery_images[]" accept="image/*" multiple class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <p class="text-sm text-gray-500 mt-1">Add more images to existing gallery</p>
                         <input type="hidden" name="current_gallery_images" id="editCurrentGalleryImages">
+                        <div id="editGalleryPreview" class="mt-3 grid grid-cols-4 gap-2"></div>
                     </div>
                     
                     <div class="mb-4 border-t pt-4">
@@ -552,6 +553,8 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
     </div>
 
     <script>
+        const UPLOAD_BASE_URL = '<?php echo UPLOAD_URL; ?>';
+        
         function openModal(modalId) {
             document.getElementById(modalId).classList.remove('hidden');
         }
@@ -598,6 +601,28 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
             
             // Handle gallery images
             document.getElementById('editCurrentGalleryImages').value = product.gallery_images || '';
+            
+            // Populate gallery preview
+            const galleryPreview = document.getElementById('editGalleryPreview');
+            galleryPreview.innerHTML = '';
+            if (product.gallery_images) {
+                try {
+                    const galleryImages = JSON.parse(product.gallery_images);
+                    if (Array.isArray(galleryImages)) {
+                        galleryImages.forEach((img, index) => {
+                            const imgDiv = document.createElement('div');
+                            imgDiv.className = 'relative gallery-img-container';
+                            imgDiv.innerHTML = `
+                                <img src="${UPLOAD_BASE_URL}${img}" alt="" class="w-20 h-20 object-cover rounded border">
+                                <button type="button" class="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700" onclick="removeEditGalleryImage(${index})">×</button>
+                            `;
+                            galleryPreview.appendChild(imgDiv);
+                        });
+                    }
+                } catch(e) {
+                    console.error('Error parsing gallery images:', e);
+                }
+            }
             
             // Handle additional details
             let additionalDetails = {};
@@ -649,6 +674,35 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
             document.getElementById('edit_show_reviews_tab').checked = product.show_reviews_tab == 1;
             
             openModal('editProductModal');
+        }
+
+        function removeEditGalleryImage(index) {
+            const hiddenInput = document.getElementById('editCurrentGalleryImages');
+            if (!hiddenInput) return;
+            
+            try {
+                const galleryImages = JSON.parse(hiddenInput.value || '[]');
+                if (Array.isArray(galleryImages) && galleryImages[index] !== undefined) {
+                    // Remove the image from the array
+                    galleryImages.splice(index, 1);
+                    hiddenInput.value = JSON.stringify(galleryImages);
+                    
+                    // Rebuild the gallery preview
+                    const galleryPreview = document.getElementById('editGalleryPreview');
+                    galleryPreview.innerHTML = '';
+                    galleryImages.forEach((img, idx) => {
+                        const imgDiv = document.createElement('div');
+                        imgDiv.className = 'relative gallery-img-container';
+                        imgDiv.innerHTML = `
+                            <img src="${UPLOAD_BASE_URL}${img}" alt="" class="w-20 h-20 object-cover rounded border">
+                            <button type="button" class="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700" onclick="removeEditGalleryImage(${idx})">×</button>
+                        `;
+                        galleryPreview.appendChild(imgDiv);
+                    });
+                }
+            } catch(e) {
+                console.error('Error removing gallery image:', e);
+            }
         }
 
         function deleteProduct(productId) {
