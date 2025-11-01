@@ -1170,6 +1170,34 @@ html[lang=ar] .home-style1 .loader-wrap {
     font-size: 2rem !important;
   }
   
+  /* Featured project cards mobile optimization */
+  .tc-projects-style1 .projects .project-card .img {
+    height: 280px !important;
+  }
+  
+  .tc-projects-style1 .projects .project-card .info {
+    padding-top: 25px !important;
+  }
+  
+  .tc-projects-style1 .projects .project-card .info .title {
+    font-size: 22px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .tc-projects-style1 .projects .project-card .info .tags {
+    margin-bottom: 20px !important;
+  }
+  
+  .tc-projects-style1 .projects .project-card .info .tags a {
+    font-size: 11px !important;
+    padding: 4px 8px !important;
+  }
+  
+  .tc-projects-style1 .projects .project-card .info .text {
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+  }
+  
   /* Product cards */
   .product-card .info {
     padding: 20px !important;
@@ -1340,6 +1368,28 @@ html[lang=ar] .home-style1 .loader-wrap {
   
   .tc-projects-style1 h2 {
     font-size: 1.75rem !important;
+  }
+  
+  /* Featured project cards - small screens */
+  .tc-projects-style1 .projects .project-card .img {
+    height: 250px !important;
+  }
+  
+  .tc-projects-style1 .projects .project-card .info {
+    padding-top: 20px !important;
+  }
+  
+  .tc-projects-style1 .projects .project-card .info .title {
+    font-size: 20px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .tc-projects-style1 .projects .project-card .info .tags {
+    margin-bottom: 15px !important;
+  }
+  
+  .tc-projects-style1 .projects .project-card .info .text {
+    font-size: 12px !important;
   }
   
   /* Product grid - single column */
