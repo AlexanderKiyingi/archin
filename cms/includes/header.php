@@ -165,6 +165,45 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
             pointer-events: all;
             touch-action: manipulation;
         }
+        
+        /* Gallery thumbnail styles */
+        .gallery-img-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .gallery-img-container img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 0.375rem;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .gallery-img-container button {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #dc2626;
+            color: white;
+            border: none;
+            font-size: 14px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+            z-index: 10;
+        }
+        
+        .gallery-img-container button:hover {
+            background-color: #b91c1c;
+        }
     </style>
 </head>
 <body class="bg-gray-100">

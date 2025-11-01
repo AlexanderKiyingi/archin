@@ -611,10 +611,10 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                     if (Array.isArray(galleryImages)) {
                         galleryImages.forEach((img, index) => {
                             const imgDiv = document.createElement('div');
-                            imgDiv.className = 'relative gallery-img-container';
+                            imgDiv.className = 'gallery-img-container';
                             imgDiv.innerHTML = `
-                                <img src="${UPLOAD_BASE_URL}${img}" alt="" class="w-20 h-20 object-cover rounded border">
-                                <button type="button" class="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700" onclick="removeEditGalleryImage(${index})">×</button>
+                                <img src="${UPLOAD_BASE_URL}${img}" alt="">
+                                <button type="button" onclick="removeEditGalleryImage(${index})">×</button>
                             `;
                             galleryPreview.appendChild(imgDiv);
                         });
@@ -692,10 +692,10 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                     galleryPreview.innerHTML = '';
                     galleryImages.forEach((img, idx) => {
                         const imgDiv = document.createElement('div');
-                        imgDiv.className = 'relative gallery-img-container';
+                        imgDiv.className = 'gallery-img-container';
                         imgDiv.innerHTML = `
-                            <img src="${UPLOAD_BASE_URL}${img}" alt="" class="w-20 h-20 object-cover rounded border">
-                            <button type="button" class="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700" onclick="removeEditGalleryImage(${idx})">×</button>
+                            <img src="${UPLOAD_BASE_URL}${img}" alt="">
+                            <button type="button" onclick="removeEditGalleryImage(${idx})">×</button>
                         `;
                         galleryPreview.appendChild(imgDiv);
                     });

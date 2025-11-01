@@ -448,9 +448,9 @@ include 'includes/header.php';
                         <input type="hidden" name="current_gallery_images" id="current_gallery_images" value="<?php echo htmlspecialchars($edit_project['gallery_images']); ?>">
                         <div class="mt-3 grid grid-cols-4 gap-2" id="gallery_preview">
                             <?php foreach ($existing_gallery as $index => $img): ?>
-                                <div class="relative gallery-img-container">
-                                    <img src="<?php echo UPLOAD_URL . $img; ?>" alt="" class="w-20 h-20 object-cover rounded border">
-                                    <button type="button" class="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700" onclick="removeGalleryImage(<?php echo $index; ?>)">×</button>
+                                <div class="gallery-img-container">
+                                    <img src="<?php echo UPLOAD_URL . $img; ?>" alt="">
+                                    <button type="button" onclick="removeGalleryImage(<?php echo $index; ?>)">×</button>
                                 </div>
                             <?php endforeach; ?>
                         </div>
