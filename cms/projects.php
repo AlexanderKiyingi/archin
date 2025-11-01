@@ -114,9 +114,14 @@ include 'includes/header.php';
     <div class="bg-white rounded-lg shadow">
         <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
             <h3 class="text-lg font-semibold text-gray-800">All Projects</h3>
-            <a href="?action=add" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-                <i class="fas fa-plus mr-2"></i>Add New Project
-            </a>
+            <div class="flex gap-3">
+                <a href="project-categories.php" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                    <i class="fas fa-folder mr-2"></i>Manage Categories
+                </a>
+                <a href="?action=add" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                    <i class="fas fa-plus mr-2"></i>Add New Project
+                </a>
+            </div>
         </div>
         
         <div class="overflow-x-auto">

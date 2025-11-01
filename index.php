@@ -516,15 +516,24 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                         <div class="row align-items-center">
                             <div class="col-lg-9">
                                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                    <!-- Featured tab first -->
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" 
+                                                id="pills-featured-tab" 
+                                                data-bs-toggle="pill" 
+                                                data-bs-target="#pills-featured" 
+                                                type="button">
+                                            Featured
+                                        </button>
+                                    </li>
                                     <?php if ($project_categories_result && $project_categories_result->num_rows > 0): ?>
                                         <?php 
-                                        $is_first = true;
                                         while ($category = $project_categories_result->fetch_assoc()): 
                                             $category_slug = strtolower(str_replace(' ', '-', $category['slug']));
                                             $tab_id = 'pills-proj' . $category_slug;
                                         ?>
                                             <li class="nav-item" role="presentation">
-                                                <button class="nav-link <?php echo $is_first ? 'active' : ''; ?>" 
+                                                <button class="nav-link" 
                                                         id="<?php echo $tab_id; ?>-tab" 
                                                         data-bs-toggle="pill" 
                                                         data-bs-target="#<?php echo $tab_id; ?>" 
@@ -533,7 +542,6 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                 </button>
                                             </li>
                                         <?php 
-                                            $is_first = false;
                                         endwhile; 
                                         $project_categories_result->data_seek(0); // Reset pointer
                                         ?>
@@ -549,9 +557,75 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                     </div>
                     <div class="projects">
                         <div class="tab-content" id="pills-tabContent">
+                            <!-- Featured Projects Tab -->
+                            <div class="tab-pane fade show active" id="pills-featured" role="tabpanel" aria-labelledby="pills-featured-tab">
+                                <div class="projects-content float_box_container">
+                                    <div class="projects-slider">
+                                        <div class="swiper-wrapper">
+                                            <?php if ($projects_result && $projects_result->num_rows > 0): ?>
+                                                <?php while ($project = $projects_result->fetch_assoc()): 
+                                                    // Handle image path
+                                                    $featured_image = getImageUrlWithFallback($project['featured_image'] ?? '', 'assets/img/home1/projects/proj1.jpg');
+                                                    
+                                                    // Handle gallery images for fancybox
+                                                    $gallery_images = [];
+                                                    if (!empty($project['gallery_images'])) {
+                                                        $gallery_array = json_decode($project['gallery_images'], true);
+                                                        if (is_array($gallery_array)) {
+                                                            foreach ($gallery_array as $gallery_img) {
+                                                                $gallery_images[] = getImageUrl($gallery_img);
+                                                            }
+                                                        }
+                                                    }
+                                                    
+                                                    // Use featured image as first gallery image if no gallery
+                                                    if (empty($gallery_images)) {
+                                                        $gallery_images[] = $featured_image;
+                                                    }
+                                                ?>
+                                                    <div class="swiper-slide">
+                                                        <div class="project-card">
+                                                            <?php if (count($gallery_images) > 0): ?>
+                                                                <a href="<?php echo htmlspecialchars($gallery_images[0]); ?>" class="img" data-fancybox="proj-featured">
+                                                                    <img src="<?php echo htmlspecialchars($featured_image); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="img-cover">
+                                                                </a>
+                                                            <?php endif; ?>
+                                                            <div class="info">
+                                                                <?php if (!empty($project['category'])): ?>
+                                                                    <div class="tags">
+                                                                        <a href="#"><?php echo htmlspecialchars($project['category']); ?></a>
+                                                                    </div>
+                                                                <?php endif; ?>
+                                                                <h3 class="title">
+                                                                    <a href="portfolio.php#project-<?php echo $project['id']; ?>">
+                                                                        <?php echo htmlspecialchars($project['title']); ?>
+                                                                    </a>
+                                                                </h3>
+                                                                <?php if (!empty($project['short_description'])): ?>
+                                                                    <div class="text"><?php echo nl2br(htmlspecialchars($project['short_description'])); ?></div>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php endwhile; ?>
+                                                <?php $projects_result->data_seek(0); // Reset pointer ?>
+                                            <?php else: ?>
+                                                <div class="swiper-slide">
+                                                    <div class="project-card">
+                                                        <div class="info">
+                                                            <p class="text">No featured projects available.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                    <div class="float-cursor float_box"> Hold <br> and Drag </div>
+                                </div>
+                            </div>
+                            
                             <?php if ($project_categories_result && $project_categories_result->num_rows > 0): ?>
                                 <?php 
-                                $is_first_tab = true;
                                 while ($category = $project_categories_result->fetch_assoc()): 
                                     $category_slug = strtolower(str_replace(' ', '-', $category['slug']));
                                     $tab_id = 'pills-proj' . $category_slug;
@@ -567,7 +641,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                         }
                                     }
                                 ?>
-                                    <div class="tab-pane fade <?php echo $is_first_tab ? 'show active' : ''; ?>" 
+                                    <div class="tab-pane fade" 
                                          id="<?php echo $tab_id; ?>" 
                                          role="tabpanel" 
                                          aria-labelledby="<?php echo $tab_id; ?>-tab">
@@ -635,7 +709,6 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                         </div>
                                     </div>
                                 <?php 
-                                    $is_first_tab = false;
                                 endwhile; 
                                 ?>
                             <?php endif; ?>
