@@ -300,7 +300,7 @@ include 'includes/header.php';
             </a>
         </div>
         
-        <form method="POST" enctype="multipart/form-data" class="p-6">
+        <form method="POST" enctype="multipart/form-data" id="project_form" class="p-6">
             <input type="hidden" name="action" value="<?php echo $edit_project ? 'edit' : 'add'; ?>">
             <?php if ($edit_project): ?>
                 <input type="hidden" name="id" value="<?php echo $edit_project['id']; ?>">
@@ -431,12 +431,25 @@ include 'includes/header.php';
                     <input 
                         type="file" 
                         name="featured_image" 
+                        id="featured_image_input"
                         accept="image/*"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
                     <p class="text-sm text-gray-500 mt-1">
                         <?php echo $edit_project ? 'Select a new image to replace current featured image' : 'Main image for the project'; ?>
+                        <span class="font-semibold text-gray-700">Max file size: 5MB</span>
                     </p>
+                    <!-- Error message for file size -->
+                    <div id="featured_image_error" class="hidden mt-2 p-2 bg-red-100 border border-red-400 text-red-700 rounded text-sm"></div>
+                    <!-- Upload Progress for Featured Image -->
+                    <div id="featured_image_progress" class="hidden mt-2">
+                        <div class="flex items-center space-x-2">
+                            <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                <div id="featured_image_progress_bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                            <span id="featured_image_progress_text" class="text-sm text-gray-600">0%</span>
+                        </div>
+                    </div>
                     <?php if ($edit_project && $edit_project['featured_image']): ?>
                         <input type="hidden" name="current_featured_image" value="<?php echo htmlspecialchars($edit_project['featured_image']); ?>">
                         <div class="mt-3 relative inline-block" id="featured_image_preview">
@@ -453,11 +466,26 @@ include 'includes/header.php';
                     <input 
                         type="file" 
                         name="gallery_images[]" 
+                        id="gallery_images_input"
                         accept="image/*"
                         multiple
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                    <p class="text-sm text-gray-500 mt-1">You can select multiple images for the project gallery</p>
+                    <p class="text-sm text-gray-500 mt-1">
+                        You can select multiple images for the project gallery
+                        <span class="font-semibold text-gray-700">Max file size: 5MB per image</span>
+                    </p>
+                    <!-- Error message for file size -->
+                    <div id="gallery_images_error" class="hidden mt-2 p-2 bg-red-100 border border-red-400 text-red-700 rounded text-sm"></div>
+                    <!-- Upload Progress for Gallery Images -->
+                    <div id="gallery_images_progress" class="hidden mt-2">
+                        <div class="flex items-center space-x-2">
+                            <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                <div id="gallery_images_progress_bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                            <span id="gallery_images_progress_text" class="text-sm text-gray-600">0%</span>
+                        </div>
+                    </div>
                     <?php if ($edit_project && !empty($edit_project['gallery_images'])): 
                         $existing_gallery = json_decode($edit_project['gallery_images'], true);
                         if (is_array($existing_gallery) && !empty($existing_gallery)):
@@ -558,6 +586,240 @@ function removeFeaturedImage() {
         fileInput.value = '';
     }
 }
+
+// Upload progress tracking
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('project_form');
+    const featuredImageInput = document.getElementById('featured_image_input');
+    const galleryImagesInput = document.getElementById('gallery_images_input');
+    
+    // Constants
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+    
+    // Helper function to format file size
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    }
+    
+    // Track featured image selection
+    if (featuredImageInput) {
+        featuredImageInput.addEventListener('change', function() {
+            const errorDiv = document.getElementById('featured_image_error');
+            const progressDiv = document.getElementById('featured_image_progress');
+            
+            // Hide previous errors
+            if (errorDiv) {
+                errorDiv.classList.add('hidden');
+                errorDiv.textContent = '';
+            }
+            
+            if (this.files && this.files.length > 0) {
+                const file = this.files[0];
+                
+                // Check file size
+                if (file.size > MAX_FILE_SIZE) {
+                    if (errorDiv) {
+                        errorDiv.textContent = `File too large! "${file.name}" is ${formatFileSize(file.size)}. Maximum allowed size is 5MB.`;
+                        errorDiv.classList.remove('hidden');
+                    }
+                    this.value = ''; // Clear the input
+                    if (progressDiv) progressDiv.classList.add('hidden');
+                    return;
+                }
+                
+                // Valid file, show progress
+                if (progressDiv) {
+                    progressDiv.classList.remove('hidden');
+                    const progressBar = document.getElementById('featured_image_progress_bar');
+                    const progressText = document.getElementById('featured_image_progress_text');
+                    if (progressBar) progressBar.style.width = '0%';
+                    if (progressText) progressText.textContent = '0%';
+                    
+                    // Simulate progress for file selection (will be updated during actual upload)
+                    setTimeout(() => {
+                        if (progressBar) progressBar.style.width = '10%';
+                        if (progressText) progressText.textContent = '10%';
+                    }, 100);
+                }
+            }
+        });
+    }
+    
+    // Track gallery images selection
+    if (galleryImagesInput) {
+        galleryImagesInput.addEventListener('change', function() {
+            const errorDiv = document.getElementById('gallery_images_error');
+            const progressDiv = document.getElementById('gallery_images_progress');
+            
+            // Hide previous errors
+            if (errorDiv) {
+                errorDiv.classList.add('hidden');
+                errorDiv.textContent = '';
+            }
+            
+            if (this.files && this.files.length > 0) {
+                const files = Array.from(this.files);
+                const oversizedFiles = [];
+                
+                // Check each file size
+                files.forEach(file => {
+                    if (file.size > MAX_FILE_SIZE) {
+                        oversizedFiles.push(`${file.name} (${formatFileSize(file.size)})`);
+                    }
+                });
+                
+                // Show error if any files are too large
+                if (oversizedFiles.length > 0) {
+                    if (errorDiv) {
+                        errorDiv.textContent = `File(s) too large! Maximum allowed size is 5MB per image. Large files: ${oversizedFiles.join(', ')}`;
+                        errorDiv.classList.remove('hidden');
+                    }
+                    this.value = ''; // Clear the input
+                    if (progressDiv) progressDiv.classList.add('hidden');
+                    return;
+                }
+                
+                // Valid files, show progress
+                if (progressDiv) {
+                    progressDiv.classList.remove('hidden');
+                    const progressBar = document.getElementById('gallery_images_progress_bar');
+                    const progressText = document.getElementById('gallery_images_progress_text');
+                    if (progressBar) progressBar.style.width = '0%';
+                    if (progressText) progressText.textContent = '0%';
+                    
+                    // Simulate progress for file selection (will be updated during actual upload)
+                    setTimeout(() => {
+                        if (progressBar) progressBar.style.width = '10%';
+                        if (progressText) progressText.textContent = '10%';
+                    }, 100);
+                }
+            }
+        });
+    }
+    
+    // Intercept form submission to track upload progress
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const featuredFile = featuredImageInput?.files[0];
+            const galleryFiles = galleryImagesInput?.files;
+            const hasFiles = (featuredFile || (galleryFiles && galleryFiles.length > 0));
+            
+            if (hasFiles) {
+                // Double-check file sizes before submission
+                let hasOversizedFiles = false;
+                const errorMessages = [];
+                
+                if (featuredFile && featuredFile.size > MAX_FILE_SIZE) {
+                    hasOversizedFiles = true;
+                    errorMessages.push(`Featured image "${featuredFile.name}" is too large (${formatFileSize(featuredFile.size)})`);
+                    const errorDiv = document.getElementById('featured_image_error');
+                    if (errorDiv) {
+                        errorDiv.textContent = `File too large! "${featuredFile.name}" is ${formatFileSize(featuredFile.size)}. Maximum allowed size is 5MB.`;
+                        errorDiv.classList.remove('hidden');
+                    }
+                }
+                
+                if (galleryFiles && galleryFiles.length > 0) {
+                    const oversizedGalleryFiles = [];
+                    Array.from(galleryFiles).forEach(file => {
+                        if (file.size > MAX_FILE_SIZE) {
+                            hasOversizedFiles = true;
+                            oversizedGalleryFiles.push(`${file.name} (${formatFileSize(file.size)})`);
+                        }
+                    });
+                    
+                    if (oversizedGalleryFiles.length > 0) {
+                        const errorDiv = document.getElementById('gallery_images_error');
+                        if (errorDiv) {
+                            errorDiv.textContent = `File(s) too large! Maximum allowed size is 5MB per image. Large files: ${oversizedGalleryFiles.join(', ')}`;
+                            errorDiv.classList.remove('hidden');
+                        }
+                    }
+                }
+                
+                if (hasOversizedFiles) {
+                    e.preventDefault();
+                    alert('Please select files that are 5MB or smaller.');
+                    return;
+                }
+                
+                e.preventDefault();
+                
+                const formData = new FormData(form);
+                const xhr = new XMLHttpRequest();
+                
+                // Featured image progress
+                if (featuredFile) {
+                    const featuredProgressDiv = document.getElementById('featured_image_progress');
+                    const featuredProgressBar = document.getElementById('featured_image_progress_bar');
+                    const featuredProgressText = document.getElementById('featured_image_progress_text');
+                    
+                    if (featuredProgressDiv) {
+                        featuredProgressDiv.classList.remove('hidden');
+                    }
+                    
+                    xhr.upload.addEventListener('progress', function(e) {
+                        if (e.lengthComputable && featuredFile) {
+                            const percentComplete = Math.round((e.loaded / e.total) * 100);
+                            if (featuredProgressBar) featuredProgressBar.style.width = percentComplete + '%';
+                            if (featuredProgressText) featuredProgressText.textContent = percentComplete + '%';
+                        }
+                    });
+                }
+                
+                // Gallery images progress (combined)
+                if (galleryFiles && galleryFiles.length > 0) {
+                    const galleryProgressDiv = document.getElementById('gallery_images_progress');
+                    const galleryProgressBar = document.getElementById('gallery_images_progress_bar');
+                    const galleryProgressText = document.getElementById('gallery_images_progress_text');
+                    
+                    if (galleryProgressDiv) {
+                        galleryProgressDiv.classList.remove('hidden');
+                    }
+                    
+                    xhr.upload.addEventListener('progress', function(e) {
+                        if (e.lengthComputable) {
+                            const percentComplete = Math.round((e.loaded / e.total) * 100);
+                            if (galleryProgressBar) galleryProgressBar.style.width = percentComplete + '%';
+                            if (galleryProgressText) galleryProgressText.textContent = percentComplete + '%';
+                        }
+                    });
+                }
+                
+                // Handle response
+                xhr.addEventListener('load', function() {
+                    if (xhr.status === 200) {
+                        // Reload page to show success/error message
+                        window.location.reload();
+                    } else {
+                        alert('Upload failed. Please try again.');
+                        // Hide progress indicators
+                        const featuredProgressDiv = document.getElementById('featured_image_progress');
+                        const galleryProgressDiv = document.getElementById('gallery_images_progress');
+                        if (featuredProgressDiv) featuredProgressDiv.classList.add('hidden');
+                        if (galleryProgressDiv) galleryProgressDiv.classList.add('hidden');
+                    }
+                });
+                
+                xhr.addEventListener('error', function() {
+                    alert('Upload failed. Please try again.');
+                    const featuredProgressDiv = document.getElementById('featured_image_progress');
+                    const galleryProgressDiv = document.getElementById('gallery_images_progress');
+                    if (featuredProgressDiv) featuredProgressDiv.classList.add('hidden');
+                    if (galleryProgressDiv) galleryProgressDiv.classList.add('hidden');
+                });
+                
+                xhr.open('POST', form.action || window.location.href);
+                xhr.send(formData);
+            }
+            // If no files, allow normal form submission
+        });
+    }
+});
 </script>
 
 <?php include 'includes/footer.php'; ?>
