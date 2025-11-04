@@ -104,6 +104,15 @@ function showAlert($message, $type = 'success') {
             </div>";
 }
 
+/**
+ * Upload file with automatic WebP conversion for images
+ * Converts JPG, PNG, and GIF images to WebP format for better compression
+ * Falls back to original format if conversion fails
+ * 
+ * @param array $file File array from $_FILES
+ * @param string $folder Destination folder within uploads directory
+ * @return array Success status and file information
+ */
 function uploadFile($file, $folder = 'general') {
     $target_dir = UPLOAD_PATH . $folder . '/';
     
@@ -123,9 +132,6 @@ function uploadFile($file, $folder = 'general') {
     }
     
     $file_extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    $new_filename = uniqid() . '_' . time() . '.' . $file_extension;
-    $target_file = $target_dir . $new_filename;
-    
     $allowed_types = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf'];
     
     if (!in_array($file_extension, $allowed_types)) {
@@ -136,30 +142,125 @@ function uploadFile($file, $folder = 'general') {
         return ['success' => false, 'message' => 'File too large (max 5MB)'];
     }
     
-    // Primary: use move_uploaded_file for real HTTP uploads
+    // Check if we should convert to WebP (only for images, not PDFs)
+    // Require both GD library and WebP support
+    $has_gd = function_exists('imagecreatefromjpeg') || function_exists('imagecreatefrompng');
+    $has_webp = function_exists('imagewebp');
+    $convert_to_webp = in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif']) && $has_gd && $has_webp;
+    $final_extension = $convert_to_webp ? 'webp' : $file_extension;
+    $new_filename = uniqid() . '_' . time() . '.' . $final_extension;
+    $target_file = $target_dir . $new_filename;
+    
+    // First, save the uploaded file to a temporary location
+    $temp_file = $target_dir . 'temp_' . uniqid() . '_' . time() . '.' . $file_extension;
     $moved = false;
+    
+    // Primary: use move_uploaded_file for real HTTP uploads
     if (isset($file['tmp_name']) && is_uploaded_file($file['tmp_name'])) {
-        $moved = move_uploaded_file($file['tmp_name'], $target_file);
+        $moved = move_uploaded_file($file['tmp_name'], $temp_file);
     }
     
     // Fallback: allow copy() for cases like our test page where tmp file is a copied file
     if (!$moved && isset($file['tmp_name']) && file_exists($file['tmp_name'])) {
-        $moved = @copy($file['tmp_name'], $target_file);
+        $moved = @copy($file['tmp_name'], $temp_file);
     }
     
-    if ($moved) {
-        return [
-            'success' => true,
-            'filename' => $new_filename,
-            'path' => $folder . '/' . $new_filename,
-            'url' => UPLOAD_URL . $folder . '/' . $new_filename
-        ];
+    if (!$moved) {
+        // Provide detailed error when possible
+        $lastError = error_get_last();
+        $detail = $lastError && isset($lastError['message']) ? (' - ' . $lastError['message']) : '';
+        return ['success' => false, 'message' => 'Upload failed' . $detail];
     }
     
-    // Provide detailed error when possible
-    $lastError = error_get_last();
-    $detail = $lastError && isset($lastError['message']) ? (' - ' . $lastError['message']) : '';
-    return ['success' => false, 'message' => 'Upload failed' . $detail];
+    // Convert to WebP if needed
+    if ($convert_to_webp) {
+        $converted = false;
+        $image = null;
+        
+        // Load image based on type
+        switch ($file_extension) {
+            case 'jpg':
+            case 'jpeg':
+                if (function_exists('imagecreatefromjpeg')) {
+                    $image = @imagecreatefromjpeg($temp_file);
+                }
+                break;
+            case 'png':
+                if (function_exists('imagecreatefrompng')) {
+                    $image = @imagecreatefrompng($temp_file);
+                    // Preserve transparency for PNG
+                    if ($image) {
+                        imagealphablending($image, false);
+                        imagesavealpha($image, true);
+                    }
+                }
+                break;
+            case 'gif':
+                if (function_exists('imagecreatefromgif')) {
+                    $image = @imagecreatefromgif($temp_file);
+                }
+                break;
+        }
+        
+        // Convert to WebP if image was loaded successfully
+        if ($image && function_exists('imagewebp')) {
+            // Use quality 85 for good balance between size and quality
+            $quality = 85;
+            $converted = @imagewebp($image, $target_file, $quality);
+            
+            if ($converted) {
+                // Clean up
+                imagedestroy($image);
+                @unlink($temp_file);
+            } else {
+                // Conversion failed, fall back to original
+                imagedestroy($image);
+                $final_extension = $file_extension;
+                $new_filename = uniqid() . '_' . time() . '.' . $final_extension;
+                $target_file = $target_dir . $new_filename;
+                $converted = @rename($temp_file, $target_file) || @copy($temp_file, $target_file);
+                if ($converted) {
+                    @unlink($temp_file);
+                }
+            }
+        } else {
+            // Image loading failed, fall back to original
+            $final_extension = $file_extension;
+            $new_filename = uniqid() . '_' . time() . '.' . $final_extension;
+            $target_file = $target_dir . $new_filename;
+            $converted = @rename($temp_file, $target_file) || @copy($temp_file, $target_file);
+            if ($converted) {
+                @unlink($temp_file);
+            }
+        }
+        
+        if (!$converted) {
+            @unlink($temp_file);
+            return ['success' => false, 'message' => 'Failed to process image'];
+        }
+    } else {
+        // Not an image or already WebP/PDF - just rename temp file to final location
+        $renamed = @rename($temp_file, $target_file);
+        if (!$renamed) {
+            $renamed = @copy($temp_file, $target_file);
+            if ($renamed) {
+                @unlink($temp_file);
+            }
+        }
+        if (!$renamed) {
+            @unlink($temp_file);
+            return ['success' => false, 'message' => 'Failed to save file'];
+        }
+    }
+    
+    return [
+        'success' => true,
+        'filename' => $new_filename,
+        'path' => $folder . '/' . $new_filename,
+        'url' => UPLOAD_URL . $folder . '/' . $new_filename,
+        'original_format' => $convert_to_webp ? $file_extension : null,
+        'converted_to_webp' => $convert_to_webp
+    ];
 }
 
 function generateSlug($string) {
