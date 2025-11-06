@@ -195,7 +195,7 @@ $categories_result = $conn->query($categories_query);
                             <div class="col-lg-12">
                                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                      <button class="nav-link active" id="pills-proj1-tab" data-bs-toggle="pill" data-bs-target="#pills-proj1" type="button">Featured Projects</button>
+                                      <button class="nav-link active" id="pills-proj1-tab" data-bs-toggle="pill" data-bs-target="#pills-proj1" type="button">Featured</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                       <button class="nav-link" id="pills-proj3-tab" data-bs-toggle="pill" data-bs-target="#pills-proj3" type="button">Interior</button>

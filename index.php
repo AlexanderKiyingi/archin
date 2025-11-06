@@ -516,16 +516,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                         <div class="row align-items-center">
                             <div class="col-lg-9">
                                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                                    <!-- Featured tab first -->
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" 
-                                                id="pills-featured-tab" 
-                                                data-bs-toggle="pill" 
-                                                data-bs-target="#pills-featured" 
-                                                type="button">
-                                            Featured
-                                        </button>
-                                    </li>
+                                    
                                     <?php if ($project_categories_result && $project_categories_result->num_rows > 0): ?>
                                         <?php 
                                         while ($category = $project_categories_result->fetch_assoc()): 

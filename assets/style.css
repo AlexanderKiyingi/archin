@@ -2488,18 +2488,36 @@ html[lang=ar] .home-style1 .loader-wrap {
   margin: 0 auto;
 }
 
+/* Ensure join-team-container displays correctly within team-member-card */
+.team-member-card .join-team-container {
+  margin: 0 auto;
+}
+
 /* Responsive team grid */
 @media screen and (max-width: 767px) {
   .team-section {
     padding: 40px 0;
   }
   
+  .tc-team-style1 .js-splittext-lines h2 {
+    font-size: 2rem;
+    text-align: center;
+  }
+  
   .team-grid {
-    gap: 25px;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
   }
   
   .team-member-card {
-    max-width: 180px;
+    max-width: 220px;
+    width: 100%;
+  }
+  
+  .join-team-container {
+    width: 200px;
+    height: 200px;
   }
 }
 
@@ -2508,22 +2526,51 @@ html[lang=ar] .home-style1 .loader-wrap {
     padding: 30px 0;
   }
   
+  .tc-team-style1 .js-splittext-lines {
+    margin-bottom: 40px;
+  }
+  
+  .tc-team-style1 .js-splittext-lines h2 {
+    font-size: 1.75rem;
+    text-align: center;
+  }
+  
   .team-grid {
-    gap: 20px;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
   }
   
   .team-member-card {
-    max-width: 150px;
+    max-width: 200px;
+    width: 100%;
+  }
+  
+  .join-team-container {
+    width: 180px;
+    height: 180px;
   }
 }
 
 @media screen and (max-width: 359px) {
+  .tc-team-style1 .js-splittext-lines h2 {
+    font-size: 1.5rem;
+  }
+  
   .team-grid {
-    gap: 15px;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
   }
   
   .team-member-card {
-    max-width: 130px;
+    max-width: 180px;
+    width: 100%;
+  }
+  
+  .join-team-container {
+    width: 160px;
+    height: 160px;
   }
 }
   
