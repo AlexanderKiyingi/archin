@@ -308,7 +308,7 @@ $read_time = ceil($word_count / 200);
                             <span class="mx-2 color-666">/</span>
                             <span class="color-000">Article</span>
                         </div>
-                        <h1 class="js-title wow fadeInUp"><?php echo htmlspecialchars($post['title']); ?></h1>
+                        <h1 class="js-title wow fadeInUp text-white"><?php echo htmlspecialchars($post['title']); ?></h1>
                         <div class="meta mt-30 wow fadeInUp" data-wow-delay="0.2s">
                             <span class="me-4"><i class="la la-calendar me-2 color-orange1"></i><?php echo date('F d, Y', strtotime($post['publish_date'])); ?></span>
                             <span class="me-4"><i class="la la-user me-2 color-orange1"></i>By <?php echo htmlspecialchars($post['author_name'] ?: 'Admin'); ?></span>
