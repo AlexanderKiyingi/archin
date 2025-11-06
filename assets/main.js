@@ -52,27 +52,58 @@ $(document).ready(function () {
         },
     });
 
-    // ------------ tc-testimonials-slider1 -----------
-    var swiper = new Swiper(".tc-testimonials-style1 .clients-slider1", {
-        slidesPerView: 1,
-        spaceBetween: 0,
-        centeredSlides: true,
-        speed: 1000,
-        pagination: {
-            el: ".tc-clients-style1 .swiper-pagination",
-            type: "fraction",
-        },
-        navigation: {
-            nextEl: ".tc-clients-style1 .swiper-button-next",
-            prevEl: ".tc-clients-style1 .swiper-button-prev",
-        },
-        mousewheel: false,
-        keyboard: true,
-        autoplay: {
-            delay: 6000,
-        },
-        loop: true,
+    // ------------ tc-testimonials-slider1 (Individual Sliders) -----------
+    // Initialize each testimonial slider separately
+    $(".testimonial-individual-slider .clients-slider1").each(function(index) {
+        var $slider = $(this);
+        var sliderId = $slider.attr('class').match(/testimonial-slider-\d+/);
+        var sliderClass = sliderId ? sliderId[0] : 'testimonial-slider-' + (index + 1);
+        
+        var swiper = new Swiper($slider[0], {
+            slidesPerView: 1,
+            spaceBetween: 0,
+            centeredSlides: true,
+            speed: 1000,
+            pagination: {
+                el: $slider.find(".swiper-pagination")[0],
+                type: "fraction",
+            },
+            navigation: {
+                nextEl: $slider.find(".swiper-button-next")[0],
+                prevEl: $slider.find(".swiper-button-prev")[0],
+            },
+            mousewheel: false,
+            keyboard: true,
+            autoplay: {
+                delay: 6000,
+            },
+            loop: true,
+        });
     });
+    
+    // Fallback for single slider (if no individual sliders found)
+    if ($(".testimonial-individual-slider").length === 0) {
+        var swiper = new Swiper(".tc-testimonials-style1 .clients-slider1", {
+            slidesPerView: 1,
+            spaceBetween: 0,
+            centeredSlides: true,
+            speed: 1000,
+            pagination: {
+                el: ".tc-clients-style1 .swiper-pagination",
+                type: "fraction",
+            },
+            navigation: {
+                nextEl: ".tc-clients-style1 .swiper-button-next",
+                prevEl: ".tc-clients-style1 .swiper-button-prev",
+            },
+            mousewheel: false,
+            keyboard: true,
+            autoplay: {
+                delay: 6000,
+            },
+            loop: true,
+        });
+    }
 
     // ------------ tc-projects-slider1 -----------
     var swiper = new Swiper(".tc-projects-style1 .projects-slider", {
