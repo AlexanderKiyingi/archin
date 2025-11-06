@@ -76,9 +76,9 @@ function getVideoThumbnail($video_id, $platform = 'youtube') {
 
 /**
  * Get video thumbnail URL with fallback
- * First tries custom uploaded thumbnail, then platform thumbnail, then placeholder
+ * First tries custom uploaded thumbnail, then platform thumbnail
  */
-function getVideoThumbnailUrl($custom_thumbnail, $video_id, $platform = 'youtube', $placeholder = 'assets/img/home1/placeholder-video.jpg') {
+function getVideoThumbnailUrl($custom_thumbnail, $video_id, $platform = 'youtube') {
     // If custom thumbnail exists, use it
     if (!empty($custom_thumbnail)) {
         return getImageUrl($custom_thumbnail);
@@ -89,7 +89,7 @@ function getVideoThumbnailUrl($custom_thumbnail, $video_id, $platform = 'youtube
         return getVideoThumbnail($video_id, $platform);
     }
     
-    // Fallback to placeholder
-    return $placeholder;
+    // Return empty string if no thumbnail available
+    return '';
 }
 

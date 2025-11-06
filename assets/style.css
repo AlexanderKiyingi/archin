@@ -15731,59 +15731,9 @@ home 9 style
     color: #666;
 }
 
-/* Horizontal Scroll Container */
-.showcases-scroll-container {
+/* Showcases Content Container (matching projects-content) */
+.showcases-content {
     position: relative;
-    width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 10px 0 30px 0;
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    scrollbar-width: thin; /* Firefox */
-    scrollbar-color: var(--color-orange1) rgba(0, 0, 0, 0.1); /* Firefox */
-    scroll-behavior: smooth;
-}
-
-/* Custom scrollbar for Webkit browsers */
-.showcases-scroll-container::-webkit-scrollbar {
-    height: 8px;
-}
-
-.showcases-scroll-container::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 10px;
-}
-
-.showcases-scroll-container::-webkit-scrollbar-thumb {
-    background: var(--color-orange1);
-    border-radius: 10px;
-}
-
-.showcases-scroll-container::-webkit-scrollbar-thumb:hover {
-    background: #e68900;
-}
-
-/* Scroll Wrapper */
-.showcases-scroll-wrapper {
-    display: flex;
-    gap: 30px;
-    padding: 10px 0;
-    width: max-content;
-    min-width: 100%;
-}
-
-/* Empty state */
-.showcase-empty {
-    width: 100%;
-    text-align: center;
-    padding: 40px 20px;
-}
-
-/* Showcase Card Item */
-.showcase-card-item {
-    flex: 0 0 auto;
-    width: 380px;
-    min-width: 300px;
 }
 
 /* Showcase Card */
@@ -15822,6 +15772,23 @@ home 9 style
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
+}
+
+.showcase-thumbnail-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a1a;
+    color: #666;
+}
+
+.showcase-thumbnail-placeholder i {
+    font-size: 48px;
 }
 
 .showcase-card:hover .showcase-thumbnail img {
@@ -15986,15 +15953,6 @@ home 9 style
         padding: 80px 0;
     }
     
-    .showcase-card-item {
-        width: 340px;
-        min-width: 280px;
-    }
-    
-    .showcases-scroll-wrapper {
-        gap: 25px;
-    }
-    
     .play-button {
         width: 70px;
         height: 70px;
@@ -16016,15 +15974,6 @@ home 9 style
     
     .tc-project-showcases-style1 .title p {
         font-size: 1rem;
-    }
-    
-    .showcase-card-item {
-        width: 300px;
-        min-width: 260px;
-    }
-    
-    .showcases-scroll-wrapper {
-        gap: 20px;
     }
     
     .play-button {
@@ -16056,15 +16005,6 @@ home 9 style
     
     .tc-project-showcases-style1 .title h2 {
         font-size: 1.75rem;
-    }
-    
-    .showcase-card-item {
-        width: 280px;
-        min-width: 240px;
-    }
-    
-    .showcases-scroll-wrapper {
-        gap: 15px;
     }
     
     .play-button {
