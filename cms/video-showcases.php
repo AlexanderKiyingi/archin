@@ -25,9 +25,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $upload = uploadFile($_FILES['thumbnail'], 'showcases');
                 if ($upload['success']) {
                     $thumbnail = $upload['path'];
+                    
+                    // Delete old thumbnail if exists and new one uploaded
+                    if ($action === 'edit' && !empty($_POST['current_thumbnail']) && $_POST['current_thumbnail'] !== $thumbnail) {
+                        $old_thumbnail_path = UPLOAD_PATH . $_POST['current_thumbnail'];
+                        if (file_exists($old_thumbnail_path)) {
+                            @unlink($old_thumbnail_path);
+                        }
+                    }
+                }
+            } elseif ($action === 'edit' && isset($_POST['remove_thumbnail']) && $_POST['remove_thumbnail'] === '1') {
+                // User wants to remove thumbnail
+                $thumbnail = null;
+                
+                // Delete the file
+                if (!empty($_POST['current_thumbnail'])) {
+                    $thumbnail_path = UPLOAD_PATH . $_POST['current_thumbnail'];
+                    if (file_exists($thumbnail_path)) {
+                        @unlink($thumbnail_path);
+                    }
                 }
             } elseif ($action === 'edit' && !empty($_POST['current_thumbnail'])) {
-                // Keep existing thumbnail if no new upload
+                // Keep existing thumbnail if no new upload and not removing
                 $thumbnail = $_POST['current_thumbnail'];
             }
             
@@ -68,6 +87,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $updates[] = "thumbnail = ?";
                     $params[] = $thumbnail;
                     $types .= 's';
+                } elseif ($thumbnail === null) {
+                    // Explicitly set thumbnail to empty string to remove it
+                    $updates[] = "thumbnail = ?";
+                    $params[] = '';
+                    $types .= 's';
                 }
                 
                 $updates[] = "display_order = ?";
@@ -92,6 +116,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $message = 'Error updating video showcase: ' . $conn->error;
                     $message_type = 'error';
                 }
+            }
+        } elseif ($action === 'delete_thumbnail') {
+            $id = (int)$_POST['id'];
+            
+            // Get thumbnail path to delete file
+            $result = $conn->query("SELECT thumbnail FROM video_showcases WHERE id = $id");
+            if ($result && $row = $result->fetch_assoc() && !empty($row['thumbnail'])) {
+                $thumbnail_path = UPLOAD_PATH . $row['thumbnail'];
+                if (file_exists($thumbnail_path)) {
+                    @unlink($thumbnail_path);
+                }
+                
+                // Update database to remove thumbnail
+                $sql = "UPDATE video_showcases SET thumbnail = '' WHERE id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $id);
+                
+                if ($stmt->execute()) {
+                    $message = 'Thumbnail deleted successfully! YouTube/Vimeo thumbnail will be used instead.';
+                    $message_type = 'success';
+                } else {
+                    $message = 'Error deleting thumbnail: ' . $conn->error;
+                    $message_type = 'error';
+                }
+            } else {
+                $message = 'No custom thumbnail found to delete.';
+                $message_type = 'warning';
             }
         } elseif ($action === 'delete') {
             $id = (int)$_POST['id'];
@@ -208,16 +259,27 @@ include 'includes/header.php';
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <a href="?action=edit&id=<?php echo $video['id']; ?>" class="text-blue-600 hover:text-blue-900 mr-3">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-                                    <form method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this video showcase?');">
-                                        <input type="hidden" name="action" value="delete">
-                                        <input type="hidden" name="id" value="<?php echo $video['id']; ?>">
-                                        <button type="submit" class="text-red-600 hover:text-red-900">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </button>
-                                    </form>
+                                    <div class="flex items-center justify-end gap-2">
+                                        <?php if (!empty($video['thumbnail'])): ?>
+                                            <form method="POST" class="inline" onsubmit="return confirm('Are you sure you want to remove the custom thumbnail? YouTube/Vimeo thumbnail will be used instead.');">
+                                                <input type="hidden" name="action" value="delete_thumbnail">
+                                                <input type="hidden" name="id" value="<?php echo $video['id']; ?>">
+                                                <button type="submit" class="text-orange-600 hover:text-orange-900" title="Remove custom thumbnail">
+                                                    <i class="fas fa-image"></i>
+                                                </button>
+                                            </form>
+                                        <?php endif; ?>
+                                        <a href="?action=edit&id=<?php echo $video['id']; ?>" class="text-blue-600 hover:text-blue-900">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                        <form method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this video showcase?');">
+                                            <input type="hidden" name="action" value="delete">
+                                            <input type="hidden" name="id" value="<?php echo $video['id']; ?>">
+                                            <button type="submit" class="text-red-600 hover:text-red-900">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
@@ -297,9 +359,16 @@ include 'includes/header.php';
                         Thumbnail Image <span class="text-gray-500 font-normal">(Optional - YouTube/Vimeo thumbnail will be used if not provided)</span>
                     </label>
                     <?php if ($edit_video && !empty($edit_video['thumbnail'])): ?>
-                        <div class="mb-3">
+                        <div class="mb-3 relative inline-block">
                             <img src="<?php echo UPLOAD_URL . $edit_video['thumbnail']; ?>" alt="Current thumbnail" class="w-32 h-20 object-cover rounded border border-gray-300">
-                            <p class="text-xs text-gray-500 mt-1">Current custom thumbnail</p>
+                            <button type="button" 
+                                    onclick="if(confirm('Are you sure you want to remove this custom thumbnail? The YouTube/Vimeo thumbnail will be used instead.')) { document.getElementById('remove_thumbnail').value = '1'; this.closest('div').style.display='none'; }"
+                                    class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition"
+                                    title="Remove custom thumbnail">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <input type="hidden" name="remove_thumbnail" id="remove_thumbnail" value="0">
+                            <p class="text-xs text-gray-500 mt-1">Current custom thumbnail - Click X to remove</p>
                         </div>
                     <?php endif; ?>
                     

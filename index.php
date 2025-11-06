@@ -721,6 +721,88 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
 
 
             <!--  Start project showcases  -->
+            <section class="tc-project-showcases-style1 section-padding" style="display: none;">
+                <div class="container">
+                    <div class="title mb-70">
+                        <h2 class="fsz-45 wow fadeInUp"> Project Showcases </h2>
+                        <p class="color-666 mt-3 wow fadeInUp" data-wow-delay="0.2s"> See Our Work in Motion </p>
+                    </div>
+                    <div class="showcases-content float_box_container">
+                        <div class="showcases-slider">
+                            <div class="swiper-wrapper">
+                                <?php
+                                if ($video_showcases_result && $video_showcases_result->num_rows > 0):
+                                    $delay = 0.1;
+                                    while ($showcase = $video_showcases_result->fetch_assoc()):
+                                        // Debug: Check if video_id exists
+                                        if (empty($showcase['video_id'])) {
+                                            continue; // Skip videos without video_id
+                                        }
+                                        
+                                        // Get thumbnail URL - use custom thumbnail if available, otherwise use YouTube/Vimeo thumbnail
+                                        $thumbnail_url = getVideoThumbnailUrl(
+                                            $showcase['thumbnail'] ?? '',
+                                            $showcase['video_id'] ?? '',
+                                            $showcase['platform'] ?? 'youtube'
+                                        );
+                                ?>
+                                    <div class="swiper-slide">
+                                        <div class="showcase-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
+                                            <div class="showcase-thumbnail">
+                                                <?php if (!empty($thumbnail_url)): ?>
+                                                    <?php 
+                                                    // Get fallback thumbnail URL for YouTube videos
+                                                    $fallback_url = '';
+                                                    if ($showcase['platform'] === 'youtube' && !empty($showcase['video_id'])) {
+                                                        $fallback_url = getVideoThumbnail($showcase['video_id'], 'youtube', true); // Use hqdefault as fallback
+                                                    }
+                                                    ?>
+                                                    <img src="<?php echo htmlspecialchars($thumbnail_url); ?>" 
+                                                         alt="<?php echo htmlspecialchars($showcase['title']); ?>" 
+                                                         class="img-cover"
+                                                         onerror="<?php if (!empty($fallback_url)): ?>this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';<?php else: ?>this.style.display='none'; this.nextElementSibling.style.display='flex';<?php endif; ?>">
+                                                    <?php if (!empty($fallback_url)): ?>
+                                                        <div class="showcase-thumbnail-placeholder" style="display: none;">
+                                                            <i class="la la-video"></i>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                <?php else: ?>
+                                                    <div class="showcase-thumbnail-placeholder">
+                                                        <i class="la la-video"></i>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <div class="play-button-overlay" data-video-id="<?php echo htmlspecialchars($showcase['video_id']); ?>" data-platform="<?php echo htmlspecialchars($showcase['platform']); ?>">
+                                                    <div class="play-button">
+                                                        <i class="la la-play"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="logo-overlay">
+                                                    <img src="assets/img/home1/logo.png" alt="Flip Avenue" class="logo-small">
+                                                </div>
+                                            </div>
+                                            <div class="showcase-info">
+                                                <h4 class="showcase-title"><?php echo htmlspecialchars($showcase['title']); ?></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php 
+                                    $delay += 0.1;
+                                    endwhile;
+                                else:
+                                ?>
+                                    <div class="swiper-slide">
+                                        <div class="showcase-empty">
+                                            <p class="text-center text-gray-500 py-8">No video showcases available at the moment.</p>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div class="float-cursor float_box"> Hold <br> and Drag </div>
+                    </div>
+                </div>
+            <!--  Start project showcases  -->
+            <?php /* Hide section temporarily
             <section class="tc-project-showcases-style1 section-padding">
                 <div class="container">
                     <div class="title mb-70">
@@ -802,6 +884,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                     </div>
                 </div>
             </section>
+            */ ?>
             <!--  End project showcases  -->
 
 
