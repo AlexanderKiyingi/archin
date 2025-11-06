@@ -36,8 +36,8 @@ function uploadFile($file, $folder = 'careers') {
         return ['success' => false, 'message' => 'Invalid file type. Only PDF, DOC, DOCX, ZIP, RAR files are allowed.'];
     }
     
-    if ($file['size'] > 10000000) { // 10MB
-        return ['success' => false, 'message' => 'File too large (max 10MB)'];
+    if ($file['size'] > 104857600) { // 100MB
+        return ['success' => false, 'message' => 'File too large (max 100MB)'];
     }
     
     if (move_uploaded_file($file['tmp_name'], $target_file)) {

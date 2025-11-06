@@ -204,8 +204,9 @@ function uploadFile($file, $folder = 'general') {
         
         // Convert to WebP if image was loaded successfully
         if ($image && function_exists('imagewebp')) {
-            // Use quality 85 for good balance between size and quality
-            $quality = 85;
+            // Use quality 90 for better quality while still getting good compression
+            // WebP typically provides 25-35% better compression than JPEG at same quality
+            $quality = 90;
             $converted = @imagewebp($image, $target_file, $quality);
             
             if ($converted) {
