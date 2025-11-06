@@ -250,6 +250,11 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                     <span>Projects</span>
                 </a>
                 
+                <a href="video-showcases.php" class="sidebar-link <?php echo $current_page === 'video-showcases' ? 'active' : ''; ?> flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+                    <i class="fas fa-video w-5"></i>
+                    <span>Video Showcases</span>
+                </a>
+                
                 <a href="team.php" class="sidebar-link <?php echo $current_page === 'team' ? 'active' : ''; ?> flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
                     <i class="fas fa-users w-5"></i>
                     <span>Team</span>

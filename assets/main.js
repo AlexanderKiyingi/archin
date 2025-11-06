@@ -961,4 +961,60 @@ $(document).ready(function() {
 
 
 
+// ============================================
+// PROJECT SHOWCASES VIDEO PLAYBACK
+// ============================================
+
+$(document).ready(function() {
+    // Create video modal if it doesn't exist
+    if ($('.video-modal').length === 0) {
+        $('body').append(`
+            <div class="video-modal" id="videoModal">
+                <div class="video-modal-content">
+                    <span class="video-modal-close">&times;</span>
+                    <iframe class="video-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        `);
+    }
+
+    // Handle play button click
+    $('.play-button-overlay').on('click', function() {
+        const videoId = $(this).data('video-id');
+        const platform = $(this).data('platform') || 'youtube';
+        
+        let videoUrl = '';
+        
+        if (platform === 'youtube') {
+            videoUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+        } else if (platform === 'vimeo') {
+            videoUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1`;
+        }
+        
+        // Set iframe source and show modal
+        $('#videoModal .video-iframe').attr('src', videoUrl);
+        $('#videoModal').addClass('active');
+        $('body').css('overflow', 'hidden'); // Prevent body scroll
+    });
+
+    // Close modal
+    $('.video-modal-close, .video-modal').on('click', function(e) {
+        if (e.target === this || $(e.target).hasClass('video-modal-close')) {
+            $('#videoModal').removeClass('active');
+            $('#videoModal .video-iframe').attr('src', ''); // Stop video
+            $('body').css('overflow', ''); // Restore body scroll
+        }
+    });
+
+    // Close on Escape key
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' && $('#videoModal').hasClass('active')) {
+            $('#videoModal').removeClass('active');
+            $('#videoModal .video-iframe').attr('src', '');
+            $('body').css('overflow', '');
+        }
+    });
+});
+
+
 

@@ -32,6 +32,10 @@ $testimonials_result = $conn->query($testimonials_query);
 $awards_query = "SELECT * FROM awards WHERE is_active = 1 ORDER BY year DESC, display_order ASC LIMIT 4";
 $awards_result = $conn->query($awards_query);
 
+// Fetch video showcases
+$video_showcases_query = "SELECT * FROM video_showcases WHERE is_active = 1 ORDER BY display_order ASC, id DESC LIMIT 10";
+$video_showcases_result = $conn->query($video_showcases_query);
+
 // Fetch latest blog posts
 $blog_query = "SELECT bp.*, au.full_name as author_name 
                FROM blog_posts bp 
@@ -714,6 +718,58 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                 </div>
             </section>
             <!--  End projects  -->
+
+
+            <!--  Start project showcases  -->
+            <section class="tc-project-showcases-style1 section-padding">
+                <div class="container">
+                    <div class="title text-center mb-70">
+                        <h2 class="fsz-45 wow fadeInUp"> Project Showcases </h2>
+                        <p class="color-666 mt-3 wow fadeInUp" data-wow-delay="0.2s"> See Our Work in Motion </p>
+                    </div>
+                    <div class="showcases-scroll-container">
+                        <div class="showcases-scroll-wrapper">
+                            <?php
+                            if ($video_showcases_result && $video_showcases_result->num_rows > 0):
+                                $delay = 0.1;
+                                while ($showcase = $video_showcases_result->fetch_assoc()):
+                                    // Get thumbnail URL
+                                    $thumbnail_url = !empty($showcase['thumbnail']) ? 'assets/uploads/' . $showcase['thumbnail'] : 'assets/img/home1/placeholder-video.jpg';
+                            ?>
+                                <div class="showcase-card-item wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
+                                    <div class="showcase-card">
+                                        <div class="showcase-thumbnail">
+                                            <img src="<?php echo htmlspecialchars($thumbnail_url); ?>" 
+                                                 alt="<?php echo htmlspecialchars($showcase['title']); ?>" 
+                                                 class="img-cover">
+                                            <div class="play-button-overlay" data-video-id="<?php echo htmlspecialchars($showcase['video_id']); ?>" data-platform="<?php echo htmlspecialchars($showcase['platform']); ?>">
+                                                <div class="play-button">
+                                                    <i class="la la-play"></i>
+                                                </div>
+                                            </div>
+                                            <div class="logo-overlay">
+                                                <img src="assets/img/home1/logo.png" alt="Flip Avenue" class="logo-small">
+                                            </div>
+                                        </div>
+                                        <div class="showcase-info">
+                                            <h4 class="showcase-title"><?php echo htmlspecialchars($showcase['title']); ?></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php 
+                                $delay += 0.1;
+                                endwhile;
+                            else:
+                            ?>
+                                <div class="showcase-empty">
+                                    <p class="text-center text-gray-500 py-8">No video showcases available at the moment.</p>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--  End project showcases  -->
 
 
             <!--  Start testimonials  -->

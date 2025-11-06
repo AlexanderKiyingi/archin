@@ -2316,6 +2316,7 @@ html[lang=ar] .home-style1 .loader-wrap {
 .team-member-info {
   text-align: center;
   margin-top: 15px;
+  width: 100%;
 }
 
 .team-member-name {
@@ -2324,12 +2325,16 @@ html[lang=ar] .home-style1 .loader-wrap {
   color: #333;
   margin-bottom: 5px;
   line-height: 1.2;
+  text-align: center;
+  width: 100%;
 }
 
 .team-member-position {
   font-size: 0.9rem;
   color: #666;
   font-weight: 400;
+  text-align: center;
+  width: 100%;
 }
 
 /* Responsive typography */
@@ -2478,6 +2483,8 @@ html[lang=ar] .home-style1 .loader-wrap {
   justify-content: center;
   align-items: flex-start;
   gap: 30px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .team-member-card {
@@ -2486,6 +2493,8 @@ html[lang=ar] .home-style1 .loader-wrap {
   align-items: center;
   max-width: 220px;
   margin: 0 auto;
+  width: 100%;
+  flex-shrink: 0;
 }
 
 /* Ensure join-team-container displays correctly within team-member-card */
@@ -2495,24 +2504,74 @@ html[lang=ar] .home-style1 .loader-wrap {
 
 /* Responsive team grid */
 @media screen and (max-width: 767px) {
+  .tc-team-style1 {
+    padding: 60px 0 !important;
+  }
+  
+  .tc-team-style1 .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
   .team-section {
     padding: 40px 0;
+  }
+  
+  .tc-team-style1 .js-splittext-lines {
+    margin-bottom: 50px !important;
+    text-align: center;
   }
   
   .tc-team-style1 .js-splittext-lines h2 {
     font-size: 2rem;
     text-align: center;
+    margin: 0 auto;
   }
   
   .team-grid {
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    justify-content: center;
+    gap: 35px;
+    width: 100%;
+    padding: 0;
   }
   
   .team-member-card {
     max-width: 220px;
     width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .team-image-container {
+    margin: 0 auto;
+  }
+  
+  .team-member-info {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .team-member-name {
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  .team-member-position {
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  .team-member-card .join-team-container {
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .join-team-container {
@@ -2522,28 +2581,74 @@ html[lang=ar] .home-style1 .loader-wrap {
 }
 
 @media screen and (max-width: 479px) {
+  .tc-team-style1 {
+    padding: 50px 0 !important;
+  }
+  
+  .tc-team-style1 .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
   .team-section {
     padding: 30px 0;
   }
   
   .tc-team-style1 .js-splittext-lines {
-    margin-bottom: 40px;
+    margin-bottom: 40px !important;
+    text-align: center;
   }
   
   .tc-team-style1 .js-splittext-lines h2 {
     font-size: 1.75rem;
     text-align: center;
+    margin: 0 auto;
   }
   
   .team-grid {
     flex-direction: column;
     align-items: center;
-    gap: 25px;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+    padding: 0;
   }
   
   .team-member-card {
     max-width: 200px;
     width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .team-image-container {
+    margin: 0 auto;
+  }
+  
+  .team-member-info {
+    width: 100%;
+    text-align: center;
+    margin-top: 18px;
+  }
+  
+  .team-member-name {
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  .team-member-position {
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  .team-member-card .join-team-container {
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .join-team-container {
@@ -2553,19 +2658,69 @@ html[lang=ar] .home-style1 .loader-wrap {
 }
 
 @media screen and (max-width: 359px) {
+  .tc-team-style1 {
+    padding: 40px 0 !important;
+  }
+  
+  .tc-team-style1 .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
+  .tc-team-style1 .js-splittext-lines {
+    margin-bottom: 35px !important;
+  }
+  
   .tc-team-style1 .js-splittext-lines h2 {
     font-size: 1.5rem;
+    text-align: center;
+    margin: 0 auto;
   }
   
   .team-grid {
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    justify-content: center;
+    gap: 25px;
+    width: 100%;
+    padding: 0;
   }
   
   .team-member-card {
     max-width: 180px;
     width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .team-image-container {
+    margin: 0 auto;
+  }
+  
+  .team-member-info {
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+  }
+  
+  .team-member-name {
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  .team-member-position {
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  .team-member-card .join-team-container {
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .join-team-container {
@@ -15554,4 +15709,374 @@ home 9 style
 .project-thumb.active {
     border-color: #333 !important;
     opacity: 1;
+}
+
+/* ============================================
+   PROJECT SHOWCASES SECTION
+   ============================================ */
+
+.tc-project-showcases-style1 {
+    position: relative;
+    padding: 100px 0;
+    background-color: #fff;
+}
+
+.tc-project-showcases-style1 .title h2 {
+    font-weight: 600;
+    color: #333;
+}
+
+.tc-project-showcases-style1 .title p {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+/* Horizontal Scroll Container */
+.showcases-scroll-container {
+    position: relative;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 10px 0 30px 0;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--color-orange1) rgba(0, 0, 0, 0.1); /* Firefox */
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for Webkit browsers */
+.showcases-scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.showcases-scroll-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+}
+
+.showcases-scroll-container::-webkit-scrollbar-thumb {
+    background: var(--color-orange1);
+    border-radius: 10px;
+}
+
+.showcases-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #e68900;
+}
+
+/* Scroll Wrapper */
+.showcases-scroll-wrapper {
+    display: flex;
+    gap: 30px;
+    padding: 10px 0;
+    width: max-content;
+    min-width: 100%;
+}
+
+/* Empty state */
+.showcase-empty {
+    width: 100%;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+/* Showcase Card Item */
+.showcase-card-item {
+    flex: 0 0 auto;
+    width: 380px;
+    min-width: 300px;
+}
+
+/* Showcase Card */
+.showcase-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.showcase-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Thumbnail Container */
+.showcase-thumbnail {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 aspect ratio */
+    overflow: hidden;
+    background: #000;
+    border-radius: 12px 12px 0 0;
+}
+
+.showcase-thumbnail img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.showcase-card:hover .showcase-thumbnail img {
+    transform: scale(1.05);
+}
+
+/* Play Button Overlay */
+.play-button-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.showcase-card:hover .play-button-overlay {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.play-button {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--color-orange1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(255, 153, 0, 0.4);
+}
+
+.play-button i {
+    font-size: 28px;
+    color: #fff;
+    margin-left: 4px; /* Slight offset for visual centering */
+}
+
+.play-button-overlay:hover .play-button {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(255, 153, 0, 0.6);
+}
+
+/* Logo Overlay */
+.logo-overlay {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    z-index: 3;
+    opacity: 0.9;
+}
+
+.logo-overlay .logo-small {
+    height: 30px;
+    width: auto;
+    filter: brightness(0) invert(1); /* Make logo white */
+}
+
+/* Showcase Info */
+.showcase-info {
+    padding: 20px;
+    background: #fff;
+}
+
+.showcase-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    line-height: 1.4;
+    text-align: center;
+}
+
+/* Video Container */
+.video-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 aspect ratio */
+    background: #000;
+    border-radius: 12px;
+}
+
+.video-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 12px;
+}
+
+/* Video Modal */
+.video-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    animation: fadeIn 0.3s ease;
+}
+
+.video-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 1200px;
+    padding-top: 56.25%; /* 16:9 aspect ratio */
+}
+
+.video-modal-content iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.video-modal-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: #fff;
+    font-size: 32px;
+    font-weight: 300;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 10000;
+}
+
+.video-modal-close:hover {
+    color: var(--color-orange1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 991px) {
+    .tc-project-showcases-style1 {
+        padding: 80px 0;
+    }
+    
+    .showcase-card-item {
+        width: 340px;
+        min-width: 280px;
+    }
+    
+    .showcases-scroll-wrapper {
+        gap: 25px;
+    }
+    
+    .play-button {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .play-button i {
+        font-size: 24px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .tc-project-showcases-style1 {
+        padding: 60px 0;
+    }
+    
+    .tc-project-showcases-style1 .title h2 {
+        font-size: 2rem;
+    }
+    
+    .tc-project-showcases-style1 .title p {
+        font-size: 1rem;
+    }
+    
+    .showcase-card-item {
+        width: 300px;
+        min-width: 260px;
+    }
+    
+    .showcases-scroll-wrapper {
+        gap: 20px;
+    }
+    
+    .play-button {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .play-button i {
+        font-size: 20px;
+    }
+    
+    .showcase-info {
+        padding: 15px;
+    }
+    
+    .showcase-title {
+        font-size: 1rem;
+    }
+    
+    .logo-overlay .logo-small {
+        height: 25px;
+    }
+}
+
+@media screen and (max-width: 479px) {
+    .tc-project-showcases-style1 {
+        padding: 50px 0;
+    }
+    
+    .tc-project-showcases-style1 .title h2 {
+        font-size: 1.75rem;
+    }
+    
+    .showcase-card-item {
+        width: 280px;
+        min-width: 240px;
+    }
+    
+    .showcases-scroll-wrapper {
+        gap: 15px;
+    }
+    
+    .play-button {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .play-button i {
+        font-size: 18px;
+    }
+    
+    .showcase-title {
+        font-size: 0.95rem;
+    }
 }
