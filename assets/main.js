@@ -53,16 +53,14 @@ $(document).ready(function () {
     });
 
     // ------------ tc-testimonials-slider1 -----------
-    var testimonialsSwiper = new Swiper(".tc-testimonials-style1 .clients-slider1", {
+    var swiper = new Swiper(".tc-testimonials-style1 .clients-slider1", {
         slidesPerView: 1,
         spaceBetween: 0,
         centeredSlides: true,
         speed: 1000,
         pagination: {
             el: ".tc-clients-style1 .swiper-pagination",
-            type: "bullets",
-            clickable: true,
-            dynamicBullets: true,
+            type: "fraction",
         },
         navigation: {
             nextEl: ".tc-clients-style1 .swiper-button-next",
@@ -72,16 +70,8 @@ $(document).ready(function () {
         keyboard: true,
         autoplay: {
             delay: 6000,
-            disableOnInteraction: false,
         },
         loop: true,
-        loopedSlides: 10, // Ensure enough slides for smooth looping with all testimonials
-        on: {
-            init: function() {
-                // Ensure all testimonials are properly displayed
-                this.update();
-            },
-        },
     });
 
     // ------------ tc-projects-slider1 -----------
