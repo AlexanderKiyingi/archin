@@ -362,7 +362,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                         <label class="block text-sm font-medium text-gray-700 mb-2">Featured Image</label>
                         <input type="file" name="featured_image" id="addFeaturedImageInput" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <p class="text-sm text-gray-500 mt-1">
-                            <span class="font-semibold text-gray-700">Max file size: 5MB</span>
+                            <span class="font-semibold text-gray-700">Max file size: 100MB</span>
                         </p>
                         <!-- Error message for file size -->
                         <div id="addFeaturedImageError" class="hidden mt-2 p-2 bg-red-100 border border-red-400 text-red-700 rounded text-sm"></div>
@@ -382,7 +382,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                         <input type="file" name="gallery_images[]" id="addGalleryImagesInput" accept="image/*" multiple class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <p class="text-sm text-gray-500 mt-1">
                             You can select multiple images for the gallery
-                            <span class="font-semibold text-gray-700">Max file size: 5MB per image</span>
+                            <span class="font-semibold text-gray-700">Max file size: 100MB per image</span>
                         </p>
                         <!-- Error message for file size -->
                         <div id="addGalleryImagesError" class="hidden mt-2 p-2 bg-red-100 border border-red-400 text-red-700 rounded text-sm"></div>
@@ -500,7 +500,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                         <input type="file" name="featured_image" id="editFeaturedImageInput" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <p class="text-sm text-gray-500 mt-1">
                             Select a new image to replace current featured image
-                            <span class="font-semibold text-gray-700">Max file size: 5MB</span>
+                            <span class="font-semibold text-gray-700">Max file size: 100MB</span>
                         </p>
                         <!-- Error message for file size -->
                         <div id="editFeaturedImageError" class="hidden mt-2 p-2 bg-red-100 border border-red-400 text-red-700 rounded text-sm"></div>
@@ -522,7 +522,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                         <input type="file" name="gallery_images[]" id="editGalleryImagesInput" accept="image/*" multiple class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <p class="text-sm text-gray-500 mt-1">
                             Add more images to existing gallery
-                            <span class="font-semibold text-gray-700">Max file size: 5MB per image</span>
+                            <span class="font-semibold text-gray-700">Max file size: 100MB per image</span>
                         </p>
                         <!-- Error message for file size -->
                         <div id="editGalleryImagesError" class="hidden mt-2 p-2 bg-red-100 border border-red-400 text-red-700 rounded text-sm"></div>
@@ -827,7 +827,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
         }
         
         // Constants
-        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+        const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB in bytes
         
         // Helper function to format file size
         function formatFileSize(bytes) {
@@ -862,7 +862,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                         // Check file size
                         if (file.size > MAX_FILE_SIZE) {
                             if (errorDiv) {
-                                errorDiv.textContent = `File too large! "${file.name}" is ${formatFileSize(file.size)}. Maximum allowed size is 5MB.`;
+                                errorDiv.textContent = `File too large! "${file.name}" is ${formatFileSize(file.size)}. Maximum allowed size is 100MB.`;
                                 errorDiv.classList.remove('hidden');
                             }
                             this.value = ''; // Clear the input
@@ -901,7 +901,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                         // Show error if any files are too large
                         if (oversizedFiles.length > 0) {
                             if (errorDiv) {
-                                errorDiv.textContent = `File(s) too large! Maximum allowed size is 5MB per image. Large files: ${oversizedFiles.join(', ')}`;
+                                errorDiv.textContent = `File(s) too large! Maximum allowed size is 100MB per image. Large files: ${oversizedFiles.join(', ')}`;
                                 errorDiv.classList.remove('hidden');
                             }
                             this.value = ''; // Clear the input
@@ -929,7 +929,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                         hasOversizedFiles = true;
                         const errorDiv = document.getElementById('addFeaturedImageError');
                         if (errorDiv) {
-                            errorDiv.textContent = `File too large! "${featuredFile.name}" is ${formatFileSize(featuredFile.size)}. Maximum allowed size is 5MB.`;
+                            errorDiv.textContent = `File too large! "${featuredFile.name}" is ${formatFileSize(featuredFile.size)}. Maximum allowed size is 100MB.`;
                             errorDiv.classList.remove('hidden');
                         }
                     }
@@ -946,7 +946,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                         if (oversizedGalleryFiles.length > 0) {
                             const errorDiv = document.getElementById('addGalleryImagesError');
                             if (errorDiv) {
-                                errorDiv.textContent = `File(s) too large! Maximum allowed size is 5MB per image. Large files: ${oversizedGalleryFiles.join(', ')}`;
+                                errorDiv.textContent = `File(s) too large! Maximum allowed size is 100MB per image. Large files: ${oversizedGalleryFiles.join(', ')}`;
                                 errorDiv.classList.remove('hidden');
                             }
                         }
@@ -954,7 +954,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                     
                     if (hasOversizedFiles) {
                         e.preventDefault();
-                        alert('Please select files that are 5MB or smaller.');
+                        alert('Please select files that are 100MB or smaller.');
                         return;
                     }
                     
@@ -1026,7 +1026,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                         // Check file size
                         if (file.size > MAX_FILE_SIZE) {
                             if (errorDiv) {
-                                errorDiv.textContent = `File too large! "${file.name}" is ${formatFileSize(file.size)}. Maximum allowed size is 5MB.`;
+                                errorDiv.textContent = `File too large! "${file.name}" is ${formatFileSize(file.size)}. Maximum allowed size is 100MB.`;
                                 errorDiv.classList.remove('hidden');
                             }
                             this.value = ''; // Clear the input
@@ -1065,7 +1065,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                         // Show error if any files are too large
                         if (oversizedFiles.length > 0) {
                             if (errorDiv) {
-                                errorDiv.textContent = `File(s) too large! Maximum allowed size is 5MB per image. Large files: ${oversizedFiles.join(', ')}`;
+                                errorDiv.textContent = `File(s) too large! Maximum allowed size is 100MB per image. Large files: ${oversizedFiles.join(', ')}`;
                                 errorDiv.classList.remove('hidden');
                             }
                             this.value = ''; // Clear the input
@@ -1093,7 +1093,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                         hasOversizedFiles = true;
                         const errorDiv = document.getElementById('editFeaturedImageError');
                         if (errorDiv) {
-                            errorDiv.textContent = `File too large! "${featuredFile.name}" is ${formatFileSize(featuredFile.size)}. Maximum allowed size is 5MB.`;
+                            errorDiv.textContent = `File too large! "${featuredFile.name}" is ${formatFileSize(featuredFile.size)}. Maximum allowed size is 100MB.`;
                             errorDiv.classList.remove('hidden');
                         }
                     }
@@ -1110,7 +1110,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                         if (oversizedGalleryFiles.length > 0) {
                             const errorDiv = document.getElementById('editGalleryImagesError');
                             if (errorDiv) {
-                                errorDiv.textContent = `File(s) too large! Maximum allowed size is 5MB per image. Large files: ${oversizedGalleryFiles.join(', ')}`;
+                                errorDiv.textContent = `File(s) too large! Maximum allowed size is 100MB per image. Large files: ${oversizedGalleryFiles.join(', ')}`;
                                 errorDiv.classList.remove('hidden');
                             }
                         }
@@ -1118,7 +1118,7 @@ $categories_result = $conn->query("SELECT DISTINCT category FROM shop_products O
                     
                     if (hasOversizedFiles) {
                         e.preventDefault();
-                        alert('Please select files that are 5MB or smaller.');
+                        alert('Please select files that are 100MB or smaller.');
                         return;
                     }
                     

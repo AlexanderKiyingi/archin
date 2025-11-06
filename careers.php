@@ -340,7 +340,7 @@ if ($jobs_result) {
                                         <div class="col-lg-6 mb-4">
                                             <label class="form-label fsz-14 color-666 mb-2">Resume/CV *</label>
                                             <input type="file" name="resume" class="form-control" accept=".pdf,.doc,.docx" required>
-                                            <small class="text-muted">PDF, DOC, or DOCX files only (max 5MB)</small>
+                                            <small class="text-muted">PDF, DOC, or DOCX files only (max 100MB)</small>
                                         </div>
                                         <div class="col-lg-6 mb-4">
                                             <label class="form-label fsz-14 color-666 mb-2">Portfolio (Optional)</label>

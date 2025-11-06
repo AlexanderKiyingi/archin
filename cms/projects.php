@@ -437,7 +437,7 @@ include 'includes/header.php';
                     >
                     <p class="text-sm text-gray-500 mt-1">
                         <?php echo $edit_project ? 'Select a new image to replace current featured image' : 'Main image for the project'; ?>
-                        <span class="font-semibold text-gray-700">Max file size: 5MB</span>
+                        <span class="font-semibold text-gray-700">Max file size: 100MB</span>
                     </p>
                     <!-- Error message for file size -->
                     <div id="featured_image_error" class="hidden mt-2 p-2 bg-red-100 border border-red-400 text-red-700 rounded text-sm"></div>
@@ -473,7 +473,7 @@ include 'includes/header.php';
                     >
                     <p class="text-sm text-gray-500 mt-1">
                         You can select multiple images for the project gallery
-                        <span class="font-semibold text-gray-700">Max file size: 5MB per image</span>
+                        <span class="font-semibold text-gray-700">Max file size: 100MB per image</span>
                     </p>
                     <!-- Error message for file size -->
                     <div id="gallery_images_error" class="hidden mt-2 p-2 bg-red-100 border border-red-400 text-red-700 rounded text-sm"></div>
@@ -594,7 +594,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const galleryImagesInput = document.getElementById('gallery_images_input');
     
     // Constants
-    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+        const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB in bytes
     
     // Helper function to format file size
     function formatFileSize(bytes) {
@@ -623,7 +623,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Check file size
                 if (file.size > MAX_FILE_SIZE) {
                     if (errorDiv) {
-                        errorDiv.textContent = `File too large! "${file.name}" is ${formatFileSize(file.size)}. Maximum allowed size is 5MB.`;
+                        errorDiv.textContent = `File too large! "${file.name}" is ${formatFileSize(file.size)}. Maximum allowed size is 100MB.`;
                         errorDiv.classList.remove('hidden');
                     }
                     this.value = ''; // Clear the input
@@ -675,7 +675,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Show error if any files are too large
                 if (oversizedFiles.length > 0) {
                     if (errorDiv) {
-                        errorDiv.textContent = `File(s) too large! Maximum allowed size is 5MB per image. Large files: ${oversizedFiles.join(', ')}`;
+                        errorDiv.textContent = `File(s) too large! Maximum allowed size is 100MB per image. Large files: ${oversizedFiles.join(', ')}`;
                         errorDiv.classList.remove('hidden');
                     }
                     this.value = ''; // Clear the input
@@ -718,7 +718,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     errorMessages.push(`Featured image "${featuredFile.name}" is too large (${formatFileSize(featuredFile.size)})`);
                     const errorDiv = document.getElementById('featured_image_error');
                     if (errorDiv) {
-                        errorDiv.textContent = `File too large! "${featuredFile.name}" is ${formatFileSize(featuredFile.size)}. Maximum allowed size is 5MB.`;
+                        errorDiv.textContent = `File too large! "${featuredFile.name}" is ${formatFileSize(featuredFile.size)}. Maximum allowed size is 100MB.`;
                         errorDiv.classList.remove('hidden');
                     }
                 }
@@ -735,7 +735,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (oversizedGalleryFiles.length > 0) {
                         const errorDiv = document.getElementById('gallery_images_error');
                         if (errorDiv) {
-                            errorDiv.textContent = `File(s) too large! Maximum allowed size is 5MB per image. Large files: ${oversizedGalleryFiles.join(', ')}`;
+                            errorDiv.textContent = `File(s) too large! Maximum allowed size is 100MB per image. Large files: ${oversizedGalleryFiles.join(', ')}`;
                             errorDiv.classList.remove('hidden');
                         }
                     }
@@ -743,7 +743,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (hasOversizedFiles) {
                     e.preventDefault();
-                    alert('Please select files that are 5MB or smaller.');
+                    alert('Please select files that are 100MB or smaller.');
                     return;
                 }
                 

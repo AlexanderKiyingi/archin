@@ -138,8 +138,8 @@ function uploadFile($file, $folder = 'general') {
         return ['success' => false, 'message' => 'Invalid file type'];
     }
     
-    if (!isset($file['size']) || $file['size'] > 5000000) { // 5MB
-        return ['success' => false, 'message' => 'File too large (max 5MB)'];
+    if (!isset($file['size']) || $file['size'] > 104857600) { // 100MB
+        return ['success' => false, 'message' => 'File too large (max 100MB)'];
     }
     
     // Check if we should convert to WebP (only for images, not PDFs)

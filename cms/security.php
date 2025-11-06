@@ -210,9 +210,9 @@ function logSecurityEvent($event, $details = '', $user_id = null) {
 function sanitizeFileUpload($file, $allowed_types = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx']) {
     $errors = [];
     
-    // Check file size (max 5MB)
-    if ($file['size'] > 5 * 1024 * 1024) {
-        $errors[] = 'File size must be less than 5MB';
+    // Check file size (max 100MB)
+    if ($file['size'] > 100 * 1024 * 1024) {
+        $errors[] = 'File size must be less than 100MB';
     }
     
     // Check file extension
