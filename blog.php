@@ -68,8 +68,8 @@ $categories_query = "SELECT DISTINCT category FROM blog_posts WHERE is_published
 $categories_result = $conn->query($categories_query);
 if (!$categories_result) {
     error_log("Blog categories query failed: " . $conn->error);
-    // Create empty result set to prevent errors
-    $categories_result = new mysqli_result();
+    // Set to false to indicate no result
+    $categories_result = false;
 }
 ?>
 <!DOCTYPE html>
@@ -231,8 +231,11 @@ if (!$categories_result) {
                                     <!-- Category Filter -->
                                     <select class="form-select" style="max-width: 200px;" onchange="window.location.href='blog.php?category='+this.value+(new URLSearchParams(window.location.search).get('search') ? '&search='+new URLSearchParams(window.location.search).get('search') : '')">
                                         <option value="">All Categories</option>
-                                        <?php if ($categories_result && $categories_result->num_rows > 0): ?>
-                                            <?php while ($cat = $categories_result->fetch_assoc()): ?>
+                                        <?php if ($categories_result !== false && $categories_result->num_rows > 0): ?>
+                                            <?php 
+                                            // Reset pointer to beginning
+                                            $categories_result->data_seek(0);
+                                            while ($cat = $categories_result->fetch_assoc()): ?>
                                                 <?php if (!empty($cat['category'])): ?>
                                                 <option value="<?php echo htmlspecialchars($cat['category']); ?>" <?php echo $category === $cat['category'] ? 'selected' : ''; ?>>
                                                     <?php echo htmlspecialchars($cat['category']); ?>
