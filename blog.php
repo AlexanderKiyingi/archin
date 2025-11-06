@@ -4,10 +4,22 @@ require_once 'cms/db_connect.php';
 // Include common helper functions
 require_once 'common/functions.php';
 
+// Check if database connection is established
+if (!isset($conn) || $conn->connect_error) {
+    die("Database connection error. Please check your database configuration.");
+}
+
 // Pagination
 $posts_per_page = 6;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $posts_per_page;
+
+// Initialize variables
+$total_posts = 0;
+$total_pages = 0;
+$featured_post = null;
+$posts_result = null;
+$categories_result = null;
 
 // Search
 $search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
@@ -20,13 +32,23 @@ $category_condition = $category ? "AND category = '$category'" : '';
 // Get total posts count
 $count_query = "SELECT COUNT(*) as total FROM blog_posts WHERE is_published = 1 $search_condition $category_condition";
 $count_result = $conn->query($count_query);
-$total_posts = $count_result->fetch_assoc()['total'];
-$total_pages = ceil($total_posts / $posts_per_page);
+if ($count_result) {
+    $total_posts = $count_result->fetch_assoc()['total'];
+    $total_pages = ceil($total_posts / $posts_per_page);
+} else {
+    error_log("Blog count query failed: " . $conn->error);
+    $total_posts = 0;
+    $total_pages = 0;
+}
 
 // Get featured post (most recent published)
 $featured_query = "SELECT * FROM blog_posts WHERE is_published = 1 ORDER BY publish_date DESC LIMIT 1";
 $featured_result = $conn->query($featured_query);
-$featured_post = $featured_result->fetch_assoc();
+if ($featured_result && $featured_result->num_rows > 0) {
+    $featured_post = $featured_result->fetch_assoc();
+} else {
+    $featured_post = null;
+}
 
 // Get regular posts
 $posts_query = "SELECT bp.*, au.full_name as author_name 
@@ -36,10 +58,19 @@ $posts_query = "SELECT bp.*, au.full_name as author_name
                 ORDER BY bp.publish_date DESC 
                 LIMIT $posts_per_page OFFSET $offset";
 $posts_result = $conn->query($posts_query);
+if (!$posts_result) {
+    error_log("Blog posts query failed: " . $conn->error);
+    $posts_result = null;
+}
 
 // Get categories for filter
-$categories_query = "SELECT DISTINCT category FROM blog_posts WHERE is_published = 1 AND category != '' ORDER BY category";
+$categories_query = "SELECT DISTINCT category FROM blog_posts WHERE is_published = 1 AND category != '' AND category IS NOT NULL ORDER BY category";
 $categories_result = $conn->query($categories_query);
+if (!$categories_result) {
+    error_log("Blog categories query failed: " . $conn->error);
+    // Create empty result set to prevent errors
+    $categories_result = new mysqli_result();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -200,11 +231,15 @@ $categories_result = $conn->query($categories_query);
                                     <!-- Category Filter -->
                                     <select class="form-select" style="max-width: 200px;" onchange="window.location.href='blog.php?category='+this.value+(new URLSearchParams(window.location.search).get('search') ? '&search='+new URLSearchParams(window.location.search).get('search') : '')">
                                         <option value="">All Categories</option>
-                                        <?php while ($cat = $categories_result->fetch_assoc()): ?>
-                                            <option value="<?php echo htmlspecialchars($cat['category']); ?>" <?php echo $category === $cat['category'] ? 'selected' : ''; ?>>
-                                                <?php echo htmlspecialchars($cat['category']); ?>
-                                            </option>
-                                        <?php endwhile; ?>
+                                        <?php if ($categories_result && $categories_result->num_rows > 0): ?>
+                                            <?php while ($cat = $categories_result->fetch_assoc()): ?>
+                                                <?php if (!empty($cat['category'])): ?>
+                                                <option value="<?php echo htmlspecialchars($cat['category']); ?>" <?php echo $category === $cat['category'] ? 'selected' : ''; ?>>
+                                                    <?php echo htmlspecialchars($cat['category']); ?>
+                                                </option>
+                                                <?php endif; ?>
+                                            <?php endwhile; ?>
+                                        <?php endif; ?>
                                     </select>
                                     
                                     <!-- Search Box -->
@@ -274,7 +309,7 @@ $categories_result = $conn->query($categories_query);
                     <?php endif; ?>
 
                     <!-- Blog Grid -->
-                    <?php if ($posts_result->num_rows > 0): ?>
+                    <?php if ($posts_result && $posts_result->num_rows > 0): ?>
                     <div class="row gx-4 gy-5">
                         <?php 
                         $delay = 0.2;
