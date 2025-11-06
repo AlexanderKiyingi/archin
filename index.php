@@ -728,29 +728,20 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
             <!--  Start testimonials  -->
             <section class="tc-testimonials-style1">
                 <div class="container">
-                    <div class="row mb-60">
-                        <div class="col-lg-12 text-center">
-                            <h6 class="fsz-18 text-uppercase lh-4 mb-3"> what clients say <br> about us </h6>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <h6 class="fsz-18 text-uppercase lh-4"> what clients say <br> about us </h6>
                             <div class="lg-icon color-orange1"> <i class="la la-quote-right"></i> </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <?php if ($testimonials_result && $testimonials_result->num_rows > 0): ?>
-                            <?php 
-                            $testimonial_count = 0;
-                            // Reset result pointer to loop again
-                            $testimonials_result->data_seek(0);
-                            while ($testimonial = $testimonials_result->fetch_assoc()): 
-                                $testimonial_count++;
-                                $slider_id = 'testimonial-slider-' . $testimonial_count;
-                            ?>
-                                <div class="col-lg-6 col-md-6 mb-50">
-                                    <div class="tc-clients-style1 testimonial-individual-slider">
-                                        <div class="clients-slider1 <?php echo $slider_id; ?>">
-                                            <div class="swiper-wrapper">
+                        <div class="col-lg-8">
+                            <div class="tc-clients-style1">
+                                <div class="clients-slider1">
+                                    <div class="swiper-wrapper">
+                                        <?php if ($testimonials_result && $testimonials_result->num_rows > 0): ?>
+                                            <?php while ($testimonial = $testimonials_result->fetch_assoc()): ?>
                                                 <div class="swiper-slide">
                                                     <div class="clients-card">
-                                                        <div class="text fsz-32 fw-600 lh-2 js-splittext-lines">
+                                                        <div class="text fsz-45 fw-600 lh-2 js-splittext-lines">
                                                             "<?php echo htmlspecialchars($testimonial['testimonial_text']); ?>"
                                                         </div>
                                                         <div class="author">
@@ -772,39 +763,16 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                                     }
                                                                     ?>
                                                                 </p>
-                                                                <?php if (!empty($testimonial['rating'])): ?>
-                                                                    <div class="rating mt-2">
-                                                                        <?php 
-                                                                        $rating = (int)$testimonial['rating'];
-                                                                        for ($i = 1; $i <= 5; $i++): 
-                                                                        ?>
-                                                                            <i class="la la-star <?php echo $i <= $rating ? 'color-orange1' : 'color-ccc'; ?>"></i>
-                                                                        <?php endfor; ?>
-                                                                    </div>
-                                                                <?php endif; ?>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="slider-controls">
-                                                <div class="swiper-button-prev swiper-button-prev-<?php echo $testimonial_count; ?>"></div>
-                                                <div class="swiper-pagination swiper-pagination-<?php echo $testimonial_count; ?>"></div>
-                                                <div class="swiper-button-next swiper-button-next-<?php echo $testimonial_count; ?>"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endwhile; ?>
-                        <?php else: ?>
-                            <!-- Fallback testimonials if database is empty -->
-                            <div class="col-lg-6 col-md-6 mb-50">
-                                <div class="tc-clients-style1 testimonial-individual-slider">
-                                    <div class="clients-slider1 testimonial-slider-1">
-                                        <div class="swiper-wrapper">
+                                            <?php endwhile; ?>
+                                        <?php else: ?>
+                                            <!-- Fallback testimonials if database is empty -->
                                             <div class="swiper-slide">
                                                 <div class="clients-card">
-                                                    <div class="text fsz-32 fw-600 lh-2 js-splittext-lines">
+                                                    <div class="text fsz-45 fw-600 lh-2 js-splittext-lines">
                                                         "The entire team tactfully delivered a project of exceptional quality while staying on schedule and under budget. More than what i'm expected. I'm really satisfied and recommended!."
                                                     </div>
                                                     <div class="author">
@@ -815,16 +783,16 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="slider-controls">
-                                            <div class="swiper-button-prev swiper-button-prev-1"></div>
-                                            <div class="swiper-pagination swiper-pagination-1"></div>
-                                            <div class="swiper-button-next swiper-button-next-1"></div>
-                                        </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="slider-controls">
+                                        <div class="swiper-button-prev"></div>
+                                        <div class="swiper-pagination"></div>
+                                        <div class="swiper-button-next"></div>
                                     </div>
                                 </div>
                             </div>
-                        <?php endif; ?>
+                        </div>
                     </div>
                 </div>
              
