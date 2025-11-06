@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once __DIR__ . '/../common/functions.php';
 $page_title = 'Video Showcases Management';
 $page_description = 'Manage project showcase videos';
 
@@ -171,8 +172,16 @@ include 'includes/header.php';
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center">
-                                        <?php if ($video['thumbnail']): ?>
-                                            <img src="<?php echo UPLOAD_URL . $video['thumbnail']; ?>" alt="" class="w-16 h-12 rounded object-cover mr-3">
+                                        <?php 
+                                        // Get thumbnail - use custom if available, otherwise use YouTube/Vimeo thumbnail
+                                        $list_thumbnail = getVideoThumbnailUrl(
+                                            $video['thumbnail'] ?? '',
+                                            $video['video_id'] ?? '',
+                                            $video['platform'] ?? 'youtube'
+                                        );
+                                        ?>
+                                        <?php if ($list_thumbnail): ?>
+                                            <img src="<?php echo htmlspecialchars($list_thumbnail); ?>" alt="" class="w-16 h-12 rounded object-cover mr-3" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'64\' height=\'48\'%3E%3Crect fill=\'%23ddd\' width=\'64\' height=\'48\'/%3E%3Ctext fill=\'%23999\' x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' font-size=\'12\'%3ENo Image%3C/text%3E%3C/svg%3E'">
                                         <?php else: ?>
                                             <div class="w-16 h-12 bg-gray-200 rounded flex items-center justify-center mr-3">
                                                 <i class="fas fa-video text-gray-400"></i>
@@ -285,17 +294,31 @@ include 'includes/header.php';
                 <!-- Thumbnail -->
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Thumbnail Image
+                        Thumbnail Image <span class="text-gray-500 font-normal">(Optional - YouTube/Vimeo thumbnail will be used if not provided)</span>
                     </label>
                     <?php if ($edit_video && !empty($edit_video['thumbnail'])): ?>
                         <div class="mb-3">
                             <img src="<?php echo UPLOAD_URL . $edit_video['thumbnail']; ?>" alt="Current thumbnail" class="w-32 h-20 object-cover rounded border border-gray-300">
-                            <p class="text-xs text-gray-500 mt-1">Current thumbnail</p>
+                            <p class="text-xs text-gray-500 mt-1">Current custom thumbnail</p>
                         </div>
                     <?php endif; ?>
+                    
+                    <!-- YouTube/Vimeo Thumbnail Preview -->
+                    <?php if (!empty($_POST['video_id'] ?? $edit_video['video_id'] ?? '')): 
+                        $preview_video_id = $_POST['video_id'] ?? $edit_video['video_id'] ?? '';
+                        $preview_platform = $_POST['platform'] ?? $edit_video['platform'] ?? 'youtube';
+                        require_once __DIR__ . '/../common/functions.php';
+                        $preview_thumbnail = getVideoThumbnail($preview_video_id, $preview_platform);
+                    ?>
+                        <div class="mb-3" id="platformThumbnailPreview">
+                            <img src="<?php echo htmlspecialchars($preview_thumbnail); ?>" alt="Platform thumbnail preview" class="w-32 h-20 object-cover rounded border border-gray-300" onerror="this.style.display='none'">
+                            <p class="text-xs text-gray-500 mt-1"><?php echo ucfirst($preview_platform); ?> thumbnail (will be used automatically if no custom thumbnail)</p>
+                        </div>
+                    <?php endif; ?>
+                    
                     <input type="file" name="thumbnail" accept="image/*"
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <p class="mt-1 text-xs text-gray-500">Recommended: 16:9 aspect ratio (e.g., 1280x720px)</p>
+                    <p class="mt-1 text-xs text-gray-500">Recommended: 16:9 aspect ratio (e.g., 1280x720px). Leave empty to use <?php echo isset($edit_video['platform']) && $edit_video['platform'] === 'vimeo' ? 'Vimeo' : 'YouTube'; ?> thumbnail.</p>
                 </div>
                 
                 <!-- Display Order -->
@@ -336,6 +359,72 @@ include 'includes/header.php';
         </form>
     </div>
 <?php endif; ?>
+
+<script>
+// Live preview of YouTube/Vimeo thumbnail
+document.addEventListener('DOMContentLoaded', function() {
+    const videoIdInput = document.querySelector('input[name="video_id"]');
+    const platformSelect = document.querySelector('select[name="platform"]');
+    const previewContainer = document.getElementById('platformThumbnailPreview');
+    
+    function updateThumbnailPreview() {
+        const videoId = videoIdInput.value.trim();
+        const platform = platformSelect.value;
+        
+        if (videoId && previewContainer) {
+            let thumbnailUrl = '';
+            if (platform === 'youtube') {
+                thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+            } else if (platform === 'vimeo') {
+                thumbnailUrl = `https://vumbnail.com/${videoId}.jpg`;
+            }
+            
+            if (thumbnailUrl) {
+                // Create or update preview
+                let previewDiv = document.getElementById('dynamicThumbnailPreview');
+                if (!previewDiv) {
+                    previewDiv = document.createElement('div');
+                    previewDiv.id = 'dynamicThumbnailPreview';
+                    previewDiv.className = 'mb-3';
+                    previewDiv.innerHTML = `
+                        <img src="" alt="Platform thumbnail preview" class="w-32 h-20 object-cover rounded border border-gray-300" onerror="this.style.display='none'">
+                        <p class="text-xs text-gray-500 mt-1">${platform.charAt(0).toUpperCase() + platform.slice(1)} thumbnail (will be used automatically if no custom thumbnail)</p>
+                    `;
+                    // Insert before the file input
+                    const fileInput = document.querySelector('input[name="thumbnail"]');
+                    fileInput.parentNode.insertBefore(previewDiv, fileInput);
+                }
+                
+                const img = previewDiv.querySelector('img');
+                img.src = thumbnailUrl;
+                img.style.display = 'block';
+                img.onerror = function() {
+                    // Try fallback for YouTube
+                    if (platform === 'youtube') {
+                        this.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                    }
+                };
+            }
+        } else if (previewContainer) {
+            // Hide preview if no video ID
+            const dynamicPreview = document.getElementById('dynamicThumbnailPreview');
+            if (dynamicPreview) {
+                dynamicPreview.style.display = 'none';
+            }
+        }
+    }
+    
+    if (videoIdInput && platformSelect) {
+        videoIdInput.addEventListener('input', updateThumbnailPreview);
+        platformSelect.addEventListener('change', updateThumbnailPreview);
+        
+        // Initial preview if video ID exists
+        if (videoIdInput.value.trim()) {
+            updateThumbnailPreview();
+        }
+    }
+});
+</script>
 
 <?php include 'includes/footer.php'; ?>
 

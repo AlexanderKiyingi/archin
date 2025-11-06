@@ -723,7 +723,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
             <!--  Start project showcases  -->
             <section class="tc-project-showcases-style1 section-padding">
                 <div class="container">
-                    <div class="title text-center mb-70">
+                    <div class="title mb-70">
                         <h2 class="fsz-45 wow fadeInUp"> Project Showcases </h2>
                         <p class="color-666 mt-3 wow fadeInUp" data-wow-delay="0.2s"> See Our Work in Motion </p>
                     </div>
@@ -733,8 +733,12 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                             if ($video_showcases_result && $video_showcases_result->num_rows > 0):
                                 $delay = 0.1;
                                 while ($showcase = $video_showcases_result->fetch_assoc()):
-                                    // Get thumbnail URL
-                                    $thumbnail_url = !empty($showcase['thumbnail']) ? 'assets/uploads/' . $showcase['thumbnail'] : 'assets/img/home1/placeholder-video.jpg';
+                                    // Get thumbnail URL - use custom thumbnail if available, otherwise use YouTube/Vimeo thumbnail
+                                    $thumbnail_url = getVideoThumbnailUrl(
+                                        $showcase['thumbnail'] ?? '',
+                                        $showcase['video_id'] ?? '',
+                                        $showcase['platform'] ?? 'youtube'
+                                    );
                             ?>
                                 <div class="showcase-card-item wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
                                     <div class="showcase-card">
