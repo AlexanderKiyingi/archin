@@ -24,8 +24,8 @@ $project_categories_result = $conn->query($project_categories_query);
 $team_query = "SELECT * FROM team_members WHERE is_active = 1 ORDER BY display_order ASC LIMIT 6";
 $team_result = $conn->query($team_query);
 
-// Fetch testimonials
-$testimonials_query = "SELECT * FROM testimonials WHERE is_active = 1 ORDER BY display_order ASC LIMIT 3";
+// Fetch testimonials (all active testimonials)
+$testimonials_query = "SELECT * FROM testimonials WHERE is_active = 1 ORDER BY display_order ASC";
 $testimonials_result = $conn->query($testimonials_query);
 
 // Fetch awards
