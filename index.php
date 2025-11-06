@@ -734,6 +734,11 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                 if ($video_showcases_result && $video_showcases_result->num_rows > 0):
                                     $delay = 0.1;
                                     while ($showcase = $video_showcases_result->fetch_assoc()):
+                                        // Debug: Check if video_id exists
+                                        if (empty($showcase['video_id'])) {
+                                            continue; // Skip videos without video_id
+                                        }
+                                        
                                         // Get thumbnail URL - use custom thumbnail if available, otherwise use YouTube/Vimeo thumbnail
                                         $thumbnail_url = getVideoThumbnailUrl(
                                             $showcase['thumbnail'] ?? '',
@@ -745,9 +750,22 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                         <div class="showcase-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
                                             <div class="showcase-thumbnail">
                                                 <?php if (!empty($thumbnail_url)): ?>
+                                                    <?php 
+                                                    // Get fallback thumbnail URL for YouTube videos
+                                                    $fallback_url = '';
+                                                    if ($showcase['platform'] === 'youtube' && !empty($showcase['video_id'])) {
+                                                        $fallback_url = getVideoThumbnail($showcase['video_id'], 'youtube', true); // Use hqdefault as fallback
+                                                    }
+                                                    ?>
                                                     <img src="<?php echo htmlspecialchars($thumbnail_url); ?>" 
                                                          alt="<?php echo htmlspecialchars($showcase['title']); ?>" 
-                                                         class="img-cover">
+                                                         class="img-cover"
+                                                         onerror="<?php if (!empty($fallback_url)): ?>this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';<?php else: ?>this.style.display='none'; this.nextElementSibling.style.display='flex';<?php endif; ?>">
+                                                    <?php if (!empty($fallback_url)): ?>
+                                                        <div class="showcase-thumbnail-placeholder" style="display: none;">
+                                                            <i class="la la-video"></i>
+                                                        </div>
+                                                    <?php endif; ?>
                                                 <?php else: ?>
                                                     <div class="showcase-thumbnail-placeholder">
                                                         <i class="la la-video"></i>

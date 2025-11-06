@@ -58,13 +58,18 @@ function getImageUrlWithFallback($image_path, $fallback = '') {
  * @param string $platform 'youtube' or 'vimeo'
  * @return string Thumbnail URL
  */
-function getVideoThumbnail($video_id, $platform = 'youtube') {
+function getVideoThumbnail($video_id, $platform = 'youtube', $use_hqdefault = false) {
     if (empty($video_id)) {
         return '';
     }
     
     if ($platform === 'youtube') {
-        // YouTube thumbnail URLs (try maxresdefault first, fallback to hqdefault)
+        // YouTube thumbnail URLs
+        // maxresdefault is 1280x720 (best quality, but may not exist for all videos)
+        // hqdefault is 480x360 (more reliable fallback)
+        if ($use_hqdefault) {
+            return "https://img.youtube.com/vi/{$video_id}/hqdefault.jpg";
+        }
         return "https://img.youtube.com/vi/{$video_id}/maxresdefault.jpg";
     } elseif ($platform === 'vimeo') {
         // Vimeo thumbnail via vumbnail service (free, no API needed)
