@@ -728,71 +728,76 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
             <!--  Start testimonials  -->
             <section class="tc-testimonials-style1">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <h6 class="fsz-18 text-uppercase lh-4"> what clients say <br> about us </h6>
+                    <div class="row mb-80">
+                        <div class="col-lg-12 text-center">
+                            <h6 class="fsz-18 text-uppercase lh-4 mb-3"> what clients say <br> about us </h6>
                             <div class="lg-icon color-orange1"> <i class="la la-quote-right"></i> </div>
                         </div>
-                        <div class="col-lg-8">
-                            <div class="tc-clients-style1">
-                                <div class="clients-slider1">
-                                    <div class="swiper-wrapper">
-                                        <?php if ($testimonials_result && $testimonials_result->num_rows > 0): ?>
-                                            <?php while ($testimonial = $testimonials_result->fetch_assoc()): ?>
-                                                <div class="swiper-slide">
-                                                    <div class="clients-card">
-                                                        <div class="text fsz-45 fw-600 lh-2 js-splittext-lines">
-                                                            "<?php echo htmlspecialchars($testimonial['testimonial_text']); ?>"
-                                                        </div>
-                                                        <div class="author">
-                                                            <?php if (!empty($testimonial['client_photo'])): ?>
-                                                                <div class="au-img">
-                                                                    <img src="<?php echo htmlspecialchars(getImageUrl($testimonial['client_photo'])); ?>" alt="<?php echo htmlspecialchars($testimonial['client_name']); ?>" loading="lazy">
-                                                                </div>
-                                                            <?php endif; ?>
-                                                            <div class="au-inf">
-                                                                <h6 class="text-capitalize mb-2 fsz-16 fw-bold"><?php echo htmlspecialchars($testimonial['client_name']); ?></h6>
-                                                                <p class="text-capitalize fsz-14 color-666">
-                                                                    <?php 
-                                                                    echo htmlspecialchars($testimonial['client_position']); 
-                                                                    if (!empty($testimonial['client_company'])) {
-                                                                        echo ' - ' . htmlspecialchars($testimonial['client_company']);
-                                                                    }
-                                                                    if (!empty($testimonial['project_name'])) {
-                                                                        echo ' (' . htmlspecialchars($testimonial['project_name']) . ')';
-                                                                    }
-                                                                    ?>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                    </div>
+                    <div class="row">
+                        <?php if ($testimonials_result && $testimonials_result->num_rows > 0): ?>
+                            <?php 
+                            $count = 0;
+                            while ($testimonial = $testimonials_result->fetch_assoc()): 
+                                $count++;
+                            ?>
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                    <div class="clients-card h-100 wow fadeInUp" data-wow-delay="<?php echo ($count * 0.1); ?>s">
+                                        <div class="text fsz-24 fw-600 lh-2 mb-30" style="min-height: 120px;">
+                                            <i class="la la-quote-left color-orange1 fsz-30 mb-2"></i>
+                                            "<?php echo htmlspecialchars($testimonial['testimonial_text']); ?>"
+                                        </div>
+                                        <div class="author d-flex align-items-center">
+                                            <?php if (!empty($testimonial['client_photo'])): ?>
+                                                <div class="au-img me-3">
+                                                    <img src="<?php echo htmlspecialchars(getImageUrl($testimonial['client_photo'])); ?>" alt="<?php echo htmlspecialchars($testimonial['client_name']); ?>" loading="lazy" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
                                                 </div>
-                                            <?php endwhile; ?>
-                                        <?php else: ?>
-                                            <!-- Fallback testimonials if database is empty -->
-                                            <div class="swiper-slide">
-                                                <div class="clients-card">
-                                                    <div class="text fsz-45 fw-600 lh-2 js-splittext-lines">
-                                                        "The entire team tactfully delivered a project of exceptional quality while staying on schedule and under budget. More than what i'm expected. I'm really satisfied and recommended!."
+                                            <?php endif; ?>
+                                            <div class="au-inf">
+                                                <h6 class="text-capitalize mb-1 fsz-16 fw-bold"><?php echo htmlspecialchars($testimonial['client_name']); ?></h6>
+                                                <p class="text-capitalize fsz-14 color-666 mb-0">
+                                                    <?php 
+                                                    echo htmlspecialchars($testimonial['client_position']); 
+                                                    if (!empty($testimonial['client_company'])) {
+                                                        echo ' - ' . htmlspecialchars($testimonial['client_company']);
+                                                    }
+                                                    if (!empty($testimonial['project_name'])) {
+                                                        echo ' (' . htmlspecialchars($testimonial['project_name']) . ')';
+                                                    }
+                                                    ?>
+                                                </p>
+                                                <?php if (!empty($testimonial['rating'])): ?>
+                                                    <div class="rating mt-2">
+                                                        <?php 
+                                                        $rating = (int)$testimonial['rating'];
+                                                        for ($i = 1; $i <= 5; $i++): 
+                                                        ?>
+                                                            <i class="la la-star <?php echo $i <= $rating ? 'color-orange1' : 'color-ccc'; ?>"></i>
+                                                        <?php endfor; ?>
                                                     </div>
-                                                    <div class="author">
-                                                        <div class="au-inf">
-                                                            <h6 class="text-capitalize mb-2 fsz-16 fw-bold">M. Salah</h6>
-                                                            <p class="text-capitalize fsz-14 color-666">Dash Private Villa Project Investor</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <?php endif; ?>
                                             </div>
-                                        <?php endif; ?>
+                                        </div>
                                     </div>
-                                    <div class="slider-controls">
-                                        <div class="swiper-button-prev"></div>
-                                        <div class="swiper-pagination"></div>
-                                        <div class="swiper-button-next"></div>
+                                </div>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <!-- Fallback testimonials if database is empty -->
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="clients-card h-100">
+                                    <div class="text fsz-24 fw-600 lh-2 mb-30">
+                                        <i class="la la-quote-left color-orange1 fsz-30 mb-2"></i>
+                                        "The entire team tactfully delivered a project of exceptional quality while staying on schedule and under budget. More than what i'm expected. I'm really satisfied and recommended!."
+                                    </div>
+                                    <div class="author">
+                                        <div class="au-inf">
+                                            <h6 class="text-capitalize mb-1 fsz-16 fw-bold">M. Salah</h6>
+                                            <p class="text-capitalize fsz-14 color-666">Dash Private Villa Project Investor</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
              
