@@ -745,7 +745,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                         $showcase['platform'] ?? 'youtube'
                                     );
                             ?>
-                                <div class="col-lg-3 col-md-6">
+                                <div class="col-lg-4 col-md-6">
                                     <div class="showcase-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
                                         <div class="showcase-thumbnail">
                                             <?php if (!empty($thumbnail_url)): ?>
