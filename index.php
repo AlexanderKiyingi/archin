@@ -775,9 +775,6 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                     <i class="la la-play"></i>
                                                 </div>
                                             </div>
-                                            <div class="logo-overlay">
-                                                <img src="assets/img/home1/logo.png" alt="Flip Avenue" class="logo-small">
-                                            </div>
                                         </div>
                                         <div class="showcase-info">
                                             <h4 class="showcase-title"><?php echo htmlspecialchars($showcase['title']); ?></h4>
