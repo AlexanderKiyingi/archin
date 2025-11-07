@@ -15731,9 +15731,10 @@ home 9 style
     color: #666;
 }
 
-/* Showcases Content Container (matching projects-content) */
-.showcases-content {
+/* Showcases Grid Container */
+.showcases-grid {
     position: relative;
+    width: 100%;
 }
 
 /* Showcase Card */

@@ -136,36 +136,6 @@ $(document).ready(function () {
         },
     });
 
-    // ------------ tc-project-showcases-slider -----------
-    var swiper = new Swiper(".tc-project-showcases-style1 .showcases-slider", {
-        slidesPerView: 1,
-        spaceBetween: 30,
-        speed: 1000,
-        pagination: false,
-        navigation: false,
-        mousewheel: false,
-        keyboard: true,
-        loop: false,
-        autoplay: false,
-        breakpoints: {
-            0: {
-                slidesPerView: 1,
-            },
-            480: {
-                slidesPerView: 1.2,
-            },
-            787: {
-                slidesPerView: 1.5,
-            },
-            991: {
-                slidesPerView: 2,
-            },
-            1200: {
-                slidesPerView: 3,
-            },
-        },
-    });
-
     // ------------ tc-testimonials-style1 -----------
     var swiper = new Swiper(".tc-testimonials-style1 .marq-slider", {
         slidesPerView: "auto",
