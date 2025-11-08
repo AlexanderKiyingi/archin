@@ -354,27 +354,31 @@ if (!$categories_result) {
                                     </a>
                                 </div>
                                 <div class="info">
-                                    <div class="date-line">
-                                        <span class="day"><?php echo date('d', strtotime($post['publish_date'])); ?></span>
-                                        <span class="month"><?php echo strtoupper(date('F', strtotime($post['publish_date']))); ?></span>
-                                        <span class="year"><?php echo date('Y', strtotime($post['publish_date'])); ?></span>
+                                    <div class="card-body-row">
+                                        <div class="date-block">
+                                            <span class="day"><?php echo date('d', strtotime($post['publish_date'])); ?></span>
+                                            <span class="month"><?php echo strtoupper(date('F', strtotime($post['publish_date']))); ?></span>
+                                            <span class="year"><?php echo date('Y', strtotime($post['publish_date'])); ?></span>
+                                        </div>
+                                        <div class="content-block">
+                                            <a href="single.php?slug=<?php echo $post['slug']; ?>" class="blog-title">
+                                                <?php echo htmlspecialchars($post['title']); ?>
+                                            </a>
+                                            <div class="meta-inline">
+                                                <span class="category"><?php echo htmlspecialchars($category_label); ?></span>
+                                                <span class="dot">•</span>
+                                                <span class="author">By <?php echo htmlspecialchars($author_name); ?></span>
+                                                <span class="dot">•</span>
+                                                <span class="reading-time"><?php echo $reading_minutes; ?> min read</span>
+                                            </div>
+                                            <p class="excerpt">
+                                                <?php echo htmlspecialchars(substr(strip_tags($post['excerpt'] ?: $post['content']), 0, 160)) . '...'; ?>
+                                            </p>
+                                            <a href="single.php?slug=<?php echo $post['slug']; ?>" class="read-more-link">
+                                                Read Article <i class="la la-arrow-right ms-1"></i>
+                                            </a>
+                                        </div>
                                     </div>
-                                    <a href="single.php?slug=<?php echo $post['slug']; ?>" class="blog-title">
-                                        <?php echo htmlspecialchars($post['title']); ?>
-                                    </a>
-                                    <div class="meta-inline">
-                                        <span class="category"><?php echo htmlspecialchars($category_label); ?></span>
-                                        <span class="dot">•</span>
-                                        <span class="author">By <?php echo htmlspecialchars($author_name); ?></span>
-                                        <span class="dot">•</span>
-                                        <span class="reading-time"><?php echo $reading_minutes; ?> min read</span>
-                                    </div>
-                                    <p class="excerpt">
-                                        <?php echo htmlspecialchars(substr(strip_tags($post['excerpt'] ?: $post['content']), 0, 160)) . '...'; ?>
-                                    </p>
-                                    <a href="single.php?slug=<?php echo $post['slug']; ?>" class="read-more-link">
-                                        Read Article <i class="la la-arrow-right ms-1"></i>
-                                    </a>
                                 </div>
                             </div>
                         </div>
