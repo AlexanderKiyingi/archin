@@ -42,12 +42,21 @@ if ($count_result) {
 }
 
 // Get featured post (most recent published)
-$featured_query = "SELECT * FROM blog_posts WHERE is_published = 1 ORDER BY publish_date DESC LIMIT 1";
+$featured_query = "SELECT bp.*, au.full_name as author_name 
+                   FROM blog_posts bp 
+                   LEFT JOIN admin_users au ON bp.author_id = au.id
+                   WHERE bp.is_published = 1 
+                   ORDER BY bp.publish_date DESC 
+                   LIMIT 1";
 $featured_result = $conn->query($featured_query);
 if ($featured_result && $featured_result->num_rows > 0) {
     $featured_post = $featured_result->fetch_assoc();
+    $featured_author = !empty($featured_post['author_name']) ? $featured_post['author_name'] : 'Admin';
+    $featured_read_time = max(1, ceil(str_word_count(strip_tags($featured_post['content'])) / 200));
 } else {
     $featured_post = null;
+    $featured_author = 'Admin';
+    $featured_read_time = 0;
 }
 
 // Get regular posts
@@ -279,29 +288,29 @@ if (!$categories_result) {
                                     </div>
                                     <div class="col-lg-6 mt-4 mt-lg-0">
                                         <div class="info">
-                                            <div class="tags mb-3">
-                                                <small class="fsz-12 color-orange1 text-uppercase fw-600"> <i class="la la-bookmark me-1"></i> Featured Post </small>
+                                            <div class="featured-meta-top">
+                                                <span class="featured-pill"><i class="la la-star me-1"></i> Featured</span>
+                                                <?php if (!empty($featured_post['category'])): ?>
+                                                    <span class="category-pill"><i class="la la-tag me-1"></i><?php echo htmlspecialchars($featured_post['category']); ?></span>
+                                                <?php endif; ?>
+                                                <span class="featured-date"><i class="la la-calendar me-1"></i><?php echo date('F d, Y', strtotime($featured_post['publish_date'])); ?></span>
                                             </div>
-                                            <h3 class="title fsz-35 mb-20 fw-600"> 
-                                                <a href="single.php?slug=<?php echo $featured_post['slug']; ?>" class="hover-orange1"> 
-                                                    <?php echo htmlspecialchars($featured_post['title']); ?> 
-                                                </a> 
+                                            <h3 class="featured-title fsz-35 mb-20 fw-600">
+                                                <a href="single.php?slug=<?php echo $featured_post['slug']; ?>" class="hover-orange1">
+                                                    <?php echo htmlspecialchars($featured_post['title']); ?>
+                                                </a>
                                             </h3>
-                                            <p class="text color-666 mb-20">
-                                                <?php echo htmlspecialchars($featured_post['excerpt'] ?: substr(strip_tags($featured_post['content']), 0, 200) . '...'); ?>
+                                            <p class="featured-excerpt color-666 mb-25">
+                                                <?php echo htmlspecialchars(substr(strip_tags($featured_post['excerpt'] ?: $featured_post['content']), 0, 240)) . '...'; ?>
                                             </p>
-                                            <div class="meta d-flex align-items-center mb-20">
-                                                <div class="date me-4">
-                                                    <i class="la la-calendar me-2 color-orange1"></i>
-                                                    <small class="fsz-12 color-666"> <?php echo date('F d, Y', strtotime($featured_post['publish_date'])); ?> </small>
-                                                </div>
-                                                <div class="author">
-                                                    <i class="la la-user me-2 color-orange1"></i>
-                                                    <small class="fsz-12 color-666"> By Admin </small>
-                                                </div>
+                                            <div class="featured-meta-bottom">
+                                                <span><i class="la la-user me-1"></i><?php echo htmlspecialchars($featured_author); ?></span>
+                                                <?php if ($featured_read_time): ?>
+                                                <span><i class="la la-clock me-1"></i><?php echo $featured_read_time; ?> min read</span>
+                                                <?php endif; ?>
                                             </div>
-                                            <a href="single.php?slug=<?php echo $featured_post['slug']; ?>" class="butn border rounded-pill color-orange1 border-orange1 hover-bg-orange1 d-inline-block">
-                                                <span> Read More <i class="small ms-1 ti-arrow-top-right"></i> </span>
+                                            <a href="single.php?slug=<?php echo $featured_post['slug']; ?>" class="featured-read-more butn border rounded-pill color-orange1 border-orange1 hover-bg-orange1 d-inline-flex align-items-center">
+                                                <span> Read Article <i class="small ms-2 ti-arrow-top-right"></i> </span>
                                             </a>
                                         </div>
                                     </div>
@@ -319,8 +328,14 @@ if (!$categories_result) {
                         while ($post = $posts_result->fetch_assoc()): 
                         ?>
                         <div class="col-lg-4 col-md-6">
+                            <?php 
+                                $author_name = !empty($post['author_name']) ? $post['author_name'] : 'Admin';
+                                $words = str_word_count(strip_tags($post['content']));
+                                $reading_minutes = max(1, ceil($words / 200));
+                                $category_label = !empty($post['category']) ? $post['category'] : (!empty($post['tags']) ? $post['tags'] : 'Insights');
+                            ?>
                             <div class="blog-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
-                                <div class="img mb-3">
+                                <div class="img">
                                     <a href="single.php?slug=<?php echo $post['slug']; ?>">
                                         <?php if ($post['featured_image']): ?>
                                             <img src="<?php echo htmlspecialchars(getImageUrl($post['featured_image'])); ?>" alt="" class="img-cover radius-4">
@@ -330,27 +345,26 @@ if (!$categories_result) {
                                     </a>
                                 </div>
                                 <div class="info">
-                                    <div class="date mb-3">
-                                        <div class="num fsz-35 fw-600 color-orange1"> <?php echo date('d', strtotime($post['publish_date'])); ?> </div>
-                                        <small class="fsz-12 text-uppercase color-666"> <?php echo date('F Y', strtotime($post['publish_date'])); ?> </small>
+                                    <div class="meta-top">
+                                        <div class="date-badge">
+                                            <span class="day"> <?php echo date('d', strtotime($post['publish_date'])); ?> </span>
+                                            <span class="month"> <?php echo date('M Y', strtotime($post['publish_date'])); ?> </span>
+                                        </div>
+                                        <span class="category-pill"><i class="la la-tag me-1"></i><?php echo htmlspecialchars($category_label); ?></span>
                                     </div>
-                                    <div class="cont">
-                                        <a href="single.php?slug=<?php echo $post['slug']; ?>" class="title d-block fsz-20 hover-orange1 mb-15 fw-600"> 
-                                            <?php echo htmlspecialchars($post['title']); ?> 
-                                        </a>
-                                        <?php if ($post['category'] || $post['tags']): ?>
-                                        <small class="fsz-12 color-orange1 mb-3 d-block"> 
-                                            <i class="la la-tag me-1"></i> 
-                                            <?php echo htmlspecialchars($post['category'] ?: $post['tags']); ?> 
-                                        </small>
-                                        <?php endif; ?>
-                                        <p class="text color-666 fsz-14 mb-15">
-                                            <?php echo htmlspecialchars(substr(strip_tags($post['excerpt'] ?: $post['content']), 0, 120)) . '...'; ?>
-                                        </p>
-                                        <a href="single.php?slug=<?php echo $post['slug']; ?>" class="read-more fsz-14 color-000 fw-500">
-                                            Read Article <i class="la la-arrow-right ms-1"></i>
-                                        </a>
+                                    <a href="single.php?slug=<?php echo $post['slug']; ?>" class="blog-title">
+                                        <?php echo htmlspecialchars($post['title']); ?>
+                                    </a>
+                                    <p class="excerpt">
+                                        <?php echo htmlspecialchars(substr(strip_tags($post['excerpt'] ?: $post['content']), 0, 160)) . '...'; ?>
+                                    </p>
+                                    <div class="meta-bottom">
+                                        <span class="author-meta"><i class="la la-user"></i><?php echo htmlspecialchars($author_name); ?></span>
+                                        <span class="reading-time"><i class="la la-clock"></i><?php echo $reading_minutes; ?> min read</span>
                                     </div>
+                                    <a href="single.php?slug=<?php echo $post['slug']; ?>" class="read-more-link">
+                                        Read Article <i class="la la-arrow-right ms-1"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
