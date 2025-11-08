@@ -741,16 +741,17 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                             if ($video_showcases_result && $video_showcases_result->num_rows > 0):
                                 $delay = 0.1;
                                 while ($showcase = $video_showcases_result->fetch_assoc()):
-                                    // Debug: Check if video_id exists
-                                    if (empty($showcase['video_id'])) {
-                                        continue; // Skip videos without video_id
+                                    $platform = $showcase['platform'] ?? 'youtube';
+                                    $normalized_video_id = normalizeVideoId($showcase['video_id'] ?? '', $platform);
+                                    if (empty($normalized_video_id)) {
+                                        continue; // Skip invalid video entries
                                     }
-                                    
+
                                     // Get thumbnail URL - use custom thumbnail if available, otherwise use YouTube/Vimeo thumbnail
                                     $thumbnail_url = getVideoThumbnailUrl(
                                         $showcase['thumbnail'] ?? '',
-                                        $showcase['video_id'] ?? '',
-                                        $showcase['platform'] ?? 'youtube'
+                                        $normalized_video_id,
+                                        $platform
                                     );
                             ?>
                                 <div class="col-lg-4 col-md-6">
@@ -760,8 +761,8 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                 <?php 
                                                 // Get fallback thumbnail URL for YouTube videos
                                                 $fallback_url = '';
-                                                if ($showcase['platform'] === 'youtube' && !empty($showcase['video_id'])) {
-                                                    $fallback_url = getVideoThumbnail($showcase['video_id'], 'youtube', true); // Use hqdefault as fallback
+                                                if ($platform === 'youtube') {
+                                                    $fallback_url = getVideoThumbnail($normalized_video_id, 'youtube', true); // Use hqdefault as fallback
                                                 }
                                                 ?>
                                                 <img src="<?php echo htmlspecialchars($thumbnail_url); ?>" 
@@ -778,7 +779,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                     <i class="la la-video"></i>
                                                 </div>
                                             <?php endif; ?>
-                                            <div class="play-button-overlay" data-video-id="<?php echo htmlspecialchars($showcase['video_id']); ?>" data-platform="<?php echo htmlspecialchars($showcase['platform']); ?>">
+                                            <div class="play-button-overlay" data-video-id="<?php echo htmlspecialchars($normalized_video_id); ?>" data-platform="<?php echo htmlspecialchars($platform); ?>">
                                                 <div class="play-button">
                                                     <i class="la la-play"></i>
                                                 </div>

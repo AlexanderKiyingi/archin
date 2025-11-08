@@ -1,3 +1,78 @@
+/**
+ * Normalize a provided video identifier or URL into a platform-specific ID.
+ *
+ * @param string $video_id Raw video ID or URL provided by the user.
+ * @param string $platform  Video platform, defaults to YouTube.
+ * @return string Normalized video ID or empty string if it cannot be determined.
+ */
+function normalizeVideoId($video_id, $platform = 'youtube') {
+    $video_id = trim((string) $video_id);
+    $platform = strtolower($platform ?: 'youtube');
+
+    if ($video_id === '') {
+        return '';
+    }
+
+    if ($platform === 'youtube') {
+        // Already clean ID?
+        if (preg_match('/^[A-Za-z0-9_-]{11}$/', $video_id)) {
+            return $video_id;
+        }
+
+        // Parse URL parts if a full URL was supplied.
+        $parsed = @parse_url($video_id);
+        if ($parsed !== false && is_array($parsed)) {
+            // Check query string for v parameter.
+            if (!empty($parsed['query'])) {
+                parse_str($parsed['query'], $query_vars);
+                if (!empty($query_vars['v']) && preg_match('/^[A-Za-z0-9_-]{11}$/', $query_vars['v'])) {
+                    return $query_vars['v'];
+                }
+            }
+
+            // Check path segments for embeds/shorts/etc.
+            if (!empty($parsed['path'])) {
+                $segments = explode('/', trim($parsed['path'], '/'));
+                foreach ($segments as $segment) {
+                    if (preg_match('/^[A-Za-z0-9_-]{11}$/', $segment)) {
+                        return $segment;
+                    }
+                }
+            }
+        }
+
+        // Generic extraction from common patterns.
+        if (preg_match('#(?:youtu\.be/|youtube\.com/(?:watch\?v=|embed/|shorts/|v/))([A-Za-z0-9_-]{11})#', $video_id, $matches)) {
+            return $matches[1];
+        }
+
+        // Remove query/hash fragments and re-test.
+        $clean = preg_replace('/[?#&].*/', '', $video_id);
+        if (preg_match('/^[A-Za-z0-9_-]{11}$/', $clean)) {
+            return $clean;
+        }
+
+        return '';
+    }
+
+    if ($platform === 'vimeo') {
+        // If already numeric ID
+        if (preg_match('/^[0-9]+$/', $video_id)) {
+            return $video_id;
+        }
+
+        if (preg_match('#vimeo\.com/(?:video/)?([0-9]+)#', $video_id, $matches)) {
+            return $matches[1];
+        }
+
+        // Extract digits from the string
+        $digits = preg_replace('/\D+/', '', $video_id);
+        return $digits !== '' ? $digits : '';
+    }
+
+    return $video_id;
+}
+
 <?php
 /**
  * Common Helper Functions
@@ -59,6 +134,8 @@ function getImageUrlWithFallback($image_path, $fallback = '') {
  * @return string Thumbnail URL
  */
 function getVideoThumbnail($video_id, $platform = 'youtube', $use_hqdefault = false) {
+    $video_id = normalizeVideoId($video_id, $platform);
+
     if (empty($video_id)) {
         return '';
     }
@@ -84,6 +161,8 @@ function getVideoThumbnail($video_id, $platform = 'youtube', $use_hqdefault = fa
  * First tries custom uploaded thumbnail, then platform thumbnail
  */
 function getVideoThumbnailUrl($custom_thumbnail, $video_id, $platform = 'youtube') {
+    $video_id = normalizeVideoId($video_id, $platform);
+
     // If custom thumbnail exists, use it
     if (!empty($custom_thumbnail)) {
         return getImageUrl($custom_thumbnail);

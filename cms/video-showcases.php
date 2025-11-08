@@ -14,107 +14,114 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($action === 'add' || $action === 'edit') {
             $title = cleanInput($_POST['title']);
-            $video_id = cleanInput($_POST['video_id']);
-            $platform = cleanInput($_POST['platform']);
+            $video_id_input = cleanInput($_POST['video_id']);
+            $platform_input = strtolower(cleanInput($_POST['platform']));
+            $platform = in_array($platform_input, ['youtube', 'vimeo']) ? $platform_input : 'youtube';
             $display_order = (int)$_POST['display_order'];
             $is_active = isset($_POST['is_active']) ? 1 : 0;
-            
-            // Handle thumbnail upload
-            $thumbnail = '';
-            if (isset($_FILES['thumbnail']) && $_FILES['thumbnail']['error'] === 0) {
-                $upload = uploadFile($_FILES['thumbnail'], 'showcases');
-                if ($upload['success']) {
-                    $thumbnail = $upload['path'];
-                    
-                    // Delete old thumbnail if exists and new one uploaded
-                    if ($action === 'edit' && !empty($_POST['current_thumbnail']) && $_POST['current_thumbnail'] !== $thumbnail) {
-                        $old_thumbnail_path = UPLOAD_PATH . $_POST['current_thumbnail'];
-                        if (file_exists($old_thumbnail_path)) {
-                            @unlink($old_thumbnail_path);
+
+            $video_id = normalizeVideoId($video_id_input, $platform);
+            $_POST['video_id'] = $video_id; // ensure form retains cleaned value
+
+            if (empty($video_id)) {
+                $message = 'Please provide a valid YouTube or Vimeo video URL/ID.';
+                $message_type = 'error';
+            } else {
+                // Handle thumbnail upload
+                $thumbnail = '';
+                if (isset($_FILES['thumbnail']) && $_FILES['thumbnail']['error'] === 0) {
+                    $upload = uploadFile($_FILES['thumbnail'], 'showcases');
+                    if ($upload['success']) {
+                        $thumbnail = $upload['path'];
+                        
+                        // Delete old thumbnail if exists and new one uploaded
+                        if ($action === 'edit' && !empty($_POST['current_thumbnail']) && $_POST['current_thumbnail'] !== $thumbnail) {
+                            $old_thumbnail_path = UPLOAD_PATH . $_POST['current_thumbnail'];
+                            if (file_exists($old_thumbnail_path)) {
+                                @unlink($old_thumbnail_path);
+                            }
                         }
                     }
-                }
-            } elseif ($action === 'edit' && isset($_POST['remove_thumbnail']) && $_POST['remove_thumbnail'] === '1') {
-                // User wants to remove thumbnail
-                $thumbnail = null;
-                
-                // Delete the file
-                if (!empty($_POST['current_thumbnail'])) {
-                    $thumbnail_path = UPLOAD_PATH . $_POST['current_thumbnail'];
-                    if (file_exists($thumbnail_path)) {
-                        @unlink($thumbnail_path);
+                } elseif ($action === 'edit' && isset($_POST['remove_thumbnail']) && $_POST['remove_thumbnail'] === '1') {
+                    // User wants to remove thumbnail
+                    $thumbnail = null;
+                    
+                    if (!empty($_POST['current_thumbnail'])) {
+                        $thumbnail_path = UPLOAD_PATH . $_POST['current_thumbnail'];
+                        if (file_exists($thumbnail_path)) {
+                            @unlink($thumbnail_path);
+                        }
                     }
+                } elseif ($action === 'edit' && !empty($_POST['current_thumbnail'])) {
+                    // Keep existing thumbnail if no new upload and not removing
+                    $thumbnail = $_POST['current_thumbnail'];
                 }
-            } elseif ($action === 'edit' && !empty($_POST['current_thumbnail'])) {
-                // Keep existing thumbnail if no new upload and not removing
-                $thumbnail = $_POST['current_thumbnail'];
-            }
-            
-            if ($action === 'add') {
-                $sql = "INSERT INTO video_showcases (title, video_id, platform, thumbnail, display_order, is_active) 
-                        VALUES (?, ?, ?, ?, ?, ?)";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("ssssii", $title, $video_id, $platform, $thumbnail, $display_order, $is_active);
                 
-                if ($stmt->execute()) {
-                    $message = 'Video showcase added successfully!';
-                    $message_type = 'success';
+                if ($action === 'add') {
+                    $sql = "INSERT INTO video_showcases (title, video_id, platform, thumbnail, display_order, is_active) 
+                            VALUES (?, ?, ?, ?, ?, ?)";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("ssssii", $title, $video_id, $platform, $thumbnail, $display_order, $is_active);
+                    
+                    if ($stmt->execute()) {
+                        $message = 'Video showcase added successfully!';
+                        $message_type = 'success';
+                    } else {
+                        $message = 'Error adding video showcase: ' . $conn->error;
+                        $message_type = 'error';
+                    }
                 } else {
-                    $message = 'Error adding video showcase: ' . $conn->error;
-                    $message_type = 'error';
-                }
-            } else {
-                $id = (int)$_POST['id'];
-                
-                // Build UPDATE query
-                $updates = [];
-                $params = [];
-                $types = '';
-                
-                $updates[] = "title = ?";
-                $params[] = $title;
-                $types .= 's';
-                
-                $updates[] = "video_id = ?";
-                $params[] = $video_id;
-                $types .= 's';
-                
-                $updates[] = "platform = ?";
-                $params[] = $platform;
-                $types .= 's';
-                
-                if ($thumbnail !== '') {
-                    $updates[] = "thumbnail = ?";
-                    $params[] = $thumbnail;
+                    $id = (int)$_POST['id'];
+                    
+                    // Build UPDATE query
+                    $updates = [];
+                    $params = [];
+                    $types = '';
+                    
+                    $updates[] = "title = ?";
+                    $params[] = $title;
                     $types .= 's';
-                } elseif ($thumbnail === null) {
-                    // Explicitly set thumbnail to empty string to remove it
-                    $updates[] = "thumbnail = ?";
-                    $params[] = '';
+                    
+                    $updates[] = "video_id = ?";
+                    $params[] = $video_id;
                     $types .= 's';
-                }
-                
-                $updates[] = "display_order = ?";
-                $params[] = $display_order;
-                $types .= 'i';
-                
-                $updates[] = "is_active = ?";
-                $params[] = $is_active;
-                $types .= 'i';
-                
-                $params[] = $id;
-                $types .= 'i';
-                
-                $sql = "UPDATE video_showcases SET " . implode(', ', $updates) . " WHERE id = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param($types, ...$params);
-                
-                if ($stmt->execute()) {
-                    $message = 'Video showcase updated successfully!';
-                    $message_type = 'success';
-                } else {
-                    $message = 'Error updating video showcase: ' . $conn->error;
-                    $message_type = 'error';
+                    
+                    $updates[] = "platform = ?";
+                    $params[] = $platform;
+                    $types .= 's';
+                    
+                    if ($thumbnail !== '') {
+                        $updates[] = "thumbnail = ?";
+                        $params[] = $thumbnail;
+                        $types .= 's';
+                    } elseif ($thumbnail === null) {
+                        $updates[] = "thumbnail = ?";
+                        $params[] = '';
+                        $types .= 's';
+                    }
+                    
+                    $updates[] = "display_order = ?";
+                    $params[] = $display_order;
+                    $types .= 'i';
+                    
+                    $updates[] = "is_active = ?";
+                    $params[] = $is_active;
+                    $types .= 'i';
+                    
+                    $params[] = $id;
+                    $types .= 'i';
+                    
+                    $sql = "UPDATE video_showcases SET " . implode(', ', $updates) . " WHERE id = ?";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param($types, ...$params);
+                    
+                    if ($stmt->execute()) {
+                        $message = 'Video showcase updated successfully!';
+                        $message_type = 'success';
+                    } else {
+                        $message = 'Error updating video showcase: ' . $conn->error;
+                        $message_type = 'error';
+                    }
                 }
             }
         } elseif ($action === 'delete_thumbnail') {
@@ -180,6 +187,10 @@ if (isset($_GET['action']) && $_GET['action'] === 'edit' && isset($_GET['id'])) 
     $id = (int)$_GET['id'];
     $result = $conn->query("SELECT * FROM video_showcases WHERE id = $id");
     $edit_video = $result->fetch_assoc();
+    if ($edit_video) {
+        $edit_video['platform'] = $edit_video['platform'] ?? 'youtube';
+        $edit_video['video_id'] = normalizeVideoId($edit_video['video_id'] ?? '', $edit_video['platform']);
+    }
 }
 
 $show_form = isset($_GET['action']) && ($_GET['action'] === 'add' || $_GET['action'] === 'edit');
@@ -225,10 +236,12 @@ include 'includes/header.php';
                                     <div class="flex items-center">
                                         <?php 
                                         // Get thumbnail - use custom if available, otherwise use YouTube/Vimeo thumbnail
+                                        $platform = $video['platform'] ?? 'youtube';
+                                        $normalized_video_id = normalizeVideoId($video['video_id'] ?? '', $platform);
                                         $list_thumbnail = getVideoThumbnailUrl(
                                             $video['thumbnail'] ?? '',
-                                            $video['video_id'] ?? '',
-                                            $video['platform'] ?? 'youtube'
+                                            $normalized_video_id,
+                                            $platform
                                         );
                                         ?>
                                         <?php if ($list_thumbnail): ?>
@@ -240,7 +253,7 @@ include 'includes/header.php';
                                         <?php endif; ?>
                                         <div>
                                             <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($video['title']); ?></div>
-                                            <div class="text-xs text-gray-500 mt-1">ID: <?php echo htmlspecialchars($video['video_id']); ?></div>
+                                            <div class="text-xs text-gray-500 mt-1">ID: <?php echo htmlspecialchars($normalized_video_id); ?></div>
                                         </div>
                                     </div>
                                 </td>
@@ -332,7 +345,7 @@ include 'includes/header.php';
                         Video ID <span class="text-red-500">*</span>
                     </label>
                     <input type="text" name="video_id" required
-                           value="<?php echo htmlspecialchars($edit_video['video_id'] ?? ''); ?>"
+                           value="<?php echo htmlspecialchars($_POST['video_id'] ?? ($edit_video['video_id'] ?? '')); ?>"
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                            placeholder="e.g., dQw4w9WgXcQ">
                     <p class="mt-1 text-xs text-gray-500">
@@ -343,13 +356,14 @@ include 'includes/header.php';
                 
                 <!-- Platform -->
                 <div>
+                    <?php $selected_platform = $_POST['platform'] ?? ($edit_video['platform'] ?? 'youtube'); ?>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Platform <span class="text-red-500">*</span>
                     </label>
                     <select name="platform" required
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="youtube" <?php echo (isset($edit_video['platform']) && $edit_video['platform'] === 'youtube') ? 'selected' : ''; ?>>YouTube</option>
-                        <option value="vimeo" <?php echo (isset($edit_video['platform']) && $edit_video['platform'] === 'vimeo') ? 'selected' : ''; ?>>Vimeo</option>
+                        <option value="youtube" <?php echo $selected_platform === 'youtube' ? 'selected' : ''; ?>>YouTube</option>
+                        <option value="vimeo" <?php echo $selected_platform === 'vimeo' ? 'selected' : ''; ?>>Vimeo</option>
                     </select>
                 </div>
                 
@@ -374,9 +388,9 @@ include 'includes/header.php';
                     
                     <!-- YouTube/Vimeo Thumbnail Preview -->
                     <?php if (!empty($_POST['video_id'] ?? $edit_video['video_id'] ?? '')): 
-                        $preview_video_id = $_POST['video_id'] ?? $edit_video['video_id'] ?? '';
                         $preview_platform = $_POST['platform'] ?? $edit_video['platform'] ?? 'youtube';
-                        require_once __DIR__ . '/../common/functions.php';
+                        $preview_video_id_raw = $_POST['video_id'] ?? $edit_video['video_id'] ?? '';
+                        $preview_video_id = normalizeVideoId($preview_video_id_raw, $preview_platform);
                         $preview_thumbnail = getVideoThumbnail($preview_video_id, $preview_platform);
                     ?>
                         <div class="mb-3" id="platformThumbnailPreview">
