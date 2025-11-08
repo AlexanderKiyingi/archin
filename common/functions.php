@@ -1,8 +1,9 @@
+<?php
 /**
  * Normalize a provided video identifier or URL into a platform-specific ID.
  *
  * @param string $video_id Raw video ID or URL provided by the user.
- * @param string $platform  Video platform, defaults to YouTube.
+ * @param string $platform Video platform, defaults to YouTube.
  * @return string Normalized video ID or empty string if it cannot be determined.
  */
 function normalizeVideoId($video_id, $platform = 'youtube') {
@@ -73,7 +74,6 @@ function normalizeVideoId($video_id, $platform = 'youtube') {
     return $video_id;
 }
 
-<?php
 /**
  * Common Helper Functions
  * Shared functions for both CMS and public pages
