@@ -260,25 +260,35 @@ if (!$categories_result) {
                                                     <?php echo htmlspecialchars($featured_post['title']); ?>
                                                 </a>
                                             </h3>
-                                            <div class="featured-meta-top">
-                                                <span class="featured-pill"><i class="la la-star me-1"></i> Featured</span>
-                                                <?php if (!empty($featured_post['category'])): ?>
-                                                    <span class="category-pill"><i class="la la-tag me-1"></i><?php echo htmlspecialchars($featured_post['category']); ?></span>
-                                                <?php endif; ?>
-                                                <span class="featured-date"><i class="la la-calendar me-1"></i><?php echo date('F d, Y', strtotime($featured_post['publish_date'])); ?></span>
+                                            <div class="featured-layout">
+                                                <div class="featured-meta-column">
+                                                    <span class="featured-pill"><i class="la la-star me-1"></i> Featured</span>
+                                                    <?php if (!empty($featured_post['category'])): ?>
+                                                        <span class="featured-category"><?php echo htmlspecialchars($featured_post['category']); ?></span>
+                                                    <?php endif; ?>
+                                                    <span class="featured-date"><i class="la la-calendar me-1"></i><?php echo date('F d, Y', strtotime($featured_post['publish_date'])); ?></span>
+                                                </div>
+                                                <div class="featured-excerpt-column">
+                                                    <p class="featured-excerpt color-666 mb-0">
+                                                        <?php echo htmlspecialchars(substr(strip_tags($featured_post['excerpt'] ?: $featured_post['content']), 0, 240)) . '...'; ?>
+                                                    </p>
+                                                </div>
+                                                <div class="featured-side-column">
+                                                    <div class="featured-meta-item">
+                                                        <i class="la la-user"></i>
+                                                        <span><?php echo htmlspecialchars($featured_author); ?></span>
+                                                    </div>
+                                                    <?php if ($featured_read_time): ?>
+                                                    <div class="featured-meta-item">
+                                                        <i class="la la-clock"></i>
+                                                        <span><?php echo $featured_read_time; ?> min read</span>
+                                                    </div>
+                                                    <?php endif; ?>
+                                                    <a href="single.php?slug=<?php echo $featured_post['slug']; ?>" class="featured-read-more butn border rounded-pill color-orange1 border-orange1 hover-bg-orange1 d-inline-flex align-items-center">
+                                                        <span> Read Article <i class="small ms-2 ti-arrow-top-right"></i> </span>
+                                                    </a>
+                                                </div>
                                             </div>
-                                            <p class="featured-excerpt color-666 mb-30">
-                                                <?php echo htmlspecialchars(substr(strip_tags($featured_post['excerpt'] ?: $featured_post['content']), 0, 240)) . '...'; ?>
-                                            </p>
-                                            <div class="featured-meta-bottom">
-                                                <span><i class="la la-user me-1"></i><?php echo htmlspecialchars($featured_author); ?></span>
-                                                <?php if ($featured_read_time): ?>
-                                                <span><i class="la la-clock me-1"></i><?php echo $featured_read_time; ?> min read</span>
-                                                <?php endif; ?>
-                                            </div>
-                                            <a href="single.php?slug=<?php echo $featured_post['slug']; ?>" class="featured-read-more butn border rounded-pill color-orange1 border-orange1 hover-bg-orange1 d-inline-flex align-items-center">
-                                                <span> Read Article <i class="small ms-2 ti-arrow-top-right"></i> </span>
-                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -348,26 +358,31 @@ if (!$categories_result) {
                                     </a>
                                 </div>
                                 <div class="info">
-                                    <div class="meta-top">
-                                        <div class="date-badge">
-                                            <span class="day"> <?php echo date('d', strtotime($post['publish_date'])); ?> </span>
-                                            <span class="month"> <?php echo date('M Y', strtotime($post['publish_date'])); ?> </span>
+                                    <div class="card-meta-row">
+                                        <div class="date-block">
+                                            <span class="day"><?php echo date('d', strtotime($post['publish_date'])); ?></span>
+                                            <span class="month"><?php echo strtoupper(date('F', strtotime($post['publish_date']))); ?></span>
+                                            <span class="year"><?php echo date('Y', strtotime($post['publish_date'])); ?></span>
                                         </div>
-                                        <span class="category-pill"><i class="la la-tag me-1"></i><?php echo htmlspecialchars($category_label); ?></span>
+                                        <div class="content-block">
+                                            <a href="single.php?slug=<?php echo $post['slug']; ?>" class="blog-title">
+                                                <?php echo htmlspecialchars($post['title']); ?>
+                                            </a>
+                                            <div class="meta-inline">
+                                                <span class="category"><?php echo htmlspecialchars($category_label); ?></span>
+                                                <span class="dot">•</span>
+                                                <span class="author">By <?php echo htmlspecialchars($author_name); ?></span>
+                                                <span class="dot">•</span>
+                                                <span class="reading-time"><?php echo $reading_minutes; ?> min read</span>
+                                            </div>
+                                            <p class="excerpt">
+                                                <?php echo htmlspecialchars(substr(strip_tags($post['excerpt'] ?: $post['content']), 0, 160)) . '...'; ?>
+                                            </p>
+                                            <a href="single.php?slug=<?php echo $post['slug']; ?>" class="read-more-link">
+                                                Read Article <i class="la la-arrow-right ms-1"></i>
+                                            </a>
+                                        </div>
                                     </div>
-                                    <a href="single.php?slug=<?php echo $post['slug']; ?>" class="blog-title">
-                                        <?php echo htmlspecialchars($post['title']); ?>
-                                    </a>
-                                    <p class="excerpt">
-                                        <?php echo htmlspecialchars(substr(strip_tags($post['excerpt'] ?: $post['content']), 0, 160)) . '...'; ?>
-                                    </p>
-                                    <div class="meta-bottom">
-                                        <span class="author-meta"><i class="la la-user"></i><?php echo htmlspecialchars($author_name); ?></span>
-                                        <span class="reading-time"><i class="la la-clock"></i><?php echo $reading_minutes; ?> min read</span>
-                                    </div>
-                                    <a href="single.php?slug=<?php echo $post['slug']; ?>" class="read-more-link">
-                                        Read Article <i class="la la-arrow-right ms-1"></i>
-                                    </a>
                                 </div>
                             </div>
                         </div>
