@@ -24,10 +24,6 @@ $project_categories_result = $conn->query($project_categories_query);
 $team_query = "SELECT * FROM team_members WHERE is_active = 1 ORDER BY display_order ASC LIMIT 6";
 $team_result = $conn->query($team_query);
 
-// Fetch testimonials (all active testimonials)
-$testimonials_query = "SELECT * FROM testimonials WHERE is_active = 1 ORDER BY display_order ASC";
-$testimonials_result = $conn->query($testimonials_query);
-
 // Fetch awards
 $awards_query = "SELECT * FROM awards WHERE is_active = 1 ORDER BY year DESC, display_order ASC LIMIT 4";
 $awards_result = $conn->query($awards_query);
@@ -54,6 +50,18 @@ if ($settings_result) {
         $settings[$row['setting_key']] = $row['setting_value'];
     }
 }
+
+// Fetch testimonials with dynamic limit
+$testimonials_limit = isset($settings['homepage_testimonials_limit']) ? (int)$settings['homepage_testimonials_limit'] : 6;
+if ($testimonials_limit < 0) {
+    $testimonials_limit = 0;
+}
+
+$testimonials_query = "SELECT * FROM testimonials WHERE is_active = 1 ORDER BY display_order ASC";
+if ($testimonials_limit > 0) {
+    $testimonials_query .= " LIMIT " . $testimonials_limit;
+}
+$testimonials_result = $conn->query($testimonials_query);
 
 // Set current year for copyright
 $current_year = date('Y');
