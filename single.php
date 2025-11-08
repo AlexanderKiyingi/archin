@@ -109,6 +109,34 @@ $read_time = ceil($word_count / 200);
     <link rel="stylesheet" href="assets/style.css">
 
     <style>
+        .article-hero {
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            overflow: hidden;
+            min-height: 320px;
+        }
+        .article-hero .hero-overlay {
+            position: relative;
+            padding: 70px 40px;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.65) 0%, rgba(15, 23, 42, 0.35) 60%, rgba(15, 23, 42, 0.85) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 20px;
+        }
+        .article-hero .article-title {
+            font-size: 38px;
+            line-height: 1.3;
+            max-width: 720px;
+        }
+        .article-hero .hero-meta span {
+            font-size: 14px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
         .blog-content .highlight-box {
             border-left: 4px solid var(--color-orange1);
         }
@@ -290,38 +318,6 @@ $read_time = ceil($word_count / 200);
         <!--  End navbar  -->
 
         <!--  Start hero section  -->
-        <header class="tc-header-style1">
-            <div class="img">
-                <?php if ($post['featured_image']): ?>
-                    <img src="<?php echo htmlspecialchars(getImageUrl($post['featured_image'])); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" class="img-cover">
-                <?php else: ?>
-                    <img src="assets/img/home1/blog/blog1.jpg" alt="<?php echo htmlspecialchars($post['title']); ?>" class="img-cover">
-                <?php endif; ?>
-            </div>
-            <div class="info section-padding-x pb-70">
-                <div class="row align-items-end gx-5">
-                    <div class="col-lg-8 offset-lg-2 text-center">
-                        <div class="breadcrumb mb-3">
-                            <a href="index.php" class="color-666 hover-orange1">Home</a>
-                            <span class="mx-2 color-666">/</span>
-                            <a href="blog.php" class="color-666 hover-orange1">Blog</a>
-                            <span class="mx-2 color-666">/</span>
-                            <span class="color-000">Article</span>
-                        </div>
-                        <h1 class="js-title wow fadeInUp text-white"><?php echo htmlspecialchars($post['title']); ?></h1>
-                        <div class="meta mt-30 wow fadeInUp" data-wow-delay="0.2s">
-                            <span class="me-4"><i class="la la-calendar me-2 color-orange1"></i><?php echo date('F d, Y', strtotime($post['publish_date'])); ?></span>
-                            <span class="me-4"><i class="la la-user me-2 color-orange1"></i>By <?php echo htmlspecialchars($post['author_name'] ?: 'Admin'); ?></span>
-                            <span><i class="la la-clock me-2 color-orange1"></i><?php echo $read_time; ?> min read</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-        <!--  End hero section  -->
-
-
-
         <!--Contents-->
         <main>
 
@@ -331,6 +327,27 @@ $read_time = ceil($word_count / 200);
                     <div class="row gx-5">
                         <!-- Main Content -->
                         <div class="col-lg-8">
+                            <?php 
+                                $hero_background = $post['featured_image'] ? getImageUrl($post['featured_image']) : 'assets/img/home1/blog/blog1.jpg';
+                            ?>
+                            <div class="article-hero radius-4 mb-40" style="background-image: url('<?php echo htmlspecialchars($hero_background); ?>');">
+                                    <div class="hero-overlay radius-4">
+                                    <div class="breadcrumb mb-3 text-white">
+                                        <a href="index.php" class="text-white hover-orange1 text-decoration-none">Home</a>
+                                        <span class="mx-2">/</span>
+                                        <a href="blog.php" class="text-white hover-orange1 text-decoration-none">Blog</a>
+                                        <span class="mx-2">/</span>
+                                        <span class="text-white-50">Article</span>
+                                    </div>
+                                    <h1 class="article-title text-white mb-3"><?php echo htmlspecialchars($post['title']); ?></h1>
+                                    <div class="hero-meta text-white-50 d-flex flex-wrap justify-content-center gap-3">
+                                        <span><i class="la la-calendar me-2 color-orange1"></i><?php echo date('F d, Y', strtotime($post['publish_date'])); ?></span>
+                                        <span><i class="la la-user me-2 color-orange1"></i>By <?php echo htmlspecialchars($post['author_name'] ?: 'Admin'); ?></span>
+                                        <span><i class="la la-clock me-2 color-orange1"></i><?php echo $read_time; ?> min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
                             <article class="blog-content wow fadeInUp">
                                 <!-- Article Content -->
                                 <div class="content">

@@ -7181,16 +7181,6 @@ html[lang=ar] .home-style1 .loader-wrap {
   .tc-blog-style1 .blog-card:not(.featured-post) .meta-inline {
     gap: 8px;
   }
-  .tc-blog-style1 .blog-card:not(.featured-post) .card-body-row {
-    flex-direction: column;
-    gap: 18px;
-  }
-  .tc-blog-style1 .blog-card:not(.featured-post) .date-block {
-    flex-direction: row;
-    align-items: baseline;
-    gap: 10px;
-    letter-spacing: 0.12em;
-  }
 }
 .tc-chat-style1 .c-line.animated {
   -webkit-clip-path: polygon(100% 0, 0 0, 0 100%, 100% 100%);
