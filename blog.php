@@ -231,42 +231,9 @@ if (!$categories_result) {
                 <div class="container">
                     <div class="mb-50">
                         <div class="row align-items-center">
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <h2 class="fsz-45 mb-3 wow fadeInUp"> Latest Posts </h2>
                                 <p class="color-666 wow fadeInUp" data-wow-delay="0.2s">Explore our latest articles, industry insights, and design inspiration</p>
-                            </div>
-                            <div class="col-lg-6 mt-4 mt-lg-0">
-                                <div class="d-flex gap-3">
-                                    <!-- Category Filter -->
-                                    <select class="form-select" style="max-width: 200px;" onchange="window.location.href='blog.php?category='+this.value+(new URLSearchParams(window.location.search).get('search') ? '&search='+new URLSearchParams(window.location.search).get('search') : '')">
-                                        <option value="">All Categories</option>
-                                        <?php if ($categories_result !== false && $categories_result->num_rows > 0): ?>
-                                            <?php 
-                                            // Reset pointer to beginning
-                                            $categories_result->data_seek(0);
-                                            while ($cat = $categories_result->fetch_assoc()): ?>
-                                                <?php if (!empty($cat['category'])): ?>
-                                                <option value="<?php echo htmlspecialchars($cat['category']); ?>" <?php echo $category === $cat['category'] ? 'selected' : ''; ?>>
-                                                    <?php echo htmlspecialchars($cat['category']); ?>
-                                                </option>
-                                                <?php endif; ?>
-                                            <?php endwhile; ?>
-                                        <?php endif; ?>
-                                    </select>
-                                    
-                                    <!-- Search Box -->
-                                    <form method="GET" class="flex-grow-1">
-                                        <?php if ($category): ?>
-                                            <input type="hidden" name="category" value="<?php echo htmlspecialchars($category); ?>">
-                                        <?php endif; ?>
-                                        <div class="input-group">
-                                            <input type="text" name="search" class="form-control" placeholder="Search articles..." value="<?php echo htmlspecialchars($search); ?>">
-                                            <button class="btn btn-outline-secondary" type="submit">
-                                                <i class="la la-search"></i>
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -288,6 +255,11 @@ if (!$categories_result) {
                                     </div>
                                     <div class="col-lg-6 mt-4 mt-lg-0">
                                         <div class="info">
+                                            <h3 class="featured-title fsz-40 mb-25 fw-600">
+                                                <a href="single.php?slug=<?php echo $featured_post['slug']; ?>" class="hover-orange1">
+                                                    <?php echo htmlspecialchars($featured_post['title']); ?>
+                                                </a>
+                                            </h3>
                                             <div class="featured-meta-top">
                                                 <span class="featured-pill"><i class="la la-star me-1"></i> Featured</span>
                                                 <?php if (!empty($featured_post['category'])): ?>
@@ -295,12 +267,7 @@ if (!$categories_result) {
                                                 <?php endif; ?>
                                                 <span class="featured-date"><i class="la la-calendar me-1"></i><?php echo date('F d, Y', strtotime($featured_post['publish_date'])); ?></span>
                                             </div>
-                                            <h3 class="featured-title fsz-35 mb-20 fw-600">
-                                                <a href="single.php?slug=<?php echo $featured_post['slug']; ?>" class="hover-orange1">
-                                                    <?php echo htmlspecialchars($featured_post['title']); ?>
-                                                </a>
-                                            </h3>
-                                            <p class="featured-excerpt color-666 mb-25">
+                                            <p class="featured-excerpt color-666 mb-30">
                                                 <?php echo htmlspecialchars(substr(strip_tags($featured_post['excerpt'] ?: $featured_post['content']), 0, 240)) . '...'; ?>
                                             </p>
                                             <div class="featured-meta-bottom">
@@ -319,6 +286,42 @@ if (!$categories_result) {
                         </div>
                     </div>
                     <?php endif; ?>
+
+                    <div class="row justify-content-between align-items-center mb-40">
+                        <div class="col-lg-12">
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <!-- Category Filter -->
+                                <select class="form-select" style="max-width: 200px;" onchange="window.location.href='blog.php?category='+this.value+(new URLSearchParams(window.location.search).get('search') ? '&search='+new URLSearchParams(window.location.search).get('search') : '')">
+                                    <option value="">All Categories</option>
+                                    <?php if ($categories_result !== false && $categories_result->num_rows > 0): ?>
+                                        <?php 
+                                        // Reset pointer to beginning
+                                        $categories_result->data_seek(0);
+                                        while ($cat = $categories_result->fetch_assoc()): ?>
+                                            <?php if (!empty($cat['category'])): ?>
+                                            <option value="<?php echo htmlspecialchars($cat['category']); ?>" <?php echo $category === $cat['category'] ? 'selected' : ''; ?>>
+                                                <?php echo htmlspecialchars($cat['category']); ?>
+                                            </option>
+                                            <?php endif; ?>
+                                        <?php endwhile; ?>
+                                    <?php endif; ?>
+                                </select>
+                                
+                                <!-- Search Box -->
+                                <form method="GET" class="flex-grow-1">
+                                    <?php if ($category): ?>
+                                        <input type="hidden" name="category" value="<?php echo htmlspecialchars($category); ?>">
+                                    <?php endif; ?>
+                                    <div class="input-group">
+                                        <input type="text" name="search" class="form-control" placeholder="Search articles..." value="<?php echo htmlspecialchars($search); ?>">
+                                        <button class="btn btn-outline-secondary" type="submit">
+                                            <i class="la la-search"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Blog Grid -->
                     <?php if ($posts_result && $posts_result->num_rows > 0): ?>

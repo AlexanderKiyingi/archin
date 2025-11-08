@@ -6930,6 +6930,7 @@ html[lang=ar] .home-style1 .loader-wrap {
   flex-direction: column;
   gap: 16px;
   flex: 1;
+  width: 100%;
 }
 .tc-blog-style1 .blog-card:not(.featured-post) .meta-top {
   display: flex;
@@ -7061,12 +7062,14 @@ html[lang=ar] .home-style1 .loader-wrap {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  width: 100%;
 }
 .tc-blog-style1 .featured-meta-top {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  margin-bottom: 12px;
 }
 .tc-blog-style1 .featured-pill {
   display: inline-flex;
@@ -7126,6 +7129,7 @@ html[lang=ar] .home-style1 .loader-wrap {
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  align-self: flex-start;
 }
 
 @media screen and (max-width: 991px) {
