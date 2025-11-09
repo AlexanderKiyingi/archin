@@ -324,11 +324,25 @@ $read_time = ceil($word_count / 200);
             <!--  Start blog content  -->
             <section class="tc-blog-single section-padding">
                 <div class="container">
+                    <div class="section-intro text-center mb-5">
+                        <div class="breadcrumb mb-3">
+                            <a href="index.php" class="color-666 hover-orange1 text-decoration-none">Home</a>
+                            <span class="mx-2 color-666">/</span>
+                            <a href="blog.php" class="color-666 hover-orange1 text-decoration-none">Blog</a>
+                            <span class="mx-2 color-666">/</span>
+                            <span class="color-000">Article</span>
+                        </div>
+                        <h2 class="fsz-45 mb-3">Latest Insight</h2>
+                        <p class="color-666">Explore the story behind “<?php echo htmlspecialchars($post['title']); ?>”.</p>
+                    </div>
+
                     <div class="row gx-5">
                         <!-- Main Content -->
                         <div class="col-lg-8">
                             <?php 
-                                $hero_background = $post['featured_image'] ? getImageUrl($post['featured_image']) : 'assets/img/home1/blog/blog1.jpg';
+                                $hero_background = $post['featured_image']
+                                    ? getImageUrl($post['featured_image'])
+                                    : 'assets/img/home1/head_slide2.png';
                             ?>
                             <div class="article-hero radius-4 mb-40" style="background-image: url('<?php echo htmlspecialchars($hero_background); ?>');">
                                     <div class="hero-overlay radius-4">
