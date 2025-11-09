@@ -63,6 +63,11 @@ $categories_result = $conn->query($categories_query);
 // Calculate read time (assuming 200 words per minute)
 $word_count = str_word_count(strip_tags($post['content']));
 $read_time = ceil($word_count / 200);
+
+// Determine hero background image
+$hero_background = $post['featured_image']
+    ? getImageUrl($post['featured_image'])
+    : 'assets/img/home1/head_slide2.png';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -330,11 +335,15 @@ $read_time = ceil($word_count / 200);
         </nav>
         <!--  End navbar  -->
 
-        <?php 
-            $hero_background = $post['featured_image']
-                ? getImageUrl($post['featured_image'])
-                : 'assets/img/home1/head_slide2.png';
-        ?>
+        <!--  Start page header  -->
+        <header class="tc-header-style1 blog-header" style="min-height: 12vh;">
+            <div class="img">
+                <img src="assets/img/home1/head_slide2.png" alt="" class="img-cover">
+            </div>
+            
+        </header>
+        <!--  End page header  -->
+
         <header class="article-hero-banner" style="background-image: url('<?php echo htmlspecialchars($hero_background); ?>');"></header>
         <!--Contents-->
         <main>
@@ -359,13 +368,7 @@ $read_time = ceil($word_count / 200);
                         <div class="col-lg-8">
                             <div class="article-hero radius-4 mb-40" style="background-image: url('<?php echo htmlspecialchars($hero_background); ?>');">
                                     <div class="hero-overlay radius-4">
-                                    <div class="breadcrumb mb-3 text-white">
-                                        <a href="index.php" class="text-white hover-orange1 text-decoration-none">Home</a>
-                                        <span class="mx-2">/</span>
-                                        <a href="blog.php" class="text-white hover-orange1 text-decoration-none">Blog</a>
-                                        <span class="mx-2">/</span>
-                                        <span class="text-white-50">Article</span>
-                                    </div>
+                                  
                                     <h1 class="article-title text-white mb-3"><?php echo htmlspecialchars($post['title']); ?></h1>
                                     <div class="hero-meta text-white-50 d-flex flex-wrap justify-content-center gap-3">
                                         <span><i class="la la-calendar me-2 color-orange1"></i><?php echo date('F d, Y', strtotime($post['publish_date'])); ?></span>
