@@ -344,39 +344,39 @@ if (!$categories_result) {
                                 $category_label = !empty($post['category']) ? $post['category'] : (!empty($post['tags']) ? $post['tags'] : 'Insights');
                             ?>
                             <div class="blog-card wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
-                                <div class="img">
-                                    <a href="single.php?slug=<?php echo $post['slug']; ?>">
+                                <div class="card-inner">
+                                    <a href="single.php?slug=<?php echo $post['slug']; ?>" class="media-wrap d-block">
                                         <?php if ($post['featured_image']): ?>
                                             <img src="<?php echo htmlspecialchars(getImageUrl($post['featured_image'])); ?>" alt="" class="img-cover radius-4">
                                         <?php else: ?>
                                             <img src="assets/img/home1/blog/blog1.jpg" alt="" class="img-cover radius-4">
                                         <?php endif; ?>
                                     </a>
-                                </div>
-                                <div class="info">
-                                    <div class="card-body-row">
-                                        <div class="date-block">
-                                            <span class="day"><?php echo date('d', strtotime($post['publish_date'])); ?></span>
-                                            <span class="month"><?php echo strtoupper(date('F', strtotime($post['publish_date']))); ?></span>
-                                            <span class="year"><?php echo date('Y', strtotime($post['publish_date'])); ?></span>
-                                        </div>
-                                        <div class="content-block">
-                                            <a href="single.php?slug=<?php echo $post['slug']; ?>" class="blog-title">
-                                                <?php echo htmlspecialchars($post['title']); ?>
-                                            </a>
-                                            <div class="meta-inline">
-                                                <span class="category"><?php echo htmlspecialchars($category_label); ?></span>
-                                                <span class="dot">•</span>
-                                                <span class="author">By <?php echo htmlspecialchars($author_name); ?></span>
-                                                <span class="dot">•</span>
-                                                <span class="reading-time"><?php echo $reading_minutes; ?> min read</span>
+                                    <div class="info">
+                                        <div class="card-body-row">
+                                            <div class="date-block">
+                                                <span class="day"><?php echo date('d', strtotime($post['publish_date'])); ?></span>
+                                                <span class="month"><?php echo strtoupper(date('F', strtotime($post['publish_date']))); ?></span>
+                                                <span class="year"><?php echo date('Y', strtotime($post['publish_date'])); ?></span>
                                             </div>
-                                            <p class="excerpt">
-                                                <?php echo htmlspecialchars(substr(strip_tags($post['excerpt'] ?: $post['content']), 0, 160)) . '...'; ?>
-                                            </p>
-                                            <a href="single.php?slug=<?php echo $post['slug']; ?>" class="read-more-link">
-                                                Read Article <i class="la la-arrow-right ms-1"></i>
-                                            </a>
+                                            <div class="content-block">
+                                                <a href="single.php?slug=<?php echo $post['slug']; ?>" class="blog-title">
+                                                    <?php echo htmlspecialchars($post['title']); ?>
+                                                </a>
+                                                <div class="meta-inline">
+                                                    <span class="category"><?php echo htmlspecialchars($category_label); ?></span>
+                                                    <span class="dot">•</span>
+                                                    <span class="author">By <?php echo htmlspecialchars($author_name); ?></span>
+                                                    <span class="dot">•</span>
+                                                    <span class="reading-time"><?php echo $reading_minutes; ?> min read</span>
+                                                </div>
+                                                <p class="excerpt">
+                                                    <?php echo htmlspecialchars(substr(strip_tags($post['excerpt'] ?: $post['content']), 0, 160)) . '...'; ?>
+                                                </p>
+                                                <a href="single.php?slug=<?php echo $post['slug']; ?>" class="read-more-link">
+                                                    Read Article <i class="la la-arrow-right ms-1"></i>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
