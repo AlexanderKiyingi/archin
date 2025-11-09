@@ -350,7 +350,7 @@ $hero_background = $post['featured_image']
             <!--  Start blog content  -->
             <section class="tc-blog-single section-padding">
                 <div class="container">
-                    <div class="section-intro text-center mb-5">
+                    <div class="section-intro text-left mb-5">
                         <div class="breadcrumb mb-3">
                             <a href="index.php" class="color-666 hover-orange1 text-decoration-none">Home</a>
                             <span class="mx-2 color-666">/</span>
