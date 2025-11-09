@@ -373,7 +373,7 @@ $hero_background = $post['featured_image']
                                 </div>
                             </div>
 
-                            <div class="hero-meta text-dark-50 d-flex flex-wrap justify-content-left gap-3">
+                            <div class="hero-meta text-dark-50 d-flex flex-wrap justify-content-left gap-3 mb-4">
                                         <span><i class="la la-calendar me-2 color-orange1"></i><?php echo date('F d, Y', strtotime($post['publish_date'])); ?></span>
                                         <span><i class="la la-user me-2 color-orange1"></i>By <?php echo htmlspecialchars($post['author_name'] ?: 'Admin'); ?></span>
                                         <span><i class="la la-clock me-2 color-orange1"></i><?php echo $read_time; ?> min read</span>
@@ -385,20 +385,20 @@ $hero_background = $post['featured_image']
                                     <?php if ($post['excerpt']): ?>
                                     <div class="intro mb-40">
                                         <p class="fsz-18 lh-2 color-666">
-                                            <?php echo nl2br(htmlspecialchars_decode($post['excerpt'])); ?>
+                                            <?php echo nl2br(stripslashes(html_entity_decode($post['excerpt'], ENT_QUOTES | ENT_HTML5))); ?>
                                         </p>
                                     </div>
                                     <?php endif; ?>
 
                                     <div class="main-content">
-                                        <?php echo html_entity_decode($post['content']); ?>
+                                        <?php echo stripslashes(html_entity_decode($post['content'], ENT_QUOTES | ENT_HTML5)); ?>
                                     </div>
                                 </div>
 
                                 <!-- Tags -->
                                 <?php if ($post['tags']): ?>
                                 <div class="tags-section mt-50 pt-40 border-top">
-                                    <h6 class="fw-600 mb-3">Tags:</h6>
+                                    <h6 class="fsz-18 lh-2 mb-3">Tags:</h6>
                                     <div class="tags">
                                         <?php 
                                         $tags = explode(',', $post['tags']);
