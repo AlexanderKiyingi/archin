@@ -376,6 +376,12 @@ $hero_background = $post['featured_image']
                                     </div>
                                 </div>
                             </div>
+                            
+                            <div class="hero-meta text-white-50 d-flex flex-wrap justify-content-center gap-3">
+                                        <span><i class="la la-calendar me-2 color-orange1"></i><?php echo date('F d, Y', strtotime($post['publish_date'])); ?></span>
+                                        <span><i class="la la-user me-2 color-orange1"></i>By <?php echo htmlspecialchars($post['author_name'] ?: 'Admin'); ?></span>
+                                        <span><i class="la la-clock me-2 color-orange1"></i><?php echo $read_time; ?> min read</span>
+                            </div>
 
                             <article class="blog-content wow fadeInUp">
                                 <!-- Article Content -->
