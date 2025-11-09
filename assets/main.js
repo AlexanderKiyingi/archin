@@ -970,39 +970,91 @@ $(document).ready(function() {
     if ($('.video-modal').length === 0) {
         $('body').append(`
             <div class="video-modal" id="videoModal">
-                <div class="video-modal-content">
-                    <span class="video-modal-close">&times;</span>
-                    <iframe class="video-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div class="video-modal-dialog" role="dialog" aria-modal="true" aria-label="Project video">
+                    <button class="video-modal-close" aria-label="Close video">
+                        <span>&times;</span>
+                    </button>
+                    <div class="video-modal-body">
+                        <div class="video-modal-frame">
+                            <div class="video-aspect">
+                                <iframe class="video-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-modal-meta">
+                            <span class="video-platform-pill"></span>
+                            <h4 class="video-title mb-0"></h4>
+                        </div>
+                    </div>
                 </div>
             </div>
         `);
     }
 
-    // Handle play button click
-    $('.play-button-overlay').on('click', function() {
-        const videoId = $(this).data('video-id');
-        const platform = $(this).data('platform') || 'youtube';
-        
+    const openVideoModal = ({ videoId, platform = 'youtube', title = '', platformLabel = '' }) => {
+        if (!videoId) return;
+
         let videoUrl = '';
-        
+
         if (platform === 'youtube') {
             videoUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
         } else if (platform === 'vimeo') {
             videoUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1`;
         }
-        
-        // Set iframe source and show modal
-        $('#videoModal .video-iframe').attr('src', videoUrl);
-        $('#videoModal').addClass('active');
-        $('body').css('overflow', 'hidden'); // Prevent body scroll
+
+        const $modal = $('#videoModal');
+        $modal.find('.video-iframe').attr('src', videoUrl);
+        $modal.find('.video-title').text(title || '');
+
+        if (platformLabel) {
+            $modal.find('.video-platform-pill').text(platformLabel).show();
+        } else {
+            $modal.find('.video-platform-pill').hide();
+        }
+
+        $modal.addClass('active');
+        $('body').css('overflow', 'hidden');
+    };
+
+    const extractVideoData = ($trigger) => {
+        const dataFromTrigger = {
+            videoId: $trigger.data('video-id'),
+            platform: $trigger.data('platform') || 'youtube',
+            title: $trigger.data('title') || '',
+            platformLabel: $trigger.data('platform-label') || ''
+        };
+
+        if (dataFromTrigger.videoId) {
+            return dataFromTrigger;
+        }
+
+        const $overlay = $trigger.closest('.showcase-card').find('.play-button-overlay');
+        return {
+            videoId: $overlay.data('video-id'),
+            platform: $overlay.data('platform') || 'youtube',
+            title: $overlay.data('title') || '',
+            platformLabel: $overlay.data('platform-label') || ''
+        };
+    };
+
+    // Handle play button click
+    $('.play-button-overlay').on('click', function() {
+        const data = extractVideoData($(this));
+        openVideoModal(data);
     });
 
-    // Close modal
-    $('.video-modal-close, .video-modal').on('click', function(e) {
-        if (e.target === this || $(e.target).hasClass('video-modal-close')) {
+    // Close modal on close button
+    $(document).on('click', '.video-modal-close', function() {
+        $('#videoModal').removeClass('active');
+        $('#videoModal .video-iframe').attr('src', '');
+        $('body').css('overflow', '');
+    });
+
+    // Close modal when clicking outside dialog
+    $(document).on('click', '.video-modal', function(e) {
+        if ($(e.target).is('.video-modal')) {
             $('#videoModal').removeClass('active');
-            $('#videoModal .video-iframe').attr('src', ''); // Stop video
-            $('body').css('overflow', ''); // Restore body scroll
+            $('#videoModal .video-iframe').attr('src', '');
+            $('body').css('overflow', '');
         }
     });
 

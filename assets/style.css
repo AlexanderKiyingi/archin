@@ -16176,81 +16176,146 @@ home 9 style
 
 /* Video Container */
 .video-container {
-    position: relative;
-    width: 100%;
-    padding-top: 56.25%; /* 16:9 aspect ratio */
-    background: #000;
-    border-radius: 12px;
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  background: #000;
+  border-radius: 12px;
 }
 
 .video-iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-    border-radius: 12px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 12px;
 }
 
 /* Video Modal */
 .video-modal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    animation: fadeIn 0.3s ease;
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 44px 24px;
+  background: rgba(8, 15, 29, 0.88);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
 }
 
 .video-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
 }
 
-.video-modal-content {
-    position: relative;
-    width: 90%;
-    max-width: 1200px;
-    padding-top: 56.25%; /* 16:9 aspect ratio */
+.video-modal-dialog {
+  position: relative;
+  width: min(960px, 92vw);
+  border-radius: 22px;
+  overflow: hidden;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 30px 60px rgba(15, 23, 42, 0.35);
 }
 
-.video-modal-content iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
+.video-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.video-modal-frame {
+  width: 100%;
+  background: #000;
+}
+
+.video-aspect {
+  position: relative;
+  padding-top: 56.25%;
+}
+
+.video-aspect iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.video-modal-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 24px 30px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(15, 23, 42, 0.78) 100%);
+}
+
+.video-platform-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.video-title {
+  margin: 0;
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.45;
+  flex: 1;
+  text-align: right;
 }
 
 .video-modal-close {
-    position: absolute;
-    top: -40px;
-    right: 0;
-    color: #fff;
-    font-size: 32px;
-    font-weight: 300;
-    cursor: pointer;
-    transition: color 0.3s ease;
-    z-index: 10000;
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(15, 23, 42, 0.65);
+  color: #fff;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 5;
 }
 
 .video-modal-close:hover {
-    color: var(--color-orange1);
+  background: var(--color-orange1);
+  border-color: var(--color-orange1);
+  transform: rotate(90deg);
+}
+
+.video-modal-close span {
+  display: block;
+  transform: translateY(-1px);
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Responsive Styles */
@@ -16324,5 +16389,44 @@ home 9 style
     
     .showcase-title {
         font-size: 0.95rem;
+    }
+
+    .video-modal {
+        padding: 24px;
+    }
+
+    .video-modal-dialog {
+        width: 100%;
+        border-radius: 18px;
+    }
+
+    .video-modal-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        gap: 12px;
+        padding: 20px 20px 22px;
+    }
+
+    .video-title {
+        text-align: left;
+        font-size: 1.05rem;
+    }
+
+    .video-modal-close {
+        top: 14px;
+        right: 14px;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .video-modal {
+        padding: 0;
+    }
+
+    .video-modal-dialog {
+        border-radius: 0;
+        width: 100%;
+        min-height: 100%;
     }
 }

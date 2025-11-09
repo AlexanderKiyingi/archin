@@ -779,7 +779,13 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                     <i class="la la-video"></i>
                                                 </div>
                                             <?php endif; ?>
-                                            <div class="play-button-overlay" data-video-id="<?php echo htmlspecialchars($normalized_video_id); ?>" data-platform="<?php echo htmlspecialchars($platform); ?>">
+                                            <div
+                                                class="play-button-overlay"
+                                                data-video-id="<?php echo htmlspecialchars($normalized_video_id); ?>"
+                                                data-platform="<?php echo htmlspecialchars($platform); ?>"
+                                                data-title="<?php echo htmlspecialchars($showcase['title']); ?>"
+                                                data-platform-label="<?php echo htmlspecialchars(ucfirst($platform)); ?>"
+                                            >
                                                 <div class="play-button">
                                                     <i class="la la-play"></i>
                                                 </div>
