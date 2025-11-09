@@ -360,7 +360,7 @@ if (!$categories_result) {
                                                 <span class="year"><?php echo date('Y', strtotime($post['publish_date'])); ?></span>
                                             </div>
                                             <div class="content-block">
-                                                <a href="single.php?slug=<?php echo $post['slug']; ?>" class="blog-title">
+                                                <a href="single.php?slug=<?php echo $post['slug']; ?>" class="blog-title text-dark">
                                                     <?php echo htmlspecialchars($post['title']); ?>
                                                 </a>
                                                 <div class="meta-inline">
@@ -370,9 +370,7 @@ if (!$categories_result) {
                                                     <span class="dot">•</span>
                                                     <span class="reading-time"><?php echo $reading_minutes; ?> min read</span>
                                                 </div>
-                                                <p class="excerpt">
-                                                    <?php echo htmlspecialchars(substr(strip_tags($post['excerpt'] ?: $post['content']), 0, 160)) . '...'; ?>
-                                                </p>
+                                               
                                                 <a href="single.php?slug=<?php echo $post['slug']; ?>" class="read-more-link">
                                                     Read Article <i class="la la-arrow-right ms-1"></i>
                                                 </a>
