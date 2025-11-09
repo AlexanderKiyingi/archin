@@ -978,23 +978,52 @@ $(document).ready(function() {
         `);
     }
 
-    // Handle play button click
-    $('.play-button-overlay').on('click', function() {
-        const videoId = $(this).data('video-id');
-        const platform = $(this).data('platform') || 'youtube';
-        
+    const openVideoModal = (videoId, platform = 'youtube') => {
+        if (!videoId) return;
+
         let videoUrl = '';
-        
+
         if (platform === 'youtube') {
             videoUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
         } else if (platform === 'vimeo') {
             videoUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1`;
         }
-        
-        // Set iframe source and show modal
+
         $('#videoModal .video-iframe').attr('src', videoUrl);
         $('#videoModal').addClass('active');
-        $('body').css('overflow', 'hidden'); // Prevent body scroll
+        $('body').css('overflow', 'hidden');
+    };
+
+    const extractVideoData = ($trigger) => {
+        const directId = $trigger.data('video-id');
+        const directPlatform = $trigger.data('platform');
+
+        if (directId) {
+            return {
+                videoId: directId,
+                platform: directPlatform || 'youtube'
+            };
+        }
+
+        const $card = $trigger.closest('.showcase-card');
+        const $overlay = $card.find('.play-button-overlay');
+        return {
+            videoId: $overlay.data('video-id'),
+            platform: $overlay.data('platform') || 'youtube'
+        };
+    };
+
+    // Handle play button click
+    $('.play-button-overlay').on('click', function() {
+        const data = extractVideoData($(this));
+        openVideoModal(data.videoId, data.platform);
+    });
+
+    // Handle watch link click
+    $('.showcase-watch-link').on('click', function(e) {
+        e.preventDefault();
+        const data = extractVideoData($(this));
+        openVideoModal(data.videoId, data.platform);
     });
 
     // Close modal

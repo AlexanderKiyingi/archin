@@ -16037,31 +16037,31 @@ home 9 style
 }
 
 /* Showcase Card */
-.showcase-card {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
+ .showcase-card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  transition: all 0.35s ease;
+  background: linear-gradient(160deg, rgba(15, 23, 42, 0.02) 0%, rgba(15, 23, 42, 0.08) 100%);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(6px);
+ }
 
 .showcase-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-12px);
+  box-shadow: 0 26px 60px rgba(15, 23, 42, 0.18);
 }
 
 /* Thumbnail Container */
 .showcase-thumbnail {
-    position: relative;
-    width: 100%;
-    padding-top: 56.25%; /* 16:9 aspect ratio */
-    overflow: hidden;
-    background: #000;
-    border-radius: 12px 12px 0 0;
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
 }
 
 .showcase-thumbnail img {
@@ -16072,6 +16072,18 @@ home 9 style
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
+}
+
+.showcase-thumbnail::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(15, 23, 42, 0.1) 45%, rgba(15, 23, 42, 0.72) 100%);
+  transition: opacity 0.3s ease;
+}
+
+.showcase-card:hover .showcase-thumbnail::after {
+  opacity: 0.95;
 }
 
 .showcase-thumbnail-placeholder {
@@ -16115,63 +16127,124 @@ home 9 style
     background: rgba(0, 0, 0, 0.4);
 }
 
-.play-button {
-    width: 78px;
-    height: 78px;
-    border-radius: 50%;
-    background: var(--color-orange1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 12px rgba(255, 153, 0, 0.4);
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+ .play-button {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff7e6 0%, #ff7a00 60%, #ff5400 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  box-shadow: 0 12px 24px rgba(255, 153, 0, 0.35);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+ }
 
 .play-button i {
-    font-size: 28px;
-    color: #fff;
-    margin: 0;
-    padding: 0;
-    display: block;
-    line-height: 1;
+  font-size: 28px;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  display: block;
+  line-height: 1;
+  transform: translateX(2px);
 }
 
 .play-button-overlay:hover .play-button {
-    transform: scale(1.08);
-    box-shadow: 0 6px 20px rgba(255, 153, 0, 0.6);
+  transform: scale(1.1);
+  box-shadow: 0 18px 32px rgba(255, 153, 0, 0.55);
+  background: radial-gradient(circle at 30% 30%, #fff 0%, #ffa94d 55%, #ff6b00 100%);
 }
 
-/* Logo Overlay */
-.logo-overlay {
-    position: absolute;
-    bottom: 15px;
-    left: 15px;
-    z-index: 3;
-    opacity: 0.9;
+/* Metadata overlay */
+.showcase-meta {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 20px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.logo-overlay .logo-small {
-    height: 30px;
-    width: auto;
-    filter: brightness(0) invert(1); /* Make logo white */
+.platform-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #0f172a;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(4px);
 }
 
-/* Showcase Info */
-.showcase-info {
-    padding: 20px;
-    background: #fff;
+.platform-pill i {
+  font-size: 1rem;
+  color: var(--color-orange1);
 }
 
 .showcase-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #333;
-    margin: 0;
-    line-height: 1.4;
-    text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  line-height: 1.45;
+  text-align: left;
+  text-shadow: 0 6px 20px rgba(15, 23, 42, 0.55);
+}
+
+/* Showcase footer */
+.showcase-footer {
+  padding: 22px 24px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #fff;
+  border-radius: 0 0 18px 18px;
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.showcase-caption {
+  font-size: 0.85rem;
+  color: #64748b;
+  flex: 1;
+}
+
+.showcase-watch-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--color-orange1);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.78rem;
+  border: 1px solid rgba(255, 153, 0, 0.6);
+  padding: 9px 18px;
+  border-radius: 999px;
+  transition: all 0.3s ease;
+}
+
+.showcase-watch-link i {
+  font-size: 0.9rem;
+}
+
+.showcase-watch-link:hover {
+  background: var(--color-orange1);
+  color: #fff;
+  border-color: var(--color-orange1);
+  transform: translateX(4px);
+  box-shadow: 0 10px 24px rgba(255, 153, 0, 0.35);
 }
 
 /* Video Container */
@@ -16290,17 +16363,17 @@ home 9 style
     .play-button i {
         font-size: 20px;
     }
-    
-    .showcase-info {
-        padding: 15px;
+    .showcase-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
     }
-    
-    .showcase-title {
-        font-size: 1rem;
+    .showcase-caption {
+        font-size: 0.82rem;
     }
-    
-    .logo-overlay .logo-small {
-        height: 25px;
+    .showcase-watch-link {
+        width: 100%;
+        justify-content: center;
     }
 }
 
@@ -16324,5 +16397,8 @@ home 9 style
     
     .showcase-title {
         font-size: 0.95rem;
+    }
+    .showcase-footer {
+        padding: 18px 18px 20px;
     }
 }
