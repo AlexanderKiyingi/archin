@@ -742,8 +742,6 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                 $delay = 0.1;
                                 while ($showcase = $video_showcases_result->fetch_assoc()):
                                     $platform = $showcase['platform'] ?? 'youtube';
-                                    $platform_label = ucfirst($platform);
-                                    $platform_icon = $platform === 'vimeo' ? 'la la-vimeo' : 'la la-youtube-play';
                                     $normalized_video_id = normalizeVideoId($showcase['video_id'] ?? '', $platform);
                                     if (empty($normalized_video_id)) {
                                         continue; // Skip invalid video entries
@@ -786,17 +784,9 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                     <i class="la la-play"></i>
                                                 </div>
                                             </div>
-                                            <div class="showcase-meta">
-                                                <span class="platform-pill"><i class="<?php echo $platform_icon; ?>"></i><?php echo htmlspecialchars($platform_label); ?></span>
-                                                <h4 class="showcase-title"><?php echo htmlspecialchars($showcase['title']); ?></h4>
-                                            </div>
                                         </div>
-                                        <div class="showcase-footer">
-                                            <p class="showcase-caption mb-0">Immerse yourself in the build story and final reveal.</p>
-                                            <a href="#" class="showcase-watch-link" data-video-id="<?php echo htmlspecialchars($normalized_video_id); ?>" data-platform="<?php echo htmlspecialchars($platform); ?>">
-                                                <span>Watch</span>
-                                                <i class="la la-arrow-right"></i>
-                                            </a>
+                                        <div class="showcase-info">
+                                            <h4 class="showcase-title"><?php echo htmlspecialchars($showcase['title']); ?></h4>
                                         </div>
                                     </div>
                                 </div>
