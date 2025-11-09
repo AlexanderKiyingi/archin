@@ -369,15 +369,11 @@ $hero_background = $post['featured_image']
                                     <div class="hero-overlay radius-4">
                                   
                                     <h1 class="article-title text-white mb-3"><?php echo htmlspecialchars($post['title']); ?></h1>
-                                    <div class="hero-meta text-white-50 d-flex flex-wrap justify-content-center gap-3">
-                                        <span><i class="la la-calendar me-2 color-orange1"></i><?php echo date('F d, Y', strtotime($post['publish_date'])); ?></span>
-                                        <span><i class="la la-user me-2 color-orange1"></i>By <?php echo htmlspecialchars($post['author_name'] ?: 'Admin'); ?></span>
-                                        <span><i class="la la-clock me-2 color-orange1"></i><?php echo $read_time; ?> min read</span>
-                                    </div>
+                                    
                                 </div>
                             </div>
-                            
-                            <div class="hero-meta text-white-50 d-flex flex-wrap justify-content-center gap-3">
+
+                            <div class="hero-meta text-dark-50 d-flex flex-wrap justify-content-left gap-3">
                                         <span><i class="la la-calendar me-2 color-orange1"></i><?php echo date('F d, Y', strtotime($post['publish_date'])); ?></span>
                                         <span><i class="la la-user me-2 color-orange1"></i>By <?php echo htmlspecialchars($post['author_name'] ?: 'Admin'); ?></span>
                                         <span><i class="la la-clock me-2 color-orange1"></i><?php echo $read_time; ?> min read</span>
