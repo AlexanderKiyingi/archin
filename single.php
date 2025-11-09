@@ -109,6 +109,19 @@ $read_time = ceil($word_count / 200);
     <link rel="stylesheet" href="assets/style.css">
 
     <style>
+        .article-hero-banner {
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+        .article-hero-banner::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.65) 0%, rgba(15, 23, 42, 0.35) 70%, rgba(15, 23, 42, 0.85) 100%);
+        }
         .article-hero {
             position: relative;
             background-size: cover;
@@ -317,7 +330,12 @@ $read_time = ceil($word_count / 200);
         </nav>
         <!--  End navbar  -->
 
-        <!--  Start hero section  -->
+        <?php 
+            $hero_background = $post['featured_image']
+                ? getImageUrl($post['featured_image'])
+                : 'assets/img/home1/head_slide2.png';
+        ?>
+        <header class="article-hero-banner" style="background-image: url('<?php echo htmlspecialchars($hero_background); ?>');"></header>
         <!--Contents-->
         <main>
 
@@ -339,11 +357,6 @@ $read_time = ceil($word_count / 200);
                     <div class="row gx-5">
                         <!-- Main Content -->
                         <div class="col-lg-8">
-                            <?php 
-                                $hero_background = $post['featured_image']
-                                    ? getImageUrl($post['featured_image'])
-                                    : 'assets/img/home1/head_slide2.png';
-                            ?>
                             <div class="article-hero radius-4 mb-40" style="background-image: url('<?php echo htmlspecialchars($hero_background); ?>');">
                                     <div class="hero-overlay radius-4">
                                     <div class="breadcrumb mb-3 text-white">
@@ -368,13 +381,13 @@ $read_time = ceil($word_count / 200);
                                     <?php if ($post['excerpt']): ?>
                                     <div class="intro mb-40">
                                         <p class="fsz-18 lh-2 color-666">
-                                            <?php echo nl2br(htmlspecialchars($post['excerpt'])); ?>
+                                            <?php echo nl2br(htmlspecialchars_decode($post['excerpt'])); ?>
                                         </p>
                                     </div>
                                     <?php endif; ?>
 
                                     <div class="main-content">
-                                        <?php echo $post['content']; ?>
+                                        <?php echo html_entity_decode($post['content']); ?>
                                     </div>
                                 </div>
 
