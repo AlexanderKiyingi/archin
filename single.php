@@ -68,6 +68,25 @@ $read_time = ceil($word_count / 200);
 $hero_background = $post['featured_image']
     ? getImageUrl($post['featured_image'])
     : 'assets/img/home1/head_slide2.png';
+
+// Helper to decode stored HTML entities and escaped characters safely
+function decodeBlogContent($text)
+{
+    if ($text === null || $text === '') {
+        return '';
+    }
+
+    $decoded = $text;
+    $previous = null;
+
+    // Keep decoding until no further changes (handles double-encoded entities)
+    while ($decoded !== $previous) {
+        $previous = $decoded;
+        $decoded = html_entity_decode($decoded, ENT_QUOTES | ENT_HTML5);
+    }
+
+    return stripslashes($decoded);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -385,13 +404,13 @@ $hero_background = $post['featured_image']
                                     <?php if ($post['excerpt']): ?>
                                     <div class="intro mb-40">
                                         <p class="fsz-18 lh-2 color-666">
-                                            <?php echo nl2br(stripslashes(html_entity_decode($post['excerpt'], ENT_QUOTES | ENT_HTML5))); ?>
+                                            <?php echo nl2br(decodeBlogContent($post['excerpt'])); ?>
                                         </p>
                                     </div>
                                     <?php endif; ?>
 
                                     <div class="main-content">
-                                        <?php echo stripslashes(html_entity_decode($post['content'], ENT_QUOTES | ENT_HTML5)); ?>
+                                        <?php echo decodeBlogContent($post['content']); ?>
                                     </div>
                                 </div>
 
