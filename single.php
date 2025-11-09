@@ -344,7 +344,6 @@ $hero_background = $post['featured_image']
         </header>
         <!--  End page header  -->
 
-        <header class="article-hero-banner" style="background-image: url('<?php echo htmlspecialchars($hero_background); ?>');"></header>
         <!--Contents-->
         <main>
 
