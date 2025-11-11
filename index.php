@@ -747,6 +747,9 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                         continue; // Skip invalid video entries
                                     }
 
+                                    $raw_title = $showcase['title'] ?? '';
+                                    $safe_title = htmlspecialchars($raw_title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', false);
+
                                     // Get thumbnail URL - use custom thumbnail if available, otherwise use YouTube/Vimeo thumbnail
                                     $thumbnail_url = getVideoThumbnailUrl(
                                         $showcase['thumbnail'] ?? '',
@@ -766,7 +769,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                 }
                                                 ?>
                                                 <img src="<?php echo htmlspecialchars($thumbnail_url); ?>" 
-                                                     alt="<?php echo htmlspecialchars($showcase['title']); ?>" 
+                                                     alt="<?php echo $safe_title; ?>" 
                                                      class="img-cover"
                                                      onerror="<?php if (!empty($fallback_url)): ?>this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';<?php else: ?>this.style.display='none'; this.nextElementSibling.style.display='flex';<?php endif; ?>">
                                                 <?php if (!empty($fallback_url)): ?>
@@ -783,7 +786,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                                 class="play-button-overlay"
                                                 data-video-id="<?php echo htmlspecialchars($normalized_video_id); ?>"
                                                 data-platform="<?php echo htmlspecialchars($platform); ?>"
-                                                data-title="<?php echo htmlspecialchars($showcase['title']); ?>"
+                                                data-title="<?php echo $safe_title; ?>"
                                                 data-platform-label="<?php echo htmlspecialchars(ucfirst($platform)); ?>"
                                             >
                                                 <div class="play-button">
@@ -792,7 +795,7 @@ $page_description = 'Flip Avenue Limited is an interior design studio based in U
                                             </div>
                                         </div>
                                         <div class="showcase-info">
-                                            <h4 class="showcase-title"><?php echo htmlspecialchars($showcase['title']); ?></h4>
+                                            <h4 class="showcase-title"><?php echo $safe_title; ?></h4>
                                         </div>
                                     </div>
                                 </div>
